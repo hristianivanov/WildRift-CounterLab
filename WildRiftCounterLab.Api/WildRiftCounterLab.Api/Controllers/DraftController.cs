@@ -1,39 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using WildRiftCounterLab.Api.DTOs;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace WildRiftCounterLab.Api.Controllers;
+
+
+using Services;
+
 
 [ApiController]
 [Route("api/[controller]")]
 public class DraftController : ControllerBase
 {
-    [HttpPost("recommendations")]
-    public IActionResult GetRecommendations([FromBody] DraftRequest request)
+    private readonly DraftService _draftService;
+
+    public DraftController(DraftService draftService)
     {
-        var result = new[]
-        {
-            new
-            {
-                champion = "Malphite",
-                score = 92,
-                reasons = new[]
-                {
-                    "Strong into AD champions",
-                    "Reliable engage",
-                    "Easy execution"
-                }
-            },
-            new
-            {
-                champion = "Garen",
-                score = 86,
-                reasons = new[]
-                {
-                    "Safe lane",
-                    "Good sustain",
-                    "Simple win condition"
-                }
-            }
-        };
+        _draftService = draftService;
+    }
+
+    [HttpPost("recommendations")]
+    public IActionResult GetRecommendations([FromBody] DraftRequestDto request)
+    {
+        var result = _draftService.GetRecommendations(request);
 
         return Ok(result);
     }
