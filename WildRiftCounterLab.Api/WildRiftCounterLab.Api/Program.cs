@@ -1,4 +1,9 @@
 
+using Microsoft.EntityFrameworkCore;
+using WildRiftCounterLab.Api.Data;
+using WildRiftCounterLab.Api.Engine;
+using WildRiftCounterLab.Api.Services;
+
 namespace WildRiftCounterLab.Api
 {
     public class Program
@@ -9,10 +14,25 @@ namespace WildRiftCounterLab.Api
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
+
+            builder.Services.AddScoped<DraftService>();
+            builder.Services.AddScoped<ScoreEngine>();
+            builder.Services.AddScoped<ChampionDataProvider>();
+            builder.Services.AddScoped<ReasonEngine>();
+            builder.Services.AddScoped<PlanEngine>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
