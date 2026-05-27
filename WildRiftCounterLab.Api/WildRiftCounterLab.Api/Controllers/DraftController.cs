@@ -1,12 +1,9 @@
-﻿using WildRiftCounterLab.Api.DTOs;
+﻿namespace WildRiftCounterLab.Api.Controllers;
 
-using Microsoft.AspNetCore.Mvc;
-
-namespace WildRiftCounterLab.Api.Controllers;
-
-
+using DTOs;
 using Services;
 
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]

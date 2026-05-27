@@ -1,6 +1,7 @@
-﻿using WildRiftCounterLab.Api.Models;
+﻿namespace WildRiftCounterLab.Api.Data;
 
-namespace WildRiftCounterLab.Api.Data;
+using Models;
+
 
 public class ChampionDataProvider
 {

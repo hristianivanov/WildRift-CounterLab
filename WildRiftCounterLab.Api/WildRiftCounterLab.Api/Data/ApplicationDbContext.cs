@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WildRiftCounterLab.Api.Models;
+﻿namespace WildRiftCounterLab.Api.Data;
 
-namespace WildRiftCounterLab.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
+using Models;
+
 
 public class ApplicationDbContext : DbContext
 {

@@ -1,8 +1,8 @@
-﻿using WildRiftCounterLab.Api.Data;
-using WildRiftCounterLab.Api.DTOs;
-using WildRiftCounterLab.Api.Engine;
+﻿namespace WildRiftCounterLab.Api.Services;
 
-namespace WildRiftCounterLab.Api.Services;
+using Data;
+using DTOs;
+using Engine;
 
 public class DraftService
 {
