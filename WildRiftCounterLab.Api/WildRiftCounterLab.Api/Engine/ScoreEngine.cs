@@ -1,36 +1,20 @@
 ﻿namespace WildRiftCounterLab.Api.Engine;
 
-using DTOs;
+using Models;
 
 public class ScoreEngine
 {
-    public int CalculateScore(string champion, DraftRequestDto request)
+    public int CalculateScore(string champion, List<MatchupRule> rules)
     {
         var score = 50;
 
-        if (request.Role == "Baron")
-        {
-            score += 10;
-        }
+        var championRules = rules
+            .Where(rule => rule.Champion == champion)
+            .ToList();
 
-        if (request.LaneEnemy == "Darius" && champion == "Malphite")
+        foreach (var rule in championRules)
         {
-            score += 30;
-        }
-
-        if (request.LaneEnemy == "Darius" && champion == "Garen")
-        {
-            score += 20;
-        }
-
-        if (request.EnemyTeam.Contains("Senna") && champion == "Malphite")
-        {
-            score += 8;
-        }
-
-        if (request.EnemyTeam.Contains("Olaf") && champion == "Malphite")
-        {
-            score += 5;
+            score += rule.ScoreModifier;
         }
 
         return score;

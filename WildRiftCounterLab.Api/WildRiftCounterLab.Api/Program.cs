@@ -23,6 +23,7 @@ public class Program
         builder.Services.AddScoped<ReasonEngine>();
         builder.Services.AddScoped<PlanEngine>();
         builder.Services.AddScoped<ChampionRepository>();
+        builder.Services.AddScoped<MatchupRuleRepository>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

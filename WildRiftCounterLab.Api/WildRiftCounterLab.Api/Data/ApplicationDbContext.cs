@@ -12,5 +12,6 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    public DbSet<MatchupRule> MatchupRules => Set<MatchupRule>();
     public DbSet<Champion> Champions => Set<Champion>();
 }
