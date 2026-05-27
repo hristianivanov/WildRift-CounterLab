@@ -19,9 +19,12 @@ public class Program
             .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; });
 
         builder.Services.AddScoped<DraftService>();
+        builder.Services.AddScoped<AiExplanationService>();
+
         builder.Services.AddScoped<ScoreEngine>();
         builder.Services.AddScoped<ReasonEngine>();
         builder.Services.AddScoped<PlanEngine>();
+
         builder.Services.AddScoped<ChampionRepository>();
         builder.Services.AddScoped<MatchupRuleRepository>();
 

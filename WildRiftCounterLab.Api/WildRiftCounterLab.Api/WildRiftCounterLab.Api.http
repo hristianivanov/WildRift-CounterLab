@@ -14,3 +14,20 @@ Content-Type: application/json
 ###
 
 GET {{WildRiftCounterLab.Api_HostAddress}}/api/champions
+
+###
+
+POST {{WildRiftCounterLab.Api_HostAddress}}/api/ai/explain
+Content-Type: application/json
+
+{
+  "role": "Baron",
+  "laneEnemy": "Darius",
+  "enemyTeam": ["Senna", "Jhin", "Olaf"],
+  "champion": "Malphite",
+  "score": 80,
+  "reasons": [
+    "Armor scaling helps against physical damage"
+  ],
+  "plan": "Play short trades early. Avoid extended fights before armor items."
+}
