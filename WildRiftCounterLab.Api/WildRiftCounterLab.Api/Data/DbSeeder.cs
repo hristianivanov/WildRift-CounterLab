@@ -69,7 +69,8 @@ public class DbSeeder
                     Champion = "Malphite",
                     EnemyChampion = "Darius",
                     ScoreModifier = 30,
-                    Reason = "Armor scaling helps against physical damage"
+                    Reason = "Armor scaling helps against physical damage",
+                    Plan = "Play short trades early. Avoid extended fights before armor items."
                 },
                 new MatchupRule
                 {
@@ -77,7 +78,8 @@ public class DbSeeder
                     Champion = "Garen",
                     EnemyChampion = "Darius",
                     ScoreModifier = 20,
-                    Reason = "Safe lane option with sustain"
+                    Reason = "Safe lane option with sustain",
+                    Plan = "Play short trades early. Avoid extended fights before armor items."
                 },
                 new MatchupRule
                 {
@@ -85,7 +87,8 @@ public class DbSeeder
                     Champion = "Fiora",
                     EnemyChampion = "Dr. Mundo",
                     ScoreModifier = 35,
-                    Reason = "True damage punishes tanky sustain champions"
+                    Reason = "True damage punishes tanky sustain champions",
+                    Plan = "Play short trades early. Avoid extended fights before armor items."
                 },
                 new MatchupRule
                 {
@@ -93,7 +96,8 @@ public class DbSeeder
                     Champion = "Vayne",
                     EnemyChampion = "Dr. Mundo",
                     ScoreModifier = 35,
-                    Reason = "Tank shred and range punish Mundo"
+                    Reason = "Tank shred and range punish Mundo",
+                    Plan = "Play short trades early. Avoid extended fights before armor items."
                 }
             );
 

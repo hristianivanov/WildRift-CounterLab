@@ -2,28 +2,22 @@
 
 using DTOs;
 
+using WildRiftCounterLab.Api.Models;
+
 public class PlanEngine
 {
-    public string BuildPlan(string champion, DraftRequestDto request)
+    public string BuildPlan(string champion, List<MatchupRule> rules)
     {
-        if (champion == "Malphite" && request.LaneEnemy == "Darius")
-        {
-            return "Play short trades early and wait for armor scaling.";
-        }
+        var plans = rules
+            .Where(rule => rule.Champion == champion)
+            .Select(rule => rule.Plan)
+            .Where(plan => !string.IsNullOrWhiteSpace(plan))
+            .Distinct()
+            .ToList();
 
-        if (champion == "Garen" && request.LaneEnemy == "Darius")
+        if (plans.Any())
         {
-            return "Avoid extended bleed trades and sustain through passive.";
-        }
-
-        if (champion == "Fiora")
-        {
-            return "Pressure side lane and force isolated duels.";
-        }
-
-        if (champion == "Camille")
-        {
-            return "Farm safely early, then punish with mobility after first item.";
+            return string.Join(" ", plans);
         }
 
         return "Play stable early game and scale into mid game fights.";

@@ -1,39 +1,20 @@
 ﻿namespace WildRiftCounterLab.Api.Engine;
 
-using DTOs;
+using Models;
 
 public class ReasonEngine
 {
-    public List<string> BuildReasons(string champion, DraftRequestDto request)
+    public List<string> BuildReasons(string champion, List<MatchupRule> rules)
     {
-        if (champion == "Malphite" && request.LaneEnemy == "Darius")
-        {
-            return new List<string>
-            {
-                "Armor scaling helps against physical damage",
-                "Reliable engage",
-                "Simple execution"
-            };
-        }
+        var reasons = rules
+            .Where(rule => rule.Champion == champion)
+            .Select(rule => rule.Reason)
+            .Distinct()
+            .ToList();
 
-        if (champion == "Garen" && request.LaneEnemy == "Darius")
+        if (reasons.Any())
         {
-            return new List<string>
-            {
-                "Safe lane option",
-                "Good sustain",
-                "Can survive short trades"
-            };
-        }
-
-        if (champion == "Fiora")
-        {
-            return new List<string>
-            {
-                "Strong dueling",
-                "Good side lane pressure",
-                "Can punish tanks and fighters"
-            };
+            return reasons;
         }
 
         return new List<string>

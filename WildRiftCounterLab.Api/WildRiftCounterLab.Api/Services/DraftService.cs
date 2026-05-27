@@ -55,8 +55,8 @@ public class DraftService
             {
                 Champion = champion.Name,
                 Score = _scoreEngine.CalculateScore(champion.Name, rules),
-                Reasons = _reasonEngine.BuildReasons(champion.Name, request),
-                Plan = _planEngine.BuildPlan(champion.Name, request)
+                Reasons = _reasonEngine.BuildReasons(champion.Name, rules),
+                Plan = _planEngine.BuildPlan(champion.Name, rules)
             })
             .OrderByDescending(x => x.Score)
             .ToList();
