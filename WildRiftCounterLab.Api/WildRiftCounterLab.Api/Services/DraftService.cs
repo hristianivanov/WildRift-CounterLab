@@ -1,32 +1,38 @@
 ﻿namespace WildRiftCounterLab.Api.Services;
 
 using Data;
+
 using DTOs;
+
 using Engine;
+
+using WildRiftCounterLab.Api.Repositories;
 
 public class DraftService
 {
     private readonly ScoreEngine _scoreEngine;
     private readonly ReasonEngine _reasonEngine;
-    private readonly ChampionDataProvider _championDataProvider;
+    private readonly ChampionRepository _championRepository;
     private readonly PlanEngine _planEngine;
 
     public DraftService(
         ScoreEngine scoreEngine,
         ReasonEngine reasonEngine,
-        ChampionDataProvider championDataProvider,
+        ChampionRepository championRepository,
         PlanEngine planEngine)
     {
         _scoreEngine = scoreEngine;
         _reasonEngine = reasonEngine;
-        _championDataProvider = championDataProvider;
+        _championRepository = championRepository;
         _planEngine = planEngine;
     }
 
-    public List<DraftRecommendationDto> GetRecommendations(DraftRequestDto request)
+    public async Task<List<DraftRecommendationDto>> GetRecommendations(DraftRequestDto request)
     {
-        var candidateChampions = _championDataProvider
-            .GetChampions()
+        var candidateChampions = await _championRepository
+            .GetAllAsync();
+
+        candidateChampions = candidateChampions
             .Where(champion => champion.Roles.Contains(request.Role))
             .ToList();
 

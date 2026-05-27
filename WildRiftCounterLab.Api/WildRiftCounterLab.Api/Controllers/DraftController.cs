@@ -17,9 +17,9 @@ public class DraftController : ControllerBase
     }
 
     [HttpPost("recommendations")]
-    public IActionResult GetRecommendations([FromBody] DraftRequestDto request)
+    public async Task<IActionResult> GetRecommendations([FromBody] DraftRequestDto request)
     {
-        var result = _draftService.GetRecommendations(request);
+        var result = await _draftService.GetRecommendations(request);
 
         return Ok(result);
     }

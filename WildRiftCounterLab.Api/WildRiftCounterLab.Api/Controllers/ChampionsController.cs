@@ -1,24 +1,24 @@
 ﻿namespace WildRiftCounterLab.Api.Controllers;
 
-using Data;
-
 using Microsoft.AspNetCore.Mvc;
+
+using Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ChampionsController : ControllerBase
 {
-    private readonly ChampionDataProvider _championDataProvider;
+    private readonly ChampionRepository _championRepository;
 
-    public ChampionsController(ChampionDataProvider championDataProvider)
+    public ChampionsController(ChampionRepository championRepository)
     {
-        _championDataProvider = championDataProvider;
+        _championRepository = championRepository;
     }
 
     [HttpGet]
-    public IActionResult GetChampions()
+    public async Task<IActionResult> GetChampions()
     {
-        var champions = _championDataProvider.GetChampions();
+        var champions = await _championRepository.GetAllAsync();
 
         return Ok(champions);
     }

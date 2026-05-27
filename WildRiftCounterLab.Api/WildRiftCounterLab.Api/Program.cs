@@ -3,6 +3,7 @@ namespace WildRiftCounterLab.Api;
 using Data;
 using Engine;
 using Services;
+using Repositories;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +20,9 @@ public class Program
 
         builder.Services.AddScoped<DraftService>();
         builder.Services.AddScoped<ScoreEngine>();
-        builder.Services.AddScoped<ChampionDataProvider>();
         builder.Services.AddScoped<ReasonEngine>();
         builder.Services.AddScoped<PlanEngine>();
+        builder.Services.AddScoped<ChampionRepository>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -36,14 +37,19 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            //app.UseSwagger();
-            //app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            DbSeeder.Seed(db);
         }
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 
