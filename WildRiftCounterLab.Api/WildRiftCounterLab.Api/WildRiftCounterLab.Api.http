@@ -8,7 +8,8 @@ Content-Type: application/json
 {
   "role": "Baron",
   "laneEnemy": "Darius",
-  "enemyTeam": ["Senna", "Jhin", "Olaf"]
+  "enemyTeam": ["Senna", "Jhin", "Olaf"],
+  "includeAiExplanation": false
 }
 
 ###

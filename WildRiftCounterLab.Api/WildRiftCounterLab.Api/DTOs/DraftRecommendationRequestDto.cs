@@ -1,6 +1,6 @@
 ﻿namespace WildRiftCounterLab.Api.DTOs;
 
-public class DraftRequestDto
+public class DraftRecommendationRequestDto
 {
     public string Role { get; set; } = string.Empty;
 
@@ -9,5 +9,4 @@ public class DraftRequestDto
     public List<string> EnemyTeam { get; set; } = new();
 
     public bool IncludeAiExplanation { get; set; } = false;
-
 }

@@ -1,12 +1,8 @@
 ﻿namespace WildRiftCounterLab.Api.Services;
 
-using Data;
-
 using DTOs;
-
 using Engine;
-
-using WildRiftCounterLab.Api.Repositories;
+using Repositories;
 
 public class DraftService
 {
@@ -30,15 +26,9 @@ public class DraftService
         _planEngine = planEngine;
     }
 
-    public async Task<List<DraftRecommendationDto>> GetRecommendations(DraftRequestDto request)
+    public async Task<DraftRecommendationResponseDto> GetRecommendations(
+        DraftRecommendationRequestDto request)
     {
-        var candidateChampions = await _championRepository
-            .GetAllAsync();
-
-        candidateChampions = candidateChampions
-            .Where(champion => champion.Roles.Contains(request.Role))
-            .ToList();
-
         var enemies = new List<string>();
 
         if (!string.IsNullOrWhiteSpace(request.LaneEnemy))
@@ -48,9 +38,17 @@ public class DraftService
 
         enemies.AddRange(request.EnemyTeam);
 
-        var rules = await _matchupRuleRepository.GetRulesForDraftAsync(request.Role, enemies);
+        var rules = await _matchupRuleRepository.GetRulesForDraftAsync(
+            request.Role,
+            enemies);
 
-        return candidateChampions
+        var candidateChampions = await _championRepository.GetAllAsync();
+
+        candidateChampions = candidateChampions
+            .Where(champion => champion.Roles.Contains(request.Role))
+            .ToList();
+
+        var recommendations = candidateChampions
             .Select(champion => new DraftRecommendationDto
             {
                 Champion = champion.Name,
@@ -59,6 +57,14 @@ public class DraftService
                 Plan = _planEngine.BuildPlan(champion.Name, rules)
             })
             .OrderByDescending(x => x.Score)
+            .Take(5)
             .ToList();
+
+        return new DraftRecommendationResponseDto
+        {
+            Role = request.Role,
+            LaneEnemy = request.LaneEnemy,
+            Recommendations = recommendations
+        };
     }
 }

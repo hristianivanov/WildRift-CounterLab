@@ -6,7 +6,9 @@ public class DraftRecommendationDto
 
     public int Score { get; set; }
 
+    public List<string> Reasons { get; set; } = new();
+
     public string Plan { get; set; } = string.Empty;
 
-    public List<string> Reasons { get; set; } = new();
+    public string? AiExplanation { get; set; }
 }
