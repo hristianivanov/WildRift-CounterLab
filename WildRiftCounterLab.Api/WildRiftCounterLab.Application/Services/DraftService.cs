@@ -1,6 +1,7 @@
 ﻿using WildRiftCounterLab.Application.DTOs;
 using WildRiftCounterLab.Application.Engine;
 using WildRiftCounterLab.Application.Interfaces;
+using WildRiftCounterLab.Domain.Constants;
 
 namespace WildRiftCounterLab.Application.Services;
 
@@ -30,6 +31,32 @@ public class DraftService
     public async Task<DraftRecommendationResponseDto> GetRecommendations(
         DraftRecommendationRequestDto request)
     {
+        if (!AllowedRoles.Values.Contains(request.Role))
+        {
+            throw new ArgumentException("Invalid role.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.LaneEnemy))
+        {
+            throw new ArgumentException("Lane enemy is required.");
+        }
+
+        if (request.EnemyTeam.Count > 5)
+        {
+            throw new ArgumentException("Enemy team cannot have more than 5 champions.");
+        }
+
+        if (request.EnemyTeam.Distinct().Count() != request.EnemyTeam.Count)
+        {
+            throw new ArgumentException("Enemy team cannot contain duplicate champions.");
+        }
+
+        if (request.EnemyTeam.Contains(request.LaneEnemy))
+        {
+            throw new ArgumentException("Lane enemy cannot also be inside enemy team.");
+        }
+
+
         var enemies = new List<string>();
 
         if (!string.IsNullOrWhiteSpace(request.LaneEnemy))

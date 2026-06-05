@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace WildRiftCounterLab.Domain.Constants;
 
-namespace WildRiftCounterLab.Domain.Constants;
-
-internal class AllowedRoles
+public static class AllowedRoles
 {
+    public static readonly HashSet<string> Values = new()
+    {
+        "Baron",
+        "Jungle",
+        "Mid",
+        "Dragon",
+        "Support"
+    };
 }

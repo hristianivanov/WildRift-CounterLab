@@ -1,3 +1,8 @@
+using System;
+
+using Microsoft.AspNetCore.Http;
+
+
 namespace WildRiftCounterLab.Api;
 
 using Application.Engine;
@@ -50,6 +55,38 @@ public class Program
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             DbSeeder.Seed(db);
         }
+
+        app.UseExceptionHandler(errorApp =>
+        {
+            errorApp.Run(async context =>
+            {
+                var exceptionFeature =
+                    context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+
+                var exception = exceptionFeature?.Error;
+
+                context.Response.ContentType = "application/json";
+
+                if (exception is ArgumentException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        error = exception.Message
+                    });
+
+                    return;
+                }
+
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    error = "Internal server error."
+                });
+            });
+        });
 
         app.UseHttpsRedirection();
 
