@@ -1,21 +1,22 @@
+namespace WildRiftCounterLab.Api;
+
+using Application.Engine;
+using Application.Interfaces;
+using Application.Services;
+
+using Infrastructure.AI;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Infrastructure.Seed;
+
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using WildRiftCounterLab.Application.Engine;
-using WildRiftCounterLab.Application.Services;
-using WildRiftCounterLab.Application.Interfaces;
-using WildRiftCounterLab.Infrastructure.AI;
-using WildRiftCounterLab.Infrastructure.Data;
-using WildRiftCounterLab.Infrastructure.Repositories;
-using WildRiftCounterLab.Infrastructure.Seed;
-
-
-namespace WildRiftCounterLab.Api;
-
-
-using Microsoft.EntityFrameworkCore;
+using WildRiftCounterLab.Application;
+using WildRiftCounterLab.Infrastructure;
 
 public class Program
 {
@@ -28,23 +29,12 @@ public class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; });
 
-        builder.Services.AddScoped<DraftService>();
-        builder.Services.AddScoped<AiExplanationService>();
-
-        builder.Services.AddScoped<ScoreEngine>();
-        builder.Services.AddScoped<ReasonEngine>();
-        builder.Services.AddScoped<PlanEngine>();
-
-        builder.Services.AddScoped<IChampionRepository, ChampionRepository>();
-        builder.Services.AddScoped<IMatchupRuleRepository, MatchupRuleRepository>();
+        builder.Services.AddApplication();
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(
-                builder.Configuration.GetConnectionString("DefaultConnection")));
 
         var app = builder.Build();
 

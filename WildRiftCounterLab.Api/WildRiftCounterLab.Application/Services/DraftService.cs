@@ -8,16 +8,17 @@ public class DraftService
 {
     private readonly ScoreEngine _scoreEngine;
     private readonly ReasonEngine _reasonEngine;
+    private readonly PlanEngine _planEngine;
+
     private readonly IChampionRepository _championRepository;
     private readonly IMatchupRuleRepository _matchupRuleRepository;
-    private readonly PlanEngine _planEngine;
 
     public DraftService(
         ScoreEngine scoreEngine,
         ReasonEngine reasonEngine,
+        PlanEngine planEngine,
         IChampionRepository championRepository,
-        IMatchupRuleRepository matchupRuleRepository,
-        PlanEngine planEngine)
+        IMatchupRuleRepository matchupRuleRepository)
     {
         _scoreEngine = scoreEngine;
         _reasonEngine = reasonEngine;

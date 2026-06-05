@@ -3,11 +3,12 @@
 using Mscc.GenerativeAI;
 
 using WildRiftCounterLab.Application.DTOs;
+using WildRiftCounterLab.Application.Interfaces;
 
 
 namespace WildRiftCounterLab.Infrastructure.AI;
 
-public class AiExplanationService
+public class AiExplanationService : IAiExplanationService
 {
     private readonly IConfiguration _configuration;
 
