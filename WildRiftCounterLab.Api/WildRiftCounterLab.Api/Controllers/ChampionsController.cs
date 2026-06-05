@@ -1,16 +1,20 @@
-﻿namespace WildRiftCounterLab.Api.Controllers;
+﻿using System.Threading.Tasks;
+
+using WildRiftCounterLab.Application.Interfaces;
+
+
+namespace WildRiftCounterLab.Api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ChampionsController : ControllerBase
 {
-    private readonly ChampionRepository _championRepository;
+    private readonly IChampionRepository _championRepository;
 
-    public ChampionsController(ChampionRepository championRepository)
+    public ChampionsController(IChampionRepository championRepository)
     {
         _championRepository = championRepository;
     }

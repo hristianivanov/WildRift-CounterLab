@@ -1,9 +1,19 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+using WildRiftCounterLab.Application.Engine;
+using WildRiftCounterLab.Application.Services;
+using WildRiftCounterLab.Application.Interfaces;
+using WildRiftCounterLab.Infrastructure.AI;
+using WildRiftCounterLab.Infrastructure.Data;
+using WildRiftCounterLab.Infrastructure.Repositories;
+using WildRiftCounterLab.Infrastructure.Seed;
+
+
 namespace WildRiftCounterLab.Api;
 
-using Data;
-using Engine;
-using Services;
-using Repositories;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -25,8 +35,8 @@ public class Program
         builder.Services.AddScoped<ReasonEngine>();
         builder.Services.AddScoped<PlanEngine>();
 
-        builder.Services.AddScoped<ChampionRepository>();
-        builder.Services.AddScoped<MatchupRuleRepository>();
+        builder.Services.AddScoped<IChampionRepository, ChampionRepository>();
+        builder.Services.AddScoped<IMatchupRuleRepository, MatchupRuleRepository>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

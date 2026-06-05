@@ -3,4 +3,7 @@
     <File Path=".editorconfig" />
   </Folder>
   <Project Path="WildRiftCounterLab.Api/WildRiftCounterLab.Api.csproj" />
+  <Project Path="WildRiftCounterLab.Application/WildRiftCounterLab.Application.csproj" Id="9081ba78-85ae-4352-a466-fa8cac168fd5" />
+  <Project Path="WildRiftCounterLab.Domain/WildRiftCounterLab.Domain.csproj" Id="f8428763-9968-41d2-a4a1-ba0397cc3959" />
+  <Project Path="WildRiftCounterLab.Infrastructure/WildRiftCounterLab.Infrastructure.csproj" Id="267c03bb-f2ab-4213-b147-3b9605d63e62" />
 </Solution>

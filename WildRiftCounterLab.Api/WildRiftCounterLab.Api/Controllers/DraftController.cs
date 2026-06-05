@@ -1,7 +1,10 @@
-﻿namespace WildRiftCounterLab.Api.Controllers;
+﻿using System.Threading.Tasks;
 
-using DTOs;
-using Services;
+using WildRiftCounterLab.Application.DTOs;
+using WildRiftCounterLab.Application.Services;
+
+
+namespace WildRiftCounterLab.Api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
