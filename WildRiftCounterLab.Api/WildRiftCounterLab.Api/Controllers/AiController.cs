@@ -12,9 +12,9 @@ namespace WildRiftCounterLab.Api.Controllers;
 [Route("api/[controller]")]
 public class AiController : ControllerBase
 {
-    private readonly AiExplanationService _aiExplanationService;
+    private readonly GeminiAiExplanationProvider _aiExplanationService;
 
-    public AiController(AiExplanationService aiExplanationService)
+    public AiController(GeminiAiExplanationProvider aiExplanationService)
     {
         _aiExplanationService = aiExplanationService;
     }
