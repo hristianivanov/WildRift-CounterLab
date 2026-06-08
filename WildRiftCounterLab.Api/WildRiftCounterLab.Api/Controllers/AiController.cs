@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Infrastructure.AI;
+using WildRiftCounterLab.Application.Interfaces;
 
 
 namespace WildRiftCounterLab.Api.Controllers;
@@ -12,17 +12,17 @@ namespace WildRiftCounterLab.Api.Controllers;
 [Route("api/[controller]")]
 public class AiController : ControllerBase
 {
-    private readonly GeminiAiExplanationProvider _aiExplanationService;
+    private readonly IAiExplanationProvider _aiExplanationProvider;
 
-    public AiController(GeminiAiExplanationProvider aiExplanationService)
+    public AiController(IAiExplanationProvider aiExplanationProvider)
     {
-        _aiExplanationService = aiExplanationService;
+        _aiExplanationProvider = aiExplanationProvider;
     }
 
     [HttpPost("explain")]
     public async Task<IActionResult> Explain([FromBody] AiExplanationRequestDto request)
     {
-        var result = await _aiExplanationService.ExplainAsync(request);
+        var result = await _aiExplanationProvider.ExplainAsync(request);
 
         return Ok(result);
     }

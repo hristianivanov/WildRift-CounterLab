@@ -11,7 +11,7 @@ using WildRiftCounterLab.Infrastructure.Data;
 
 #nullable disable
 
-namespace WildRiftCounterLab.Api.Migrations
+namespace WildRiftCounterLab.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260527112706_AddMatchupRules")]

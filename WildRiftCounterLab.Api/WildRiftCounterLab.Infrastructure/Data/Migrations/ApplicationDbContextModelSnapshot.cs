@@ -10,7 +10,7 @@ using WildRiftCounterLab.Infrastructure.Data;
 
 #nullable disable
 
-namespace WildRiftCounterLab.Api.Migrations
+namespace WildRiftCounterLab.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

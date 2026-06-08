@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace WildRiftCounterLab.Api.Migrations
+namespace WildRiftCounterLab.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddPlanToMatchupRules : Migration

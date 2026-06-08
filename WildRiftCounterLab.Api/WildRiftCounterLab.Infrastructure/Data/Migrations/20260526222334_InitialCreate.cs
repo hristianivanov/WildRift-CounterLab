@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+
 using Microsoft.EntityFrameworkCore.Migrations;
+
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace WildRiftCounterLab.Api.Migrations
+namespace WildRiftCounterLab.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

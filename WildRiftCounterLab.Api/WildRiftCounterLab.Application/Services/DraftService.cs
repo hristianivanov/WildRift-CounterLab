@@ -31,7 +31,11 @@ public class DraftService
     public async Task<DraftRecommendationResponseDto> GetRecommendations(
         DraftRecommendationRequestDto request)
     {
-        if (!AllowedRoles.Values.Contains(request.Role))
+        var role = AllowedRoles.Values
+            .SingleOrDefault(allowedRole =>
+                allowedRole.Equals(request.Role, StringComparison.OrdinalIgnoreCase));
+
+        if (role is null)
         {
             throw new ArgumentException("Invalid role.");
         }
@@ -41,39 +45,49 @@ public class DraftService
             throw new ArgumentException("Lane enemy is required.");
         }
 
-        if (request.EnemyTeam.Count > 5)
+        if (request.EnemyTeam.Count > 4)
         {
-            throw new ArgumentException("Enemy team cannot have more than 5 champions.");
+            throw new ArgumentException("Enemy team cannot have more than 5 champions including the lane enemy.");
         }
 
-        if (request.EnemyTeam.Distinct().Count() != request.EnemyTeam.Count)
+        if (request.EnemyTeam.Distinct(StringComparer.OrdinalIgnoreCase).Count() != request.EnemyTeam.Count)
         {
             throw new ArgumentException("Enemy team cannot contain duplicate champions.");
         }
 
-        if (request.EnemyTeam.Contains(request.LaneEnemy))
+        if (request.EnemyTeam.Contains(request.LaneEnemy, StringComparer.OrdinalIgnoreCase))
         {
             throw new ArgumentException("Lane enemy cannot also be inside enemy team.");
         }
 
+        var allChampions = await _championRepository.GetAllAsync();
+        var championsByName = allChampions.ToDictionary(
+            champion => champion.Name,
+            StringComparer.OrdinalIgnoreCase);
 
-        var enemies = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(request.LaneEnemy))
+        if (!championsByName.TryGetValue(request.LaneEnemy, out var laneEnemy))
         {
-            enemies.Add(request.LaneEnemy);
+            throw new ArgumentException($"Unknown champion: {request.LaneEnemy}.");
         }
 
-        enemies.AddRange(request.EnemyTeam);
+        var enemies = new List<string> { laneEnemy.Name };
+
+        foreach (var enemyName in request.EnemyTeam)
+        {
+            if (!championsByName.TryGetValue(enemyName, out var enemy))
+            {
+                throw new ArgumentException($"Unknown champion: {enemyName}.");
+            }
+
+            enemies.Add(enemy.Name);
+        }
 
         var rules = await _matchupRuleRepository.GetRulesForDraftAsync(
-            request.Role,
+            role,
             enemies);
 
-        var candidateChampions = await _championRepository.GetAllAsync();
-
-        candidateChampions = candidateChampions
-            .Where(champion => champion.Roles.Contains(request.Role))
+        var candidateChampions = allChampions
+            .Where(champion => champion.Roles.Contains(role))
             .ToList();
 
         var recommendations = candidateChampions
@@ -90,8 +104,8 @@ public class DraftService
 
         return new DraftRecommendationResponseDto
         {
-            Role = request.Role,
-            LaneEnemy = request.LaneEnemy,
+            Role = role,
+            LaneEnemy = laneEnemy.Name,
             Recommendations = recommendations
         };
     }

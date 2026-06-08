@@ -22,6 +22,11 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
         var apiKey = _configuration["Gemini:ApiKey"];
         var model = _configuration["Gemini:Model"] ?? "gemini-2.5-flash";
 
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException("Gemini API key is not configured.");
+        }
+
         var googleAI = new GoogleAI(apiKey: apiKey);
 
         var generativeModel = googleAI.GenerativeModel(model: model);
@@ -67,6 +72,7 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
         return new AiExplanationResponseDto
         {
             Explanation = response.Text
+                ?? throw new InvalidOperationException("Gemini returned an empty explanation.")
         };
     }
 }
