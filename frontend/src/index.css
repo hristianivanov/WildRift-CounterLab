@@ -18,10 +18,22 @@ body {
     radial-gradient(circle at 15% 10%, rgba(23, 126, 137, 0.2), transparent 28rem),
     radial-gradient(circle at 85% 15%, rgba(174, 124, 45, 0.16), transparent 26rem),
     #070b12;
+  background-attachment: fixed;
 }
 
 button,
 select,
 input {
   font: inherit;
+}
+
+button,
+select,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #ecfeff;
+  background: rgba(34, 211, 238, 0.28);
 }

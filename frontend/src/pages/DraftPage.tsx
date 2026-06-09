@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FlaskConical, TriangleAlert } from 'lucide-react'
+import { BrainCircuit, DatabaseZap, FlaskConical, ShieldCheck } from 'lucide-react'
 
+import EmptyState from '../components/common/EmptyState'
+import ErrorState from '../components/common/ErrorState'
+import LoadingState from '../components/common/LoadingState'
 import DraftForm from '../components/draft/DraftForm'
 import RecommendationCard from '../components/draft/RecommendationCard'
+import PageShell from '../components/layout/PageShell'
 import { useChampions } from '../hooks/useChampions'
 import { useDraftAnalysis } from '../hooks/useDraftAnalysis'
 import type { DraftRecommendationRequest } from '../types'
@@ -15,116 +19,107 @@ const initialDraft: DraftRecommendationRequest = {
   includeAiExplanation: false,
 }
 
+const productSignals = [
+  { icon: DatabaseZap, label: 'Rule-based scoring' },
+  { icon: ShieldCheck, label: 'Role-aware picks' },
+  { icon: BrainCircuit, label: 'Optional AI context' },
+]
+
 export default function DraftPage() {
   const [draft, setDraft] = useState(initialDraft)
   const { champions, usingFallback } = useChampions()
   const { analyzeDraft, error, isLoading, result } = useDraftAnalysis()
 
   return (
-    <main className="min-h-screen px-4 py-8 md:px-8 lg:py-12">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-8 max-w-3xl">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+    <PageShell>
+      <header className="mb-8 overflow-hidden rounded-[32px] border border-white/8 bg-gradient-to-br from-slate-900/75 via-slate-900/35 to-cyan-950/20 px-5 py-8 shadow-2xl shadow-black/20 sm:px-8 lg:px-10 lg:py-10">
+        <div className="max-w-4xl">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200">
             <FlaskConical className="size-3.5" />
-            WildRiftCounterLab
+            Deterministic draft intelligence
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-white md:text-6xl">
-            Draft with data.
-            <span className="block text-cyan-300">Explain with AI.</span>
+          <h1 className="max-w-3xl text-4xl font-black tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+            Find the right answer
+            <span className="block bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-300 bg-clip-text text-transparent">
+              before draft locks.
+            </span>
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-400 md:text-lg">
-            The recommendation engine scores every pick deterministically. AI only explains the
-            final result when you ask for it.
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base lg:text-lg">
+            Compare matchup strength, team fit, safety, scaling, and utility in seconds. The engine
+            ranks every pick from rules and data; AI only explains the result.
           </p>
-        </header>
 
-        <div className="grid gap-7 lg:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.4fr)]">
-          <DraftForm
-            champions={champions}
-            value={draft}
-            isLoading={isLoading}
-            usingFallback={usingFallback}
-            onChange={setDraft}
-            onSubmit={() => void analyzeDraft(draft)}
-          />
-
-          <section>
-            {error && (
-              <div className="mb-5 flex items-start gap-3 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm text-red-100">
-                <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-                {error}
+          <div className="mt-7 flex flex-wrap gap-2">
+            {productSignals.map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-black/15 px-3 py-2 text-xs font-medium text-slate-300"
+              >
+                <Icon className="size-3.5 text-cyan-300" />
+                {label}
               </div>
-            )}
+            ))}
+          </div>
+        </div>
+      </header>
 
-            {!result && !isLoading && (
-              <div className="grid min-h-72 place-items-center rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-                <div>
-                  <p className="text-lg font-medium text-slate-300">Recommendations appear here</p>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Select a lane opponent and analyze the draft.
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(330px,0.72fr)_minmax(0,1.35fr)] xl:gap-8">
+        <DraftForm
+          champions={champions}
+          value={draft}
+          isLoading={isLoading}
+          usingFallback={usingFallback}
+          onChange={setDraft}
+          onSubmit={() => void analyzeDraft(draft)}
+        />
+
+        <section className="min-w-0">
+          {error && <ErrorState message={error} />}
+          {!result && !isLoading && <EmptyState />}
+          {isLoading && <LoadingState />}
+
+          <AnimatePresence mode="wait">
+            {result && !isLoading && (
+              <motion.div
+                key={`${result.role}-${result.laneEnemy}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="space-y-4"
+              >
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300/70">
+                      Analysis complete
+                    </p>
+                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                      {result.role} picks into {result.laneEnemy}
+                    </h2>
+                  </div>
+                  <p className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-slate-400">
+                    {result.recommendations.length} ranked picks
                   </p>
                 </div>
-              </div>
-            )}
 
-            {isLoading && (
-              <div className="space-y-4">
-                {[0, 1, 2].map((item) => (
-                  <div
-                    key={item}
-                    className="h-52 animate-pulse rounded-3xl border border-white/8 bg-white/[0.04]"
+                {result.recommendations.length === 0 && (
+                  <EmptyState
+                    title="No recommendations found"
+                    message="Try another role or adjust the enemy draft."
+                  />
+                )}
+
+                {result.recommendations.map((recommendation, index) => (
+                  <RecommendationCard
+                    key={recommendation.champion}
+                    recommendation={recommendation}
+                    rank={index}
                   />
                 ))}
-              </div>
+              </motion.div>
             )}
-
-            <AnimatePresence mode="wait">
-              {result && !isLoading && (
-                <motion.div
-                  key={`${result.role}-${result.laneEnemy}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-4"
-                >
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                        {result.role} recommendations
-                      </p>
-                      <h2 className="mt-1 text-2xl font-semibold text-white">
-                        Into {result.laneEnemy}
-                      </h2>
-                    </div>
-                    <p className="text-sm text-slate-500">
-                      {result.recommendations.length} ranked picks
-                    </p>
-                  </div>
-
-                  {result.recommendations.length === 0 && (
-                    <div className="grid min-h-56 place-items-center rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-                      <div>
-                        <p className="text-lg font-medium text-slate-300">No recommendations found</p>
-                        <p className="mt-2 text-sm text-slate-500">
-                          Try another role or enemy draft.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {result.recommendations.map((recommendation, index) => (
-                    <RecommendationCard
-                      key={recommendation.champion}
-                      recommendation={recommendation}
-                      rank={index}
-                    />
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </section>
-        </div>
+          </AnimatePresence>
+        </section>
       </div>
-    </main>
+    </PageShell>
   )
 }

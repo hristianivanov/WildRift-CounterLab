@@ -2,6 +2,8 @@ import axios from 'axios'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:5069/api'
 
+export const configuredApiBaseUrl = apiBaseUrl
+
 export const api = axios.create({
   baseURL: apiBaseUrl,
   headers: {
@@ -12,10 +14,18 @@ export const api = axios.create({
 
 export function getApiErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    const message = error.response?.data?.error
+    const responseData = error.response?.data
+    const message =
+      typeof responseData === 'object' && responseData !== null && 'error' in responseData
+        ? responseData.error
+        : undefined
+    const details =
+      typeof responseData === 'object' && responseData !== null && 'details' in responseData
+        ? responseData.details
+        : undefined
 
     if (typeof message === 'string' && message.length > 0) {
-      return message
+      return typeof details === 'string' && details.length > 0 ? `${message} ${details}` : message
     }
 
     if (error.code === 'ECONNABORTED') {

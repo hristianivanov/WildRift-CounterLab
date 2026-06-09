@@ -34,6 +34,54 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
     }
 
     [Fact]
+    public async Task Recommendations_CommonDraftWithSennaAndJhin_ReturnsRankedRecommendations()
+    {
+        var response = await _client.PostAsJsonAsync(
+            "/api/draft/recommendations",
+            new DraftRecommendationRequestDto
+            {
+                Role = "Baron",
+                LaneEnemy = "Darius",
+                EnemyTeam = new List<string> { "Senna", "Jhin", "Olaf" }
+            });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var body = await response.Content.ReadFromJsonAsync<DraftRecommendationResponseDto>();
+
+        Assert.NotNull(body);
+        Assert.NotEmpty(body.Recommendations);
+        Assert.Contains(
+            body.Recommendations.Take(3),
+            recommendation => recommendation.Champion == "Malphite");
+    }
+
+    [Fact]
+    public async Task Champions_SeedIncludesSennaAndJhin()
+    {
+        var response = await _client.GetAsync("/api/champions");
+        var champions = await response.Content.ReadFromJsonAsync<List<ChampionDto>>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(champions);
+        Assert.Contains(champions, champion => champion.Name == "Senna");
+        Assert.Contains(champions, champion => champion.Name == "Jhin");
+    }
+
+    [Fact]
+    public async Task Health_ReturnsOkStatus()
+    {
+        var response = await _client.GetAsync("/api/health");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var health = await response.Content.ReadFromJsonAsync<HealthResponse>();
+
+        Assert.NotNull(health);
+        Assert.Equal("ok", health.Status);
+    }
+
+    [Fact]
     public async Task Recommendations_InvalidRole_ReturnsStandardBadRequest()
     {
         var response = await _client.PostAsJsonAsync(
@@ -269,4 +317,6 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
             Tags = new List<string> { "tank" }
         };
     }
+
+    private sealed record HealthResponse(string Status);
 }

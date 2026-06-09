@@ -1,7 +1,8 @@
-import { LoaderCircle, Sparkles } from 'lucide-react'
+import { Bot, Info, LoaderCircle, Sparkles, X } from 'lucide-react'
 
 import type { Champion, DraftRecommendationRequest } from '../../types'
 import Button from '../common/Button'
+import SectionCard from '../common/SectionCard'
 
 const roles = ['Baron', 'Jungle', 'Mid', 'Dragon', 'Support']
 
@@ -15,7 +16,7 @@ interface DraftFormProps {
 }
 
 const fieldClass =
-  'w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400/60'
+  'w-full appearance-none rounded-xl border border-white/10 bg-slate-950/75 px-3 py-3 text-sm text-slate-100 outline-none transition hover:border-white/20 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/10'
 
 export default function DraftForm({
   champions,
@@ -41,39 +42,55 @@ export default function DraftForm({
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/70 p-5 shadow-2xl shadow-black/30 backdrop-blur md:p-7">
+    <SectionCard className="p-5 md:p-7 lg:sticky lg:top-6">
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-            Draft inputs
+            Draft setup
           </p>
-          <h2 className="mt-2 text-xl font-semibold text-white">Build the enemy draft</h2>
+          <h2 className="mt-2 text-xl font-bold text-white">Build the matchup</h2>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            Start with your lane, then add the visible enemy picks.
+          </p>
         </div>
-        {usingFallback && (
-          <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-xs text-amber-200">
-            Offline champion fallback
-          </span>
-        )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="space-y-2 text-sm text-slate-300">
-          <span>Role</span>
-          <select
-            className={fieldClass}
-            value={value.role}
-            onChange={(event) => onChange({ ...value, role: event.target.value })}
-          >
-            {roles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
-        </label>
+      {usingFallback && (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-300/[0.08] p-3 text-xs text-amber-100">
+          <Info className="mt-0.5 size-4 shrink-0 text-amber-300" />
+          <span>
+            The backend could not be reached, so a limited fallback champion list is active.
+          </span>
+        </div>
+      )}
 
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Your role
+        </p>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-3 xl:grid-cols-5">
+          {roles.map((role) => (
+            <button
+              key={role}
+              type="button"
+              onClick={() => onChange({ ...value, role })}
+              className={`rounded-xl border px-2 py-2.5 text-xs font-semibold transition ${
+                value.role === role
+                  ? 'border-cyan-300/50 bg-cyan-300/15 text-cyan-100 shadow-sm shadow-cyan-500/10'
+                  : 'border-white/8 bg-white/[0.025] text-slate-400 hover:border-white/20 hover:text-slate-200'
+              }`}
+            >
+              {role}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5">
         <label className="space-y-2 text-sm text-slate-300">
-          <span>Lane enemy</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Lane enemy
+          </span>
           <select
             className={fieldClass}
             value={value.laneEnemy}
@@ -95,12 +112,33 @@ export default function DraftForm({
         </label>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm text-slate-300">Enemy team</span>
-          <span className="text-xs text-slate-500">{value.enemyTeam.length}/4 extra picks</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Enemy team
+          </span>
+          <span className="rounded-full bg-white/[0.04] px-2 py-1 text-[10px] font-semibold text-slate-500">
+            {value.enemyTeam.length}/4 added
+          </span>
         </div>
-        <div className="flex max-h-48 flex-wrap gap-2 overflow-y-auto pr-1">
+
+        {value.enemyTeam.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2 rounded-xl border border-cyan-300/10 bg-cyan-300/[0.04] p-3">
+            {value.enemyTeam.map((enemy) => (
+              <button
+                key={enemy}
+                type="button"
+                onClick={() => toggleEnemy(enemy)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20"
+              >
+                {enemy}
+                <X className="size-3" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="flex max-h-44 flex-wrap gap-2 overflow-y-auto pr-1">
           {champions.map((champion) => {
             const selected = value.enemyTeam.includes(champion.name)
             const unavailable = champion.name === value.laneEnemy
@@ -111,9 +149,9 @@ export default function DraftForm({
                 type="button"
                 disabled={unavailable || (!selected && value.enemyTeam.length >= 4)}
                 onClick={() => toggleEnemy(champion.name)}
-                className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                className={`rounded-lg border px-3 py-1.5 text-xs transition ${
                   selected
-                    ? 'border-cyan-300/60 bg-cyan-300/15 text-cyan-100'
+                    ? 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
                     : selectedEnemies.has(champion.name)
                       ? 'border-white/5 bg-white/5 text-slate-600'
                       : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/25 hover:text-white'
@@ -126,26 +164,27 @@ export default function DraftForm({
         </div>
       </div>
 
-      <label className="mt-6 flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-violet-300/10 bg-violet-300/[0.04] p-4 transition hover:border-violet-300/20">
         <input
           type="checkbox"
           checked={value.includeAiExplanation}
           onChange={(event) =>
             onChange({ ...value, includeAiExplanation: event.target.checked })
           }
-          className="size-4 accent-cyan-400"
+          className="mt-0.5 size-4 accent-violet-400"
         />
-        <span>
-          <span className="block text-sm font-medium text-white">Include AI explanation</span>
-          <span className="block text-xs text-slate-500">
-            Adds human-readable explanations after deterministic scoring.
+        <Bot className="mt-0.5 size-4 shrink-0 text-violet-300" />
+        <span className="min-w-0">
+          <span className="block text-sm font-semibold text-white">Include AI explanation</span>
+          <span className="mt-1 block text-xs leading-5 text-slate-500">
+            Adds explanations after scoring. This may take a few extra seconds.
           </span>
         </span>
       </label>
 
       <Button
         type="button"
-        className="mt-6 w-full"
+        className="mt-6 w-full py-3.5"
         disabled={isLoading || !value.laneEnemy}
         onClick={onSubmit}
       >
@@ -161,6 +200,6 @@ export default function DraftForm({
           </>
         )}
       </Button>
-    </section>
+    </SectionCard>
   )
 }
