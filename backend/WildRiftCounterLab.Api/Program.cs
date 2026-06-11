@@ -29,6 +29,9 @@ public class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; });
 
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        builder.WebHost.UseUrls($"http://*:{port}");
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
@@ -94,6 +97,8 @@ public class Program
 
             DbSeeder.Seed(db);
         }
+
+        app.UseHealthChecks("/health");
 
         app.UseExceptionHandler(errorApp =>
         {

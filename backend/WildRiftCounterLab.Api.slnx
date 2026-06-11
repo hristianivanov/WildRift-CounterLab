@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path="railway.toml" />
   </Folder>
   <Project Path="WildRiftCounterLab.Api/WildRiftCounterLab.Api.csproj" />
   <Project Path="WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj" />

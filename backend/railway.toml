@@ -1,9 +1,8 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+builder = "dockerfile"
+dockerfilePath = "./WildRiftCounterLab.Api/Dockerfile"
 
 [deploy]
-healthcheckPath = "/api/health"
-healthcheckTimeout = 30
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3
+startCommand = "dotnet WildRiftCounterLab.Api.dll" 
+restartPolicyType = "always"
+healthcheckPath = "/health"
