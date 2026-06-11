@@ -20,7 +20,10 @@ No database password is stored in tracked configuration. Apply migrations when s
 
 ```powershell
 cd backend
+dotnet tool restore
+$env:ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=wildriftcounterlab;Username=postgres;Password=YOUR_PASSWORD"
 dotnet ef database update --project WildRiftCounterLab.Infrastructure --startup-project WildRiftCounterLab.Api
+Remove-Item Env:ConnectionStrings__DefaultConnection
 ```
 
 The API runs its idempotent seeder at startup. Existing user-created rows are preserved, while missing initial champions and matchup rules are added.

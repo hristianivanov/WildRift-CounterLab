@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -32,10 +33,17 @@ public class Program
         {
             options.AddPolicy("Frontend", policy =>
             {
-                policy
-                    .WithOrigins("http://localhost:5173", "https://localhost:5173")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                var allowedOrigins = builder.Configuration
+                    .GetSection("Frontend:AllowedOrigins")
+                    .Get<string[]>();
+
+                if (allowedOrigins is { Length: > 0 })
+                {
+                    policy
+                        .WithOrigins(allowedOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                }
             });
         });
 
@@ -78,6 +86,12 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup"))
+            {
+                db.Database.Migrate();
+            }
+
             DbSeeder.Seed(db);
         }
 

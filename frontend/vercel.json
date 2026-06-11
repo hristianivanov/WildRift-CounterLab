@@ -1,0 +1,5 @@
+{
+  "buildCommand": "corepack pnpm run build",
+  "outputDirectory": "dist",
+  "installCommand": "corepack pnpm install"
+}

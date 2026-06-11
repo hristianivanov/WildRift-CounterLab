@@ -12,6 +12,7 @@
 - Standardized errors, Swagger, CORS, and health endpoint
 - Responsive React draft interface
 - Application unit tests and API integration tests
+- Vercel, Railway/Render, and Supabase deployment configuration
 
 ## Next
 

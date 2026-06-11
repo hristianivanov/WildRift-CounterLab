@@ -18,6 +18,9 @@ public class ApiWebApplicationFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Production");
+        builder.UseSetting(
+            "ConnectionStrings:DefaultConnection",
+            "Host=localhost;Database=integration-tests;Username=integration-tests");
         builder.ConfigureLogging(logging => logging.ClearProviders());
 
         builder.ConfigureServices(services =>

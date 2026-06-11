@@ -1,0 +1,7 @@
+.vs
+**/bin
+**/obj
+**/*.user
+**/*.suo
+WildRiftCounterLab.Api.Tests
+WildRiftCounterLab.Application.Tests
