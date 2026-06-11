@@ -1,8 +1,7 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "./WildRiftCounterLab.Api/Dockerfile"
+dockerfilePath = "./Dockerfile"
 
 [deploy]
-startCommand = "dotnet WildRiftCounterLab.Api.dll" 
 restartPolicyType = "always"
 healthcheckPath = "/health"

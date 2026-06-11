@@ -32,6 +32,8 @@ public class Program
         var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
         builder.WebHost.UseUrls($"http://*:{port}");
 
+        builder.Services.AddHealthChecks();
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
@@ -85,6 +87,9 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseHttpsRedirection();
+
 
         using (var scope = app.Services.CreateScope())
         {
