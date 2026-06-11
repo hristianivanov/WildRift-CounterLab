@@ -33,6 +33,17 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(103, 232, 249, 0.85);
+  outline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+}
+
 ::selection {
   color: #ecfeff;
   background: rgba(34, 211, 238, 0.28);

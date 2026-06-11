@@ -2,6 +2,7 @@ import { Bot, Info, LoaderCircle, Sparkles, X } from 'lucide-react'
 
 import type { Champion, DraftRecommendationRequest } from '../../types'
 import Button from '../common/Button'
+import ChampionPortrait from '../common/ChampionPortrait'
 import SectionCard from '../common/SectionCard'
 
 const roles = ['Baron', 'Jungle', 'Mid', 'Dragon', 'Support']
@@ -74,6 +75,8 @@ export default function DraftForm({
               key={role}
               type="button"
               onClick={() => onChange({ ...value, role })}
+              aria-pressed={value.role === role}
+              aria-label={`Select ${role} role`}
               className={`rounded-xl border px-2 py-2.5 text-xs font-semibold transition ${
                 value.role === role
                   ? 'border-cyan-300/50 bg-cyan-300/15 text-cyan-100 shadow-sm shadow-cyan-500/10'
@@ -110,6 +113,20 @@ export default function DraftForm({
             ))}
           </select>
         </label>
+        {value.laneEnemy && (
+          <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/8 bg-black/15 p-2.5">
+            <ChampionPortrait
+              championName={value.laneEnemy}
+              className="size-10 rounded-xl border border-white/10 text-xs"
+            />
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                Lane opponent
+              </p>
+              <p className="truncate text-sm font-semibold text-slate-200">{value.laneEnemy}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-6">
@@ -129,9 +146,11 @@ export default function DraftForm({
                 key={enemy}
                 type="button"
                 onClick={() => toggleEnemy(enemy)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20"
+                aria-label={`Remove ${enemy} from enemy team`}
+                className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-cyan-300/25 bg-cyan-300/10 py-1 pr-2.5 pl-1 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20"
               >
-                {enemy}
+                <ChampionPortrait championName={enemy} className="size-6 rounded-md text-[8px]" />
+                <span className="truncate">{enemy}</span>
                 <X className="size-3" />
               </button>
             ))}
@@ -149,7 +168,9 @@ export default function DraftForm({
                 type="button"
                 disabled={unavailable || (!selected && value.enemyTeam.length >= 4)}
                 onClick={() => toggleEnemy(champion.name)}
-                className={`rounded-lg border px-3 py-1.5 text-xs transition ${
+                aria-pressed={selected}
+                aria-label={`${selected ? 'Remove' : 'Add'} ${champion.name} ${selected ? 'from' : 'to'} enemy team`}
+                className={`inline-flex items-center gap-1.5 rounded-lg border py-1 pr-2.5 pl-1 text-xs transition ${
                   selected
                     ? 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
                     : selectedEnemies.has(champion.name)
@@ -157,6 +178,10 @@ export default function DraftForm({
                       : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/25 hover:text-white'
                 } disabled:cursor-not-allowed disabled:opacity-40`}
               >
+                <ChampionPortrait
+                  championName={champion.name}
+                  className="size-6 rounded-md text-[8px]"
+                />
                 {champion.name}
               </button>
             )

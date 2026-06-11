@@ -32,13 +32,13 @@ export default function DraftPage() {
 
   return (
     <PageShell>
-      <header className="mb-8 overflow-hidden rounded-[32px] border border-white/8 bg-gradient-to-br from-slate-900/75 via-slate-900/35 to-cyan-950/20 px-5 py-8 shadow-2xl shadow-black/20 sm:px-8 lg:px-10 lg:py-10">
+      <header className="mb-6 overflow-hidden rounded-[24px] border border-white/8 bg-gradient-to-br from-slate-900/75 via-slate-900/35 to-cyan-950/20 px-4 py-7 shadow-2xl shadow-black/20 sm:mb-8 sm:rounded-[32px] sm:px-8 sm:py-8 lg:px-10 lg:py-10">
         <div className="max-w-4xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200">
             <FlaskConical className="size-3.5" />
             Deterministic draft intelligence
           </div>
-          <h1 className="max-w-3xl text-4xl font-black tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+          <h1 className="max-w-3xl text-3xl font-black tracking-[-0.04em] text-white min-[390px]:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
             Find the right answer
             <span className="block bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-300 bg-clip-text text-transparent">
               before draft locks.
@@ -63,7 +63,7 @@ export default function DraftPage() {
         </div>
       </header>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(330px,0.72fr)_minmax(0,1.35fr)] xl:gap-8">
+      <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(310px,0.72fr)_minmax(0,1.35fr)] xl:grid-cols-[minmax(350px,0.72fr)_minmax(0,1.35fr)] xl:gap-8">
         <DraftForm
           champions={champions}
           value={draft}

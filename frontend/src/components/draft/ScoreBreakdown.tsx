@@ -20,13 +20,16 @@ export default function ScoreBreakdown({ breakdown }: ScoreBreakdownProps) {
   const maxValue = Math.max(...categories.map(([, score]) => Math.abs(score)), 1)
 
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
+    <div
+      className="grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:grid-cols-3 2xl:grid-cols-6"
+      aria-label="Recommendation score breakdown"
+    >
       {categories.map(([label, score]) => {
         const width = Math.max((Math.abs(score) / maxValue) * 100, score === 0 ? 0 : 10)
         const positive = score >= 0
 
         return (
-          <div key={label} className="rounded-xl border border-white/8 bg-black/20 p-3">
+          <div key={label} className="min-w-0 rounded-xl border border-white/8 bg-black/20 p-3">
             <div className="flex items-center justify-between gap-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 {label}

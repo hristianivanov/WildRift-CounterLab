@@ -1,22 +1,15 @@
-using System;
-using System.Linq;
+namespace WildRiftCounterLab.Api;
 
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-using WildRiftCounterLab.Application;
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
-using WildRiftCounterLab.Infrastructure;
-using WildRiftCounterLab.Infrastructure.Data;
-using WildRiftCounterLab.Infrastructure.Seed;
-
-namespace WildRiftCounterLab.Api;
+using Application;
+using Application.DTOs;
+using Application.Exceptions;
+using Infrastructure;
+using Infrastructure.Data;
+using Infrastructure.Seed;
 
 public class Program
 {
