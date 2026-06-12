@@ -202,7 +202,7 @@ export default function DraftForm({
         <span className="min-w-0">
           <span className="block text-sm font-semibold text-white">Include AI explanation</span>
           <span className="mt-1 block text-xs leading-5 text-slate-500">
-            Adds explanations after scoring. This may take a few extra seconds.
+            Recommendations appear first, then AI analysis fills in one card at a time.
           </span>
         </span>
       </label>

@@ -105,7 +105,8 @@ public class DraftServiceTests
             IncludeAiExplanation = false
         });
 
-        Assert.Equal(0, aiProvider.CallCount);
+        Assert.Equal(0, aiProvider.BatchCallCount);
+        Assert.Equal(0, aiProvider.SingleCallCount);
         Assert.All(response.Recommendations, recommendation =>
             Assert.Null(recommendation.AiExplanation));
     }
@@ -123,14 +124,15 @@ public class DraftServiceTests
             IncludeAiExplanation = true
         });
 
-        Assert.Equal(3, aiProvider.CallCount);
+        Assert.Equal(1, aiProvider.BatchCallCount);
+        Assert.Equal(0, aiProvider.SingleCallCount);
         Assert.All(response.Recommendations.Take(3), recommendation =>
             Assert.Equal($"Explanation for {recommendation.Champion}", recommendation.AiExplanation));
         Assert.All(response.Recommendations.Skip(3), recommendation =>
             Assert.Null(recommendation.AiExplanation));
 
         var firstRecommendation = response.Recommendations[0];
-        var firstRequest = aiProvider.Requests[0];
+        var firstRequest = aiProvider.BatchRequests[0].First();
 
         Assert.Equal("Baron", firstRequest.Role);
         Assert.Equal("Darius", firstRequest.LaneEnemy);
@@ -139,6 +141,26 @@ public class DraftServiceTests
         Assert.Equal(firstRecommendation.Score, firstRequest.Score);
         Assert.Equal(firstRecommendation.Reasons, firstRequest.Reasons);
         Assert.Equal(firstRecommendation.Plan, firstRequest.Plan);
+    }
+
+    [Fact]
+    public async Task GetRecommendations_UsesUnavailableTextWhenBatchExplanationIsMissing()
+    {
+        var aiProvider = new FakeAiExplanationProvider(omittedChampion: "Malphite");
+        var service = CreateService(aiProvider);
+
+        var response = await service.GetRecommendations(new DraftRecommendationRequestDto
+        {
+            Role = "Baron",
+            LaneEnemy = "Darius",
+            IncludeAiExplanation = true
+        });
+
+        var malphite = Assert.Single(response.Recommendations, recommendation =>
+            recommendation.Champion == "Malphite");
+
+        Assert.Equal(1, aiProvider.BatchCallCount);
+        Assert.Equal("AI explanation unavailable.", malphite.AiExplanation);
     }
 
     [Fact]
@@ -154,7 +176,7 @@ public class DraftServiceTests
             IncludeAiExplanation = true
         });
 
-        Assert.Equal(3, aiProvider.CallCount);
+        Assert.Equal(1, aiProvider.BatchCallCount);
         Assert.All(response.Recommendations.Take(3), recommendation =>
             Assert.Equal("AI explanation unavailable.", recommendation.AiExplanation));
         Assert.Equal("Malphite", response.Recommendations[0].Champion);
@@ -337,20 +359,23 @@ public class DraftServiceTests
     private sealed class FakeAiExplanationProvider : IAiExplanationProvider
     {
         private readonly bool _shouldFail;
+        private readonly string? _omittedChampion;
 
-        public FakeAiExplanationProvider(bool shouldFail = false)
+        public FakeAiExplanationProvider(bool shouldFail = false, string? omittedChampion = null)
         {
             _shouldFail = shouldFail;
+            _omittedChampion = omittedChampion;
         }
 
-        public int CallCount { get; private set; }
+        public int SingleCallCount { get; private set; }
 
-        public List<AiExplanationRequestDto> Requests { get; } = new();
+        public int BatchCallCount { get; private set; }
+
+        public List<IReadOnlyCollection<AiExplanationRequestDto>> BatchRequests { get; } = new();
 
         public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
         {
-            CallCount++;
-            Requests.Add(request);
+            SingleCallCount++;
 
             if (_shouldFail)
             {
@@ -361,6 +386,30 @@ public class DraftServiceTests
             {
                 Explanation = $"Explanation for {request.Champion}"
             });
+        }
+
+        public Task<IReadOnlyDictionary<string, string>> ExplainBatchAsync(
+            IReadOnlyCollection<AiExplanationRequestDto> requests,
+            CancellationToken cancellationToken = default)
+        {
+            BatchCallCount++;
+            BatchRequests.Add(requests);
+
+            if (_shouldFail)
+            {
+                throw new InvalidOperationException("AI unavailable.");
+            }
+
+            IReadOnlyDictionary<string, string> explanations = requests
+                .Where(request => !request.Champion.Equals(
+                    _omittedChampion,
+                    StringComparison.OrdinalIgnoreCase))
+                .ToDictionary(
+                    request => request.Champion,
+                    request => $"Explanation for {request.Champion}",
+                    StringComparer.OrdinalIgnoreCase);
+
+            return Task.FromResult(explanations);
         }
     }
 }

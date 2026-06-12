@@ -9,11 +9,13 @@ import ScoreBreakdown from './ScoreBreakdown'
 interface RecommendationCardProps {
   recommendation: DraftRecommendation
   rank: number
+  isAiLoading?: boolean
 }
 
 export default function RecommendationCard({
   recommendation,
   rank,
+  isAiLoading = false,
 }: RecommendationCardProps) {
   return (
     <motion.article
@@ -102,7 +104,7 @@ export default function RecommendationCard({
         </div>
       </div>
 
-      {recommendation.aiExplanation && (
+      {(isAiLoading || recommendation.aiExplanation) && (
         <div className="mt-4 rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-300/[0.1] to-cyan-300/[0.04] p-4 sm:p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-violet-100">
@@ -114,9 +116,19 @@ export default function RecommendationCard({
               Explains engine result
             </span>
           </div>
-          <p className="whitespace-pre-line text-sm leading-6 text-violet-100/75">
-            {recommendation.aiExplanation}
-          </p>
+          {isAiLoading ? (
+            <div
+              className="flex items-center gap-3 text-sm text-violet-100/75"
+              aria-live="polite"
+            >
+              <span className="size-2 animate-pulse rounded-full bg-violet-300" />
+              Generating AI analysis...
+            </div>
+          ) : (
+            <p className="whitespace-pre-line text-sm leading-6 text-violet-100/75">
+              {recommendation.aiExplanation}
+            </p>
+          )}
         </div>
       )}
     </motion.article>

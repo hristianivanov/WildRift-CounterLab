@@ -82,6 +82,29 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
     }
 
     [Fact]
+    public async Task AiExplain_UsesStandaloneSingleExplanationEndpoint()
+    {
+        var response = await _client.PostAsJsonAsync(
+            "/api/ai/explain",
+            new AiExplanationRequestDto
+            {
+                Role = "Baron",
+                LaneEnemy = "Darius",
+                Champion = "Malphite",
+                Score = 84,
+                Reasons = new List<string> { "Armor scaling helps against physical damage" },
+                Plan = "Play short trades early."
+            });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var explanation = await response.Content.ReadFromJsonAsync<AiExplanationResponseDto>();
+
+        Assert.NotNull(explanation);
+        Assert.Equal("Explanation for Malphite", explanation.Explanation);
+    }
+
+    [Fact]
     public async Task Recommendations_InvalidRole_ReturnsStandardBadRequest()
     {
         var response = await _client.PostAsJsonAsync(

@@ -123,11 +123,14 @@ public class DraftService
 
         if (request.IncludeAiExplanation)
         {
-            foreach (var recommendation in recommendations.Take(AiExplanationLimit))
+            var recommendationsToExplain = recommendations
+                .Take(AiExplanationLimit)
+                .ToList();
+
+            try
             {
-                try
-                {
-                    var response = await _aiExplanationProvider.ExplainAsync(
+                var explanationRequests = recommendationsToExplain
+                    .Select(recommendation =>
                         new AiExplanationRequestDto
                         {
                             Role = role,
@@ -140,11 +143,24 @@ public class DraftService
                             Score = recommendation.Score,
                             Reasons = recommendation.Reasons,
                             Plan = recommendation.Plan
-                        });
+                        })
+                    .ToList();
 
-                    recommendation.AiExplanation = response.Explanation;
+                var explanations = await _aiExplanationProvider.ExplainBatchAsync(explanationRequests);
+
+                foreach (var recommendation in recommendationsToExplain)
+                {
+                    recommendation.AiExplanation = explanations.TryGetValue(
+                        recommendation.Champion,
+                        out var explanation)
+                        && !string.IsNullOrWhiteSpace(explanation)
+                            ? explanation
+                            : "AI explanation unavailable.";
                 }
-                catch (Exception)
+            }
+            catch (Exception)
+            {
+                foreach (var recommendation in recommendationsToExplain)
                 {
                     recommendation.AiExplanation = "AI explanation unavailable.";
                 }

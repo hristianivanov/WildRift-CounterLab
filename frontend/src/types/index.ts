@@ -38,6 +38,20 @@ export interface DraftRecommendationResponse {
   recommendations: DraftRecommendation[]
 }
 
+export interface AiExplanationRequest {
+  role: string
+  laneEnemy: string
+  enemyTeam: string[]
+  champion: string
+  score: number
+  reasons: string[]
+  plan: string
+}
+
+export interface AiExplanationResponse {
+  explanation: string
+}
+
 export interface ApiError {
   error: string
   details?: string | null

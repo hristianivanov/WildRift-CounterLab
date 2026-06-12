@@ -28,7 +28,7 @@ const productSignals = [
 export default function DraftPage() {
   const [draft, setDraft] = useState(initialDraft)
   const { champions, usingFallback } = useChampions()
-  const { analyzeDraft, error, isLoading, result } = useDraftAnalysis()
+  const { aiLoadingChampions, analyzeDraft, error, isLoading, result } = useDraftAnalysis()
 
   return (
     <PageShell>
@@ -113,6 +113,7 @@ export default function DraftPage() {
                     key={recommendation.champion}
                     recommendation={recommendation}
                     rank={index}
+                    isAiLoading={aiLoadingChampions.has(recommendation.champion)}
                   />
                 ))}
               </motion.div>

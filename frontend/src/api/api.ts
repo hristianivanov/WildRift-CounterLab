@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+export const DEFAULT_API_TIMEOUT_MS = 30_000
+export const AI_EXPLANATION_TIMEOUT_MS = 120_000
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:5069/api'
 
 export const configuredApiBaseUrl = apiBaseUrl
@@ -9,7 +12,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000,
+  timeout: DEFAULT_API_TIMEOUT_MS,
 })
 
 export function getApiErrorMessage(error: unknown): string {

@@ -56,5 +56,17 @@ public class ApiWebApplicationFactory : WebApplicationFactory<Program>
                 Explanation = $"Explanation for {request.Champion}"
             });
         }
+
+        public Task<IReadOnlyDictionary<string, string>> ExplainBatchAsync(
+            IReadOnlyCollection<AiExplanationRequestDto> requests,
+            CancellationToken cancellationToken = default)
+        {
+            IReadOnlyDictionary<string, string> explanations = requests.ToDictionary(
+                request => request.Champion,
+                request => $"Explanation for {request.Champion}",
+                StringComparer.OrdinalIgnoreCase);
+
+            return Task.FromResult(explanations);
+        }
     }
 }

@@ -5,4 +5,8 @@ namespace WildRiftCounterLab.Application.Interfaces;
 public interface IAiExplanationProvider
 {
     Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request);
+
+    Task<IReadOnlyDictionary<string, string>> ExplainBatchAsync(
+        IReadOnlyCollection<AiExplanationRequestDto> requests,
+        CancellationToken cancellationToken = default);
 }
