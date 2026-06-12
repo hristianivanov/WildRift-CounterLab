@@ -40,7 +40,7 @@ Use Supabase's direct database connection for migrations and for a persistent ba
 | Variable | Required | Example |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | Yes | `https://YOUR-BACKEND-DOMAIN/api` |
-| `VITE_AI_ENABLED` | Optional | `true` enables AI in production; defaults to disabled |
+| `VITE_AI_ENABLED` | Optional | Defaults to `true`; set `false` to disable AI for demo stability |
 
 Vite embeds this value during the build. Redeploy the frontend after changing it.
 
@@ -135,7 +135,7 @@ The frontend includes `frontend/vercel.json`.
 1. Import the repository into Vercel.
 2. Set the Vercel Root Directory to `frontend`.
 3. Add `VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api`.
-4. Add `VITE_AI_ENABLED=true` only after the selected backend AI provider is configured and verified.
+4. AI is enabled by default. Set `VITE_AI_ENABLED=false` only when temporarily disabling AI for demo stability.
 5. Deploy.
 6. Copy the final Vercel origin into the backend's `Frontend__AllowedOrigins__0`.
 7. Redeploy/restart the backend after changing CORS configuration.
