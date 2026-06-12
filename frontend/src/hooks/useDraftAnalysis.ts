@@ -14,9 +14,11 @@ export function useDraftAnalysis() {
   const [aiLoadingChampions, setAiLoadingChampions] = useState<Set<string>>(new Set())
   const [error, setError] = useState<string | null>(null)
   const analysisId = useRef(0)
+  const aiGenerationId = useRef(0)
 
   async function analyzeDraft(request: DraftRecommendationRequest) {
     const currentAnalysisId = ++analysisId.current
+    const currentAiGenerationId = ++aiGenerationId.current
     const shouldGenerateAi = request.includeAiExplanation
 
     setIsLoading(true)
@@ -41,10 +43,12 @@ export function useDraftAnalysis() {
         return
       }
 
-      const recommendationsToExplain = deterministicResult.recommendations.slice(0, 1)
+      const recommendationsToExplain = deterministicResult.recommendations.slice(0, 3)
       setAiLoadingChampions(new Set(recommendationsToExplain.map(({ champion }) => champion)))
 
-      for (const recommendation of recommendationsToExplain) {
+      async function explainRecommendation(
+        recommendation: DraftRecommendationResponse['recommendations'][number],
+      ) {
         let explanation = 'AI explanation unavailable.'
 
         try {
@@ -69,7 +73,10 @@ export function useDraftAnalysis() {
           // Keep the card-level fallback and continue generating the remaining explanations.
         }
 
-        if (analysisId.current !== currentAnalysisId) {
+        if (
+          analysisId.current !== currentAnalysisId ||
+          aiGenerationId.current !== currentAiGenerationId
+        ) {
           return
         }
 
@@ -91,6 +98,29 @@ export function useDraftAnalysis() {
           return nextChampions
         })
       }
+
+      const queue = [...recommendationsToExplain]
+
+      async function runWorker() {
+        while (queue.length > 0) {
+          const recommendation = queue.shift()
+
+          if (!recommendation) {
+            return
+          }
+
+          await explainRecommendation(recommendation)
+
+          if (
+            analysisId.current !== currentAnalysisId ||
+            aiGenerationId.current !== currentAiGenerationId
+          ) {
+            return
+          }
+        }
+      }
+
+      await Promise.all([runWorker(), runWorker()])
     } catch (requestError) {
       if (analysisId.current === currentAnalysisId) {
         setError(getApiErrorMessage(requestError))
@@ -102,5 +132,10 @@ export function useDraftAnalysis() {
     }
   }
 
-  return { aiLoadingChampions, analyzeDraft, error, isLoading, result }
+  function cancelAiAnalysis() {
+    aiGenerationId.current++
+    setAiLoadingChampions(new Set())
+  }
+
+  return { aiLoadingChampions, analyzeDraft, cancelAiAnalysis, error, isLoading, result }
 }

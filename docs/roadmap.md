@@ -5,7 +5,7 @@
 - Clean Architecture backend
 - Deterministic multi-category recommendation pipeline
 - Rule/tag-based reasons and plans
-- Optional Gemini explanations after ranking
+- Optional cached AI explanations with configurable GroqCloud or Gemini providers
 - PostgreSQL and EF Core persistence
 - Idempotent initial champion and matchup-rule dataset
 - Champion and matchup-rule CRUD APIs
@@ -26,4 +26,4 @@
 - Add authentication before exposing administration workflows
 - Build champion and matchup-rule administration UI
 - Add patch-aware data ingestion with explicit versioning
-- Add caching only when profiling demonstrates a need
+- Add distributed caching only if future scale and profiling justify it

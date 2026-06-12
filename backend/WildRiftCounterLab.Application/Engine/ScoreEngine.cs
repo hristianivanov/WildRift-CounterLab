@@ -5,7 +5,7 @@ namespace WildRiftCounterLab.Application.Engine;
 
 public class ScoreEngine
 {
-    private const int BaseScore = 50;
+    private const int BaseScore = 40;
 
     public ScoreBreakdownDto CalculateScore(
         Champion champion,
@@ -15,7 +15,7 @@ public class ScoreEngine
         IReadOnlyCollection<MatchupRule> rules)
     {
         var championTags = champion.Tags.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var enemyTags = enemies.SelectMany(enemy => enemy.Tags).ToList();
+        var profile = EnemyDraftProfile.Create(enemies);
 
         var laneScore = rules
             .Where(rule =>
@@ -25,16 +25,16 @@ public class ScoreEngine
 
         if (championTags.Contains("lane-bully") && HasTag(laneEnemy, "scaling"))
         {
-            laneScore += 6;
+            laneScore += 7;
         }
 
         laneScore = Math.Clamp(laneScore, -30, 30);
 
-        var teamScore = CalculateTeamScore(championTags, enemyTags);
+        var teamScore = CalculateTeamScore(championTags, profile);
         var roleFitScore = champion.Roles.Contains(role, StringComparer.OrdinalIgnoreCase) ? 8 : 0;
-        var safetyScore = CalculateSafetyScore(championTags, enemyTags);
-        var scalingScore = CalculateScalingScore(championTags, enemyTags);
-        var utilityScore = CalculateUtilityScore(championTags, enemyTags);
+        var safetyScore = CalculateSafetyScore(championTags, profile);
+        var scalingScore = CalculateScalingScore(championTags, profile);
+        var utilityScore = CalculateUtilityScore(championTags, profile);
 
         return new ScoreBreakdownDto
         {
@@ -52,80 +52,95 @@ public class ScoreEngine
         };
     }
 
-    private static int CalculateTeamScore(HashSet<string> championTags, List<string> enemyTags)
+    private static int CalculateTeamScore(HashSet<string> championTags, EnemyDraftProfile profile)
     {
         var score = 0;
 
+        if (championTags.Contains("anti-ad"))
+        {
+            score += profile.HeavyAd ? 10 : 2;
+        }
+
+        if (championTags.Contains("anti-ap"))
+        {
+            score += profile.HeavyAp ? 10 : 2;
+        }
+
         if (championTags.Contains("tank-shred"))
         {
-            score += Math.Min(12, CountTags(enemyTags, "tank", "sustain", "juggernaut") * 3);
+            score += profile.TankHeavy
+                ? 12
+                : Math.Min(8, profile.DurableEnemyCount * 2);
         }
 
         if (championTags.Contains("true-damage"))
         {
-            score += Math.Min(8, CountTags(enemyTags, "tank", "fighter") * 2);
+            score += profile.TankHeavy
+                ? 8
+                : Math.Min(6, profile.DurableEnemyCount * 2);
         }
 
-        if (championTags.Contains("anti-dash"))
-        {
-            score += Math.Min(12, CountTags(enemyTags, "mobile") * 4);
-        }
-
-        if (championTags.Contains("anti-ad"))
-        {
-            score += Math.Min(10, CountTags(enemyTags, "ad", "marksman", "fighter") * 2);
-        }
-
-        return score;
+        return Math.Clamp(score, 0, 18);
     }
 
-    private static int CalculateSafetyScore(HashSet<string> championTags, List<string> enemyTags)
+    private static int CalculateSafetyScore(
+        HashSet<string> championTags,
+        EnemyDraftProfile profile)
     {
         var score = 0;
 
         if (championTags.Contains("safe"))
         {
-            score += CountTags(enemyTags, "pick", "burst") > 0 ? 8 : 4;
+            score += profile.BurstOrPickComp ? 8 : 3;
         }
 
         if (championTags.Contains("sustain"))
         {
-            score += 3;
+            score += profile.PokeComp ? 7 : 2;
         }
 
-        return score;
+        return Math.Clamp(score, 0, 10);
     }
 
-    private static int CalculateScalingScore(HashSet<string> championTags, List<string> enemyTags)
+    private static int CalculateScalingScore(
+        HashSet<string> championTags,
+        EnemyDraftProfile profile)
     {
         if (!championTags.Contains("scaling"))
         {
             return 0;
         }
 
-        return CountTags(enemyTags, "scaling") > 0 ? 8 : 4;
+        return profile.ScalingComp ? 7 : 3;
     }
 
-    private static int CalculateUtilityScore(HashSet<string> championTags, List<string> enemyTags)
+    private static int CalculateUtilityScore(
+        HashSet<string> championTags,
+        EnemyDraftProfile profile)
     {
         var score = 0;
 
         if (championTags.Contains("engage"))
         {
-            score += Math.Min(12, CountTags(enemyTags, "marksman", "mage", "immobile") * 3);
+            score += profile.SquishyBackline || profile.ImmobileCarries ? 8 : 3;
         }
 
         if (championTags.Contains("peel"))
         {
-            score += Math.Min(10, CountTags(enemyTags, "assassin", "dive") * 5);
+            score += profile.DiveComp ? 9 : 2;
         }
 
-        return score;
-    }
+        if (championTags.Contains("anti-dash"))
+        {
+            score += profile.MobileComp ? 9 : 2;
+        }
 
-    private static int CountTags(IEnumerable<string> tags, params string[] desiredTags)
-    {
-        return tags.Count(tag => desiredTags.Contains(tag, StringComparer.OrdinalIgnoreCase));
+        if (championTags.Contains("teamfight"))
+        {
+            score += profile.GroupedFightComp ? 7 : 3;
+        }
+
+        return Math.Clamp(score, 0, 16);
     }
 
     private static bool HasTag(Champion champion, string tag)

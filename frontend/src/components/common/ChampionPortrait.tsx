@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getChampionImageUrl, getChampionInitials } from '../../utils/championImages'
 
@@ -14,6 +14,10 @@ export default function ChampionPortrait({
   imageClassName = '',
 }: ChampionPortraitProps) {
   const [imageFailed, setImageFailed] = useState(false)
+
+  useEffect(() => {
+    setImageFailed(false)
+  }, [championName])
 
   return (
     <span

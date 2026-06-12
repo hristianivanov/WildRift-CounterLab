@@ -40,7 +40,7 @@ Use Supabase's direct database connection for migrations and for a persistent ba
 | Variable | Required | Example |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | Yes | `https://YOUR-BACKEND-DOMAIN/api` |
-| `VITE_AI_ENABLED` | Optional | Defaults to `true`; set `false` to disable AI for demo stability |
+| `VITE_AI_ENABLED` | Optional | Set `true` to expose AI analysis; set `false` to disable it for demo stability |
 
 Vite embeds this value during the build. Redeploy the frontend after changing it.
 
@@ -66,8 +66,9 @@ The repository includes `backend/railway.toml` and `backend/Dockerfile`. Both ar
 7. Add every required backend environment variable from the table above.
 8. Set `Frontend__AllowedOrigins__0` to the final Vercel origin. It can temporarily use the first Vercel deployment URL and be updated later.
 9. For the first deployment, set `Database__ApplyMigrationsOnStartup=true` only when the configured connection supports migrations. Otherwise, run the manual migration command first.
-10. Deploy and wait for Railway's `/api/health` health check to pass.
-11. Verify `/api/champions` returns seeded champion data.
+10. Deploy and wait for Railway's internal `/health` health check to pass.
+11. Confirm the public `GET /api/health` endpoint returns `{"status":"ok"}`.
+12. Verify `/api/champions` returns seeded champion data.
 
 The Railway build log should contain Docker build stages from `mcr.microsoft.com/dotnet/sdk:8.0`. If it shows Railpack or runs plain `dotnet restore`, the service root/builder settings are incorrect or the deployment is using a commit that does not contain `backend/railway.toml`.
 
@@ -81,7 +82,7 @@ The repository includes `render.yaml` and uses the same Dockerfile.
 2. Enter the secret environment variables marked `sync: false`.
 3. Set `Frontend__AllowedOrigins__0` to the Vercel origin.
 4. Set `Database__ApplyMigrationsOnStartup=true` for the first deployment only when the configured connection supports migrations. Otherwise, run the manual migration command first.
-5. Deploy and confirm the `/api/health` health check passes.
+5. Deploy and confirm the public `/api/health` health check passes.
 
 ## 4. Verify Production Migrations
 
@@ -124,7 +125,7 @@ Gemini__ApiKey=YOUR_GEMINI_API_KEY
 Gemini__Model=gemini-2.5-flash
 ```
 
-Verify by submitting a draft recommendation request with `includeAiExplanation: true`. The top recommendations should contain generated explanations rather than `AI explanation unavailable.`
+Verify the provider with `POST /api/ai/explain`, then complete the browser flow with AI enabled. The frontend requests explanations asynchronously after deterministic recommendations render.
 
 The configured provider never affects scores or ranking. Successful explanations are cached in PostgreSQL. If the provider is unavailable or rate-limited, deterministic recommendations still return with a safe fallback.
 
@@ -135,7 +136,7 @@ The frontend includes `frontend/vercel.json`.
 1. Import the repository into Vercel.
 2. Set the Vercel Root Directory to `frontend`.
 3. Add `VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api`.
-4. AI is enabled by default. Set `VITE_AI_ENABLED=false` only when temporarily disabling AI for demo stability.
+4. Set `VITE_AI_ENABLED=true` to expose AI analysis, or `false` to disable it for demo stability.
 5. Deploy.
 6. Copy the final Vercel origin into the backend's `Frontend__AllowedOrigins__0`.
 7. Redeploy/restart the backend after changing CORS configuration.

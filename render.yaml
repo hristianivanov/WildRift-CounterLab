@@ -14,7 +14,9 @@ services:
         sync: false
       - key: Frontend__AllowedOrigins__0
         sync: false
-      - key: Gemini__ApiKey
+      - key: Ai__Provider
+        value: Groq
+      - key: Groq__ApiKey
         sync: false
-      - key: Gemini__Model
-        value: gemini-2.5-flash
+      - key: Groq__Model
+        value: llama-3.1-8b-instant

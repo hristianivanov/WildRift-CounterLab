@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wild Rift Counter Lab uses Clean Architecture to keep recommendation logic deterministic, testable, and independent from PostgreSQL and Gemini.
+Wild Rift Counter Lab uses Clean Architecture to keep recommendation logic deterministic, testable, and independent from PostgreSQL and external AI providers.
 
 ```text
 Frontend -> Api -> Application -> Domain
@@ -43,7 +43,8 @@ Implements Application contracts:
 - EF Core `ApplicationDbContext`
 - PostgreSQL repositories
 - Idempotent database seeding
-- Gemini explanation provider
+- Cached AI explanation orchestration
+- Configurable GroqCloud and Gemini provider implementations
 
 ### Api
 
@@ -78,8 +79,8 @@ components -> types
 4. `ReasonEngine` creates rule/tag-based reasons.
 5. `PlanEngine` chooses a matchup plan or deterministic fallback.
 6. Recommendations are ranked and limited to the top five.
-7. When requested, Gemini explains only the top recommendations.
+7. When requested, the frontend asynchronously asks the configured provider to explain the top recommendations without blocking the main recommendation response.
 
 ## Why AI Does Not Decide Scores
 
-Generative model output can vary and is difficult to audit. Recommendation rankings therefore come entirely from database rules and deterministic scoring logic. AI receives the completed recommendation as context and produces a human-readable explanation only. AI failures cannot prevent deterministic recommendations from returning.
+Generative model output can vary and is difficult to audit. Recommendation rankings therefore come entirely from database rules and deterministic scoring logic. AI receives the completed recommendation as context and produces a human-readable explanation only. GroqCloud is the current production provider, while Gemini remains an optional alternative. AI failures cannot prevent deterministic recommendations from returning.

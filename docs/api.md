@@ -55,7 +55,7 @@ Returns ranked recommendations with score breakdowns, reasons, plans, and option
 
 ### `POST /api/ai/explain`
 
-Generates an explanation for a recommendation supplied by the caller. This endpoint does not calculate or alter recommendation scores.
+Generates an explanation for a recommendation supplied by the caller. The frontend uses this endpoint to enrich top recommendation cards asynchronously. This endpoint does not calculate or alter recommendation scores.
 
 ## Matchup Rules
 

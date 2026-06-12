@@ -4,6 +4,11 @@ Wild Rift Counter Lab is a full-stack draft assistant that recommends champion p
 
 > **Design principle:** the recommendation engine decides; AI explains.
 
+## Live Demo
+
+- Frontend: [wild-rift-app-mocha.vercel.app](https://wild-rift-app-mocha.vercel.app)
+- API health: replace `YOUR-BACKEND-DOMAIN` with the active Railway domain and open `https://YOUR-BACKEND-DOMAIN/api/health`
+
 ## Problem Solved
 
 Draft decisions involve more than a single counter matchup. A useful recommendation must also consider role fit, team composition, safety, scaling, and utility. Wild Rift Counter Lab combines those signals into transparent ranked recommendations with reasons and an actionable game plan.
@@ -56,7 +61,7 @@ Application contains the recommendation pipeline and contracts. Infrastructure i
 3. Calculate deterministic score categories.
 4. Build rule/tag-based reasons and plans.
 5. Rank and select the top recommendations.
-6. Optionally ask the configured AI provider to explain the already-completed result.
+6. Optionally enrich the top recommendations with asynchronous explanations from the configured AI provider.
 
 Groq and Gemini cannot change scores, ranking, reasons, plans, or score breakdowns.
 
@@ -89,15 +94,15 @@ The frontend separates API clients, hooks, reusable components, draft-specific c
 
 ## Screenshots
 
-Screenshot files will be added under `docs/screenshots/`.
+Portfolio screenshots will be added under `docs/screenshots/`.
 
-| Draft setup | Recommendation results |
+| Draft setup | Recommendations |
 | --- | --- |
-| _Placeholder_ | _Placeholder_ |
+| _Placeholder: desktop draft form_ | _Placeholder: ranked recommendation cards_ |
 
-| AI explanation | Score breakdown |
+| AI Analysis | Mobile layout |
 | --- | --- |
-| _Placeholder_ | _Placeholder_ |
+| _Placeholder: asynchronous AI explanation_ | _Placeholder: responsive draft workflow_ |
 
 ## Local Setup
 
@@ -115,7 +120,7 @@ corepack pnpm install
 corepack pnpm dev
 ```
 
-## Deployment
+## Deployment Summary
 
 The production target is:
 
@@ -153,9 +158,11 @@ cd backend
 dotnet restore
 dotnet build --warnaserror --configuration Release
 dotnet test
+```
 
+```powershell
 # Frontend
-cd ../frontend
+cd frontend
 corepack pnpm install
 corepack pnpm run lint
 corepack pnpm run build

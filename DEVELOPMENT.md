@@ -5,7 +5,7 @@
 - .NET 8 SDK
 - Node.js with Corepack/pnpm
 - PostgreSQL running locally
-- GroqCloud or Gemini API key for optional AI explanations
+- GroqCloud API key for the current provider, or a Gemini API key for the optional alternative
 
 ## PostgreSQL Setup
 
@@ -105,13 +105,13 @@ corepack pnpm run build
 8. Leave AI explanation off and click **Analyze Draft**.
 9. Confirm ranked cards render score breakdowns, reasons, and plans.
 10. Enable AI explanation and analyze again.
-11. Confirm AI explanations render on the top recommendations.
+11. Confirm asynchronous AI explanations render on the top three recommendations without blocking the deterministic cards.
 
 ## Common Issues
 
 ### CORS error
 
-The backend permits `http://localhost:5173` and `https://localhost:5173`. Run Vite on port `5173`, or update the named `Frontend` CORS policy for a deliberate alternate origin.
+The backend permits `http://localhost:5173` and `https://localhost:5173` in development. For a deployed frontend, set `Frontend__AllowedOrigins__0` to the exact HTTPS origin, without a trailing slash.
 
 ### Backend port mismatch
 

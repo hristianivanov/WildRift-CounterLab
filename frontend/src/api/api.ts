@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const DEFAULT_API_TIMEOUT_MS = 30_000
-export const AI_EXPLANATION_TIMEOUT_MS = 120_000
+export const AI_EXPLANATION_TIMEOUT_MS = 45_000
 export const AI_RATE_LIMIT_MESSAGE =
   'AI analysis is temporarily unavailable due to free-tier limits. Engine recommendations are still available.'
 

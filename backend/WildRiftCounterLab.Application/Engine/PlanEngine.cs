@@ -4,7 +4,10 @@ namespace WildRiftCounterLab.Application.Engine;
 
 public class PlanEngine
 {
-    public string BuildPlan(Champion champion, IReadOnlyCollection<MatchupRule> rules)
+    public string BuildPlan(
+        Champion champion,
+        IReadOnlyCollection<MatchupRule> rules,
+        IReadOnlyCollection<Champion>? enemies = null)
     {
         var plans = rules
             .Where(rule => rule.Champion.Equals(champion.Name, StringComparison.OrdinalIgnoreCase))
@@ -16,6 +19,33 @@ public class PlanEngine
         if (plans.Count > 0)
         {
             return string.Join(" ", plans);
+        }
+
+        var profile = EnemyDraftProfile.Create(enemies ?? Array.Empty<Champion>());
+
+        if (profile.PokeComp)
+        {
+            return "Preserve health through the enemy poke, avoid slow sieges, and engage when key ranged abilities are unavailable.";
+        }
+
+        if (profile.MobileComp)
+        {
+            return "Hold key control tools for enemy movement, avoid isolated chases, and force fights in constrained areas.";
+        }
+
+        if (profile.DiveComp)
+        {
+            return "Track enemy engage threats, stay close enough to protect carries, and punish divers after they commit.";
+        }
+
+        if (profile.TankHeavy)
+        {
+            return "Avoid wasting cooldowns on the frontline, preserve damage for extended fights, and focus priority targets when access opens.";
+        }
+
+        if (profile.ScalingComp)
+        {
+            return "Create early objective pressure, deny free scaling, and convert tempo advantages before late-game power spikes.";
         }
 
         if (champion.Tags.Contains("lane-bully", StringComparer.OrdinalIgnoreCase))

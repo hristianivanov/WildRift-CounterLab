@@ -29,7 +29,22 @@ const productSignals = [
 export default function DraftPage() {
   const [draft, setDraft] = useState(initialDraft)
   const { champions, usingFallback } = useChampions()
-  const { aiLoadingChampions, analyzeDraft, error, isLoading, result } = useDraftAnalysis()
+  const {
+    aiLoadingChampions,
+    analyzeDraft,
+    cancelAiAnalysis,
+    error,
+    isLoading,
+    result,
+  } = useDraftAnalysis()
+
+  function updateDraft(nextDraft: DraftRecommendationRequest) {
+    if (draft.includeAiExplanation && !nextDraft.includeAiExplanation) {
+      cancelAiAnalysis()
+    }
+
+    setDraft(nextDraft)
+  }
 
   return (
     <PageShell>
@@ -71,7 +86,7 @@ export default function DraftPage() {
           isLoading={isLoading}
           aiEnabled={aiEnabled}
           usingFallback={usingFallback}
-          onChange={setDraft}
+          onChange={updateDraft}
           onSubmit={() => void analyzeDraft(draft)}
         />
 
@@ -94,7 +109,7 @@ export default function DraftPage() {
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300/70">
                       Analysis complete
                     </p>
-                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                    <h2 className="mt-1 break-words text-2xl font-bold tracking-tight text-white sm:text-3xl">
                       {result.role} picks into {result.laneEnemy}
                     </h2>
                   </div>

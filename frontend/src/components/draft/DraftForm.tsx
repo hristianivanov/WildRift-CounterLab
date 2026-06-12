@@ -46,7 +46,7 @@ export default function DraftForm({
 
   return (
     <SectionCard className="p-5 md:p-7 lg:sticky lg:top-6">
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-6 flex min-w-0 items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
             Draft setup
@@ -159,7 +159,7 @@ export default function DraftForm({
           </div>
         )}
 
-        <div className="flex max-h-44 flex-wrap gap-2 overflow-y-auto pr-1">
+        <div className="flex max-h-44 min-w-0 flex-wrap gap-2 overflow-y-auto pr-1">
           {champions.map((champion) => {
             const selected = value.enemyTeam.includes(champion.name)
             const unavailable = champion.name === value.laneEnemy
@@ -172,7 +172,7 @@ export default function DraftForm({
                 onClick={() => toggleEnemy(champion.name)}
                 aria-pressed={selected}
                 aria-label={`${selected ? 'Remove' : 'Add'} ${champion.name} ${selected ? 'from' : 'to'} enemy team`}
-                className={`inline-flex items-center gap-1.5 rounded-lg border py-1 pr-2.5 pl-1 text-xs transition ${
+                className={`inline-flex max-w-full items-center gap-1.5 rounded-lg border py-1 pr-2.5 pl-1 text-xs transition ${
                   selected
                     ? 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
                     : selectedEnemies.has(champion.name)
@@ -184,7 +184,7 @@ export default function DraftForm({
                   championName={champion.name}
                   className="size-6 rounded-md text-[8px]"
                 />
-                {champion.name}
+                <span className="truncate">{champion.name}</span>
               </button>
             )
           })}
@@ -210,7 +210,7 @@ export default function DraftForm({
           <span className="block text-sm font-semibold text-white">Include AI explanation</span>
           <span className="mt-1 block text-xs leading-5 text-slate-500">
             {aiEnabled
-              ? 'Recommendations appear first, then AI analysis fills in for the best pick.'
+              ? 'Recommendations appear first, then AI analysis fills in for the top three picks.'
               : 'AI analysis disabled for demo stability.'}
           </span>
         </span>

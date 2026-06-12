@@ -114,7 +114,7 @@ public class DraftService
                     Score = scoreBreakdown.TotalScore,
                     ScoreBreakdown = scoreBreakdown,
                     Reasons = _reasonEngine.BuildReasons(champion, enemyChampions, rules),
-                    Plan = _planEngine.BuildPlan(champion, rules)
+                    Plan = _planEngine.BuildPlan(champion, rules, enemyChampions)
                 };
             })
             .OrderByDescending(x => x.Score)
