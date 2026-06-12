@@ -5,7 +5,7 @@
 - .NET 8 SDK
 - Node.js with Corepack/pnpm
 - PostgreSQL running locally
-- Gemini API key for optional AI explanations
+- GroqCloud or Gemini API key for optional AI explanations
 
 ## PostgreSQL Setup
 
@@ -28,17 +28,27 @@ Remove-Item Env:ConnectionStrings__DefaultConnection
 
 The API runs its idempotent seeder at startup. Existing user-created rows are preserved, while missing initial champions and matchup rules are added.
 
-## Gemini Secret Setup
+## AI Provider Secret Setup
 
-AI explanations are optional. Configure the API project user secret:
+AI explanations are optional. GroqCloud is the default provider:
 
 ```powershell
 cd backend
+dotnet user-secrets set "Ai:Provider" "Groq" --project WildRiftCounterLab.Api
+dotnet user-secrets set "Groq:ApiKey" "YOUR_GROQ_API_KEY" --project WildRiftCounterLab.Api
+dotnet user-secrets set "Groq:Model" "llama-3.1-8b-instant" --project WildRiftCounterLab.Api
+```
+
+To use Gemini instead:
+
+```powershell
+cd backend
+dotnet user-secrets set "Ai:Provider" "Gemini" --project WildRiftCounterLab.Api
 dotnet user-secrets set "Gemini:ApiKey" "YOUR_GEMINI_API_KEY" --project WildRiftCounterLab.Api
 dotnet user-secrets set "Gemini:Model" "gemini-2.5-flash" --project WildRiftCounterLab.Api
 ```
 
-Without a Gemini key, deterministic recommendations still work. AI explanation requests return the endpoint's safe fallback message.
+Without a matching provider key, deterministic recommendations still work. AI explanation requests return the endpoint's safe fallback message.
 
 ## Run Backend
 
@@ -111,9 +121,9 @@ The frontend expects `http://localhost:5069/api`. Confirm the backend uses the `
 
 Restart the backend so startup seeding runs. Then verify `/api/champions` contains Senna and Jhin. The seeder adds missing rows without deleting existing data.
 
-### Gemini API key missing
+### AI provider key missing
 
-Recommendations still work without Gemini. Configure `Gemini:ApiKey` with user secrets before demonstrating AI explanations.
+Recommendations still work without AI. Confirm `Ai:Provider` is `Groq` or `Gemini`, then configure the matching API key before demonstrating AI explanations.
 
 ### Frontend `.env` missing
 

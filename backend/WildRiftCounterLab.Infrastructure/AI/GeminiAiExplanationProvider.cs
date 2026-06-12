@@ -3,13 +3,15 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 using WildRiftCounterLab.Application.DTOs;
+using WildRiftCounterLab.Application.Exceptions;
 using WildRiftCounterLab.Application.Interfaces;
 
 namespace WildRiftCounterLab.Infrastructure.AI;
 
-public class GeminiAiExplanationProvider : IAiExplanationProvider
+public class GeminiAiExplanationProvider : IExternalAiExplanationProvider
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -25,8 +27,6 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
 
     public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
     {
-        var generativeModel = CreateGenerativeModel();
-
         var prompt = $"""
                       You are a Wild Rift draft assistant.
 
@@ -63,7 +63,7 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
                       Do not invent patch data.
                       """;
 
-        var response = await generativeModel.GenerateContent(prompt);
+        var response = await GenerateContent(prompt);
 
         return new AiExplanationResponseDto
         {
@@ -81,11 +81,8 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        var generativeModel = CreateGenerativeModel();
         var prompt = BuildBatchPrompt(requests);
-        var response = await generativeModel.GenerateContent(
-            prompt,
-            cancellationToken: cancellationToken);
+        var response = await GenerateContent(prompt, cancellationToken);
 
         return ParseBatchExplanations(response.Text);
     }
@@ -103,6 +100,42 @@ public class GeminiAiExplanationProvider : IAiExplanationProvider
         var googleAI = new GoogleAI(apiKey: apiKey);
 
         return googleAI.GenerativeModel(model: model);
+    }
+
+    private async Task<GenerateContentResponse> GenerateContent(
+        string prompt,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await CreateGenerativeModel().GenerateContent(
+                prompt,
+                cancellationToken: cancellationToken);
+        }
+        catch (Exception exception) when (IsRateLimitError(exception))
+        {
+            throw new AiProviderRateLimitException(
+                "Gemini provider rate limit reached.",
+                exception);
+        }
+    }
+
+    private static bool IsRateLimitError(Exception exception)
+    {
+        for (var current = exception; current is not null; current = current.InnerException)
+        {
+            var message = current.Message;
+
+            if (message.Contains("429", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("rate limit", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("resource exhausted", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("quota", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static string BuildBatchPrompt(IReadOnlyCollection<AiExplanationRequestDto> requests)

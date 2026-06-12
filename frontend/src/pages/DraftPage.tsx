@@ -11,6 +11,7 @@ import PageShell from '../components/layout/PageShell'
 import { useChampions } from '../hooks/useChampions'
 import { useDraftAnalysis } from '../hooks/useDraftAnalysis'
 import type { DraftRecommendationRequest } from '../types'
+import { aiEnabled } from '../utils/aiConfig'
 
 const initialDraft: DraftRecommendationRequest = {
   role: 'Baron',
@@ -68,6 +69,7 @@ export default function DraftPage() {
           champions={champions}
           value={draft}
           isLoading={isLoading}
+          aiEnabled={aiEnabled}
           usingFallback={usingFallback}
           onChange={setDraft}
           onSubmit={() => void analyzeDraft(draft)}

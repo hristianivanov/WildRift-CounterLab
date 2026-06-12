@@ -20,8 +20,11 @@ No secrets should be committed. Configure every production value in the hosting 
 | `Frontend__AllowedOrigins__0` | Yes | Exact Vercel origin, such as `https://wildrift-counterlab.vercel.app` |
 | `Frontend__AllowedOrigins__1` | Optional | Additional custom frontend origin |
 | `Database__ApplyMigrationsOnStartup` | First deploy / optional | `true` applies pending EF Core migrations before seeding |
-| `Gemini__ApiKey` | Required for AI | Gemini API key |
-| `Gemini__Model` | Recommended | `gemini-2.5-flash` |
+| `Ai__Provider` | Recommended | `Groq` for the primary provider, or `Gemini` |
+| `Groq__ApiKey` | Required when using Groq | GroqCloud API key |
+| `Groq__Model` | Recommended for Groq | `llama-3.1-8b-instant` |
+| `Gemini__ApiKey` | Required when using Gemini | Gemini API key |
+| `Gemini__Model` | Recommended for Gemini | `gemini-2.5-flash` |
 | `PORT` | Platform-provided | Railway/Render port; the Docker command uses it automatically |
 
 Supabase Npgsql connection string format:
@@ -37,6 +40,7 @@ Use Supabase's direct database connection for migrations and for a persistent ba
 | Variable | Required | Example |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | Yes | `https://YOUR-BACKEND-DOMAIN/api` |
+| `VITE_AI_ENABLED` | Optional | `true` enables AI in production; defaults to disabled |
 
 Vite embeds this value during the build. Redeploy the frontend after changing it.
 
@@ -102,18 +106,27 @@ dotnet ef database update --project backend/WildRiftCounterLab.Infrastructure --
 Remove-Item Env:ConnectionStrings__DefaultConnection
 ```
 
-## 5. Verify Gemini
+## 5. Configure And Verify AI
 
-Set:
+GroqCloud is the recommended free-friendly provider:
 
 ```text
+Ai__Provider=Groq
+Groq__ApiKey=YOUR_GROQ_API_KEY
+Groq__Model=llama-3.1-8b-instant
+```
+
+To use Gemini instead:
+
+```text
+Ai__Provider=Gemini
 Gemini__ApiKey=YOUR_GEMINI_API_KEY
 Gemini__Model=gemini-2.5-flash
 ```
 
 Verify by submitting a draft recommendation request with `includeAiExplanation: true`. The top recommendations should contain generated explanations rather than `AI explanation unavailable.`
 
-Gemini never affects scores or ranking. If Gemini is unavailable, deterministic recommendations still return.
+The configured provider never affects scores or ranking. Successful explanations are cached in PostgreSQL. If the provider is unavailable or rate-limited, deterministic recommendations still return with a safe fallback.
 
 ## 6. Deploy Frontend To Vercel
 
@@ -122,9 +135,10 @@ The frontend includes `frontend/vercel.json`.
 1. Import the repository into Vercel.
 2. Set the Vercel Root Directory to `frontend`.
 3. Add `VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api`.
-4. Deploy.
-5. Copy the final Vercel origin into the backend's `Frontend__AllowedOrigins__0`.
-6. Redeploy/restart the backend after changing CORS configuration.
+4. Add `VITE_AI_ENABLED=true` only after the selected backend AI provider is configured and verified.
+5. Deploy.
+6. Copy the final Vercel origin into the backend's `Frontend__AllowedOrigins__0`.
+7. Redeploy/restart the backend after changing CORS configuration.
 
 ## 7. Production Verification
 
@@ -155,4 +169,4 @@ Complete the browser validation:
 - **Tables missing:** enable `Database__ApplyMigrationsOnStartup` or run the manual migration command.
 - **Health check fails:** inspect Railway/Render logs and verify the service is binding the platform-provided `PORT`.
 - **Railway runs plain `dotnet restore`:** set Root Directory to `/backend`, Config File to `/backend/railway.toml`, Builder to `Dockerfile`, Dockerfile Path to `Dockerfile`, clear custom build/start commands, and redeploy the commit containing `backend/railway.toml`.
-- **AI unavailable:** verify `Gemini__ApiKey` and `Gemini__Model`.
+- **AI unavailable:** verify `Ai__Provider` and the matching Groq or Gemini key/model variables.

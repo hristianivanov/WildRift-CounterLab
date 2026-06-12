@@ -13,7 +13,7 @@ Draft decisions involve more than a single counter matchup. A useful recommendat
 - Deterministic multi-category recommendation scoring
 - Score breakdowns for lane, team fit, role fit, safety, scaling, and utility
 - Rule-based reasons and game plans
-- Optional Gemini explanations generated only after ranking is complete
+- Optional cached AI explanations generated only after ranking is complete
 - Champion and matchup-rule management APIs
 - Idempotent initial dataset with 62 champions
 - Standardized API errors, Swagger documentation, and health endpoint
@@ -35,7 +35,7 @@ Application services + deterministic engines
 Domain entities and rules
         ^
         |
-Infrastructure: PostgreSQL / EF Core / Gemini provider
+Infrastructure: PostgreSQL / EF Core / configurable Groq or Gemini provider
 ```
 
 Dependency direction:
@@ -56,9 +56,9 @@ Application contains the recommendation pipeline and contracts. Infrastructure i
 3. Calculate deterministic score categories.
 4. Build rule/tag-based reasons and plans.
 5. Rank and select the top recommendations.
-6. Optionally ask Gemini to explain the already-completed result.
+6. Optionally ask the configured AI provider to explain the already-completed result.
 
-Gemini cannot change scores, ranking, reasons, plans, or score breakdowns.
+Groq and Gemini cannot change scores, ranking, reasons, plans, or score breakdowns.
 
 ## Tech Stack
 
@@ -67,7 +67,7 @@ Gemini cannot change scores, ranking, reasons, plans, or score breakdowns.
 | Frontend | React, Vite, TypeScript, Tailwind CSS, Framer Motion, axios |
 | Backend | ASP.NET Core Web API, Clean Architecture |
 | Data | PostgreSQL, Entity Framework Core |
-| AI | Gemini API |
+| AI | GroqCloud chat completions, optional Gemini fallback, PostgreSQL explanation cache |
 | Testing | xUnit, ASP.NET Core integration testing, EF Core InMemory |
 
 ## Project Structure
@@ -101,7 +101,7 @@ Screenshot files will be added under `docs/screenshots/`.
 
 ## Local Setup
 
-Detailed PostgreSQL, Gemini user-secret, troubleshooting, and demo instructions are in [DEVELOPMENT.md](DEVELOPMENT.md).
+Detailed PostgreSQL, AI provider secrets, troubleshooting, and demo instructions are in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ```powershell
 # Backend
@@ -132,7 +132,7 @@ The repository includes:
 - Optional startup migration configuration
 - Environment-driven production CORS
 
-See [docs/deployment.md](docs/deployment.md) for the complete environment-variable list, Supabase migration procedure, Gemini verification, health checks, and platform steps.
+See [docs/deployment.md](docs/deployment.md) for the complete environment-variable list, Supabase migration procedure, AI provider verification, health checks, and platform steps.
 
 ## Main API Routes
 

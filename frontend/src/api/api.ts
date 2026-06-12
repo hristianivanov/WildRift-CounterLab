@@ -2,6 +2,8 @@ import axios from 'axios'
 
 export const DEFAULT_API_TIMEOUT_MS = 30_000
 export const AI_EXPLANATION_TIMEOUT_MS = 120_000
+export const AI_RATE_LIMIT_MESSAGE =
+  'AI analysis is temporarily unavailable due to free-tier limits. Engine recommendations are still available.'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:5069/api'
 
@@ -41,4 +43,24 @@ export function getApiErrorMessage(error: unknown): string {
   }
 
   return 'Something went wrong while analyzing the draft.'
+}
+
+export function isAiRateLimitError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) {
+    return false
+  }
+
+  const responseData = error.response?.data
+  const responseMessage =
+    typeof responseData === 'object' && responseData !== null && 'error' in responseData
+      ? responseData.error
+      : undefined
+  const message = `${typeof responseMessage === 'string' ? responseMessage : ''} ${error.message}`
+
+  return (
+    error.response?.status === 429 ||
+    message.toLowerCase().includes('rate limit') ||
+    message.toLowerCase().includes('quota') ||
+    message.toLowerCase().includes('resource exhausted')
+  )
 }

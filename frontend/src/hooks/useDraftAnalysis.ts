@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 
 import { getAiExplanation } from '../api/aiApi'
-import { getApiErrorMessage } from '../api/api'
+import { AI_RATE_LIMIT_MESSAGE, getApiErrorMessage, isAiRateLimitError } from '../api/api'
 import { getDraftRecommendations } from '../api/draftApi'
 import type {
   DraftRecommendationRequest,
@@ -41,7 +41,7 @@ export function useDraftAnalysis() {
         return
       }
 
-      const recommendationsToExplain = deterministicResult.recommendations.slice(0, 3)
+      const recommendationsToExplain = deterministicResult.recommendations.slice(0, 1)
       setAiLoadingChampions(new Set(recommendationsToExplain.map(({ champion }) => champion)))
 
       for (const recommendation of recommendationsToExplain) {
@@ -58,8 +58,14 @@ export function useDraftAnalysis() {
             plan: recommendation.plan,
           })
 
-          explanation = response.explanation || explanation
-        } catch {
+          explanation = response.explanation.includes('provider rate limit')
+            ? AI_RATE_LIMIT_MESSAGE
+            : response.explanation || explanation
+        } catch (aiError) {
+          if (isAiRateLimitError(aiError)) {
+            explanation = AI_RATE_LIMIT_MESSAGE
+          }
+
           // Keep the card-level fallback and continue generating the remaining explanations.
         }
 

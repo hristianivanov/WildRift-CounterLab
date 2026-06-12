@@ -14,4 +14,12 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<MatchupRule> MatchupRules => Set<MatchupRule>();
     public DbSet<Champion> Champions => Set<Champion>();
+    public DbSet<AiExplanationCache> AiExplanationCaches => Set<AiExplanationCache>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AiExplanationCache>()
+            .HasIndex(cache => cache.CacheKey)
+            .IsUnique();
+    }
 }

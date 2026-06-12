@@ -11,6 +11,7 @@ interface DraftFormProps {
   champions: Champion[]
   value: DraftRecommendationRequest
   isLoading: boolean
+  aiEnabled: boolean
   usingFallback: boolean
   onChange: (value: DraftRecommendationRequest) => void
   onSubmit: () => void
@@ -23,6 +24,7 @@ export default function DraftForm({
   champions,
   value,
   isLoading,
+  aiEnabled,
   usingFallback,
   onChange,
   onSubmit,
@@ -189,9 +191,14 @@ export default function DraftForm({
         </div>
       </div>
 
-      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-violet-300/10 bg-violet-300/[0.04] p-4 transition hover:border-violet-300/20">
+      <label
+        className={`mt-6 flex items-start gap-3 rounded-xl border border-violet-300/10 bg-violet-300/[0.04] p-4 transition ${
+          aiEnabled ? 'cursor-pointer hover:border-violet-300/20' : 'cursor-not-allowed opacity-70'
+        }`}
+      >
         <input
           type="checkbox"
+          disabled={!aiEnabled}
           checked={value.includeAiExplanation}
           onChange={(event) =>
             onChange({ ...value, includeAiExplanation: event.target.checked })
@@ -202,7 +209,9 @@ export default function DraftForm({
         <span className="min-w-0">
           <span className="block text-sm font-semibold text-white">Include AI explanation</span>
           <span className="mt-1 block text-xs leading-5 text-slate-500">
-            Recommendations appear first, then AI analysis fills in one card at a time.
+            {aiEnabled
+              ? 'Recommendations appear first, then AI analysis fills in for the best pick.'
+              : 'AI analysis disabled for demo stability.'}
           </span>
         </span>
       </label>
