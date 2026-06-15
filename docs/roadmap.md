@@ -9,7 +9,7 @@
 - PostgreSQL and EF Core persistence
 - Idempotent initial champion and matchup-rule dataset
 - Champion and matchup-rule CRUD APIs
-- Standardized errors, Swagger, CORS, and health endpoint
+- Standardized errors, OpenAPI/Scalar documentation, CORS, and health endpoint
 - Responsive React draft interface
 - Application unit tests and API integration tests
 - Vercel, Railway/Render, and Supabase deployment configuration

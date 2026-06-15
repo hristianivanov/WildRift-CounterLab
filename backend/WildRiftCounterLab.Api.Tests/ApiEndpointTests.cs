@@ -1,16 +1,20 @@
 using System.Net;
 using System.Net.Http.Json;
 
+using Microsoft.AspNetCore.Hosting;
+
 using WildRiftCounterLab.Application.DTOs;
 
 namespace WildRiftCounterLab.Api.Tests;
 
 public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
 {
+    private readonly ApiWebApplicationFactory _factory;
     private readonly HttpClient _client;
 
     public ApiEndpointTests(ApiWebApplicationFactory factory)
     {
+        _factory = factory;
         _client = factory.CreateClient();
     }
 
@@ -81,6 +85,21 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
 
         Assert.NotNull(health);
         Assert.Equal("ok", health.Status);
+    }
+
+    [Fact]
+    public async Task ApiDocumentation_ExplicitlyEnabledInProduction_ExposesScalarAndOpenApi()
+    {
+        using var client = _factory
+            .WithWebHostBuilder(builder =>
+                builder.UseSetting("ApiDocumentation:EnabledInProduction", "true"))
+            .CreateClient();
+
+        var scalarResponse = await client.GetAsync("/scalar");
+        var openApiResponse = await client.GetAsync("/swagger/v1/swagger.json");
+
+        Assert.Equal(HttpStatusCode.OK, scalarResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, openApiResponse.StatusCode);
     }
 
     [Fact]

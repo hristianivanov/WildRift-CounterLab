@@ -2,7 +2,8 @@
 
 Base URL for local development: `http://localhost:5069/api`
 
-Swagger is available at `http://localhost:5069/swagger` in Development.
+The Scalar API reference is available at `http://localhost:5069/scalar` in Development.
+The generated OpenAPI document remains available at `http://localhost:5069/swagger/v1/swagger.json`.
 
 ## Health
 

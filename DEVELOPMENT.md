@@ -65,7 +65,8 @@ Useful URLs:
 - API base: `http://localhost:5069/api`
 - Health: `http://localhost:5069/api/health`
 - Champions: `http://localhost:5069/api/champions`
-- Swagger: `http://localhost:5069/swagger`
+- Scalar API reference: `http://localhost:5069/scalar`
+- OpenAPI document: `http://localhost:5069/swagger/v1/swagger.json`
 
 ## Run Frontend
 

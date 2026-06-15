@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Scalar.AspNetCore;
+
 using Application;
 using Application.DTOs;
 using Application.Exceptions;
@@ -69,17 +71,22 @@ public class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Swashbuckle generates the OpenAPI document consumed by Scalar.
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        var apiDocumentationEnabled =
+            app.Environment.IsDevelopment() ||
+            app.Configuration.GetValue<bool>("ApiDocumentation:EnabledInProduction");
+
+        if (apiDocumentationEnabled)
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.MapScalarApiReference("/scalar", options =>
+                options.WithOpenApiRoutePattern("/swagger/{documentName}/swagger.json"));
         }
 
         app.UseHttpsRedirection();

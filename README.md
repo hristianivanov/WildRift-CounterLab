@@ -21,7 +21,7 @@ Draft decisions involve more than a single counter matchup. A useful recommendat
 - Optional cached AI explanations generated only after ranking is complete
 - Champion and matchup-rule management APIs
 - Idempotent initial dataset with 62 champions
-- Standardized API errors, Swagger documentation, and health endpoint
+- Standardized API errors, Scalar API reference, OpenAPI document, and health endpoint
 - Responsive React draft workflow with loading, fallback, error, and empty states
 
 ## Architecture
@@ -149,6 +149,8 @@ See [docs/deployment.md](docs/deployment.md) for the complete environment-variab
 - `GET|POST|PUT|DELETE /api/matchup-rules`
 
 See [docs/api.md](docs/api.md) for request and response details.
+
+In Development, the interactive Scalar API reference is available at `http://localhost:5069/scalar`.
 
 ## Verification
 

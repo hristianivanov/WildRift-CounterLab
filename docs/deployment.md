@@ -20,6 +20,7 @@ No secrets should be committed. Configure every production value in the hosting 
 | `Frontend__AllowedOrigins__0` | Yes | Exact Vercel origin, such as `https://wildrift-counterlab.vercel.app` |
 | `Frontend__AllowedOrigins__1` | Optional | Additional custom frontend origin |
 | `Database__ApplyMigrationsOnStartup` | First deploy / optional | `true` applies pending EF Core migrations before seeding |
+| `ApiDocumentation__EnabledInProduction` | Optional | `true` exposes Scalar and the OpenAPI document in Production; defaults to `false` |
 | `Ai__Provider` | Recommended | `Groq` for the primary provider, or `Gemini` |
 | `Groq__ApiKey` | Required when using Groq | GroqCloud API key |
 | `Groq__Model` | Recommended for Groq | `llama-3.1-8b-instant` |

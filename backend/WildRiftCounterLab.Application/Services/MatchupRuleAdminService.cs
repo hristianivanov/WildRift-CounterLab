@@ -1,3 +1,5 @@
+using Mapster;
+
 using WildRiftCounterLab.Application.DTOs;
 using WildRiftCounterLab.Application.Exceptions;
 using WildRiftCounterLab.Application.Interfaces;
@@ -23,14 +25,14 @@ public class MatchupRuleAdminService
     {
         var rules = await _matchupRuleRepository.GetAllAsync();
 
-        return rules.Select(Map).ToList();
+        return rules.Adapt<List<MatchupRuleDto>>();
     }
 
     public async Task<MatchupRuleDto> GetByIdAsync(int id)
     {
         var rule = await GetRequiredRuleAsync(id);
 
-        return Map(rule);
+        return rule.Adapt<MatchupRuleDto>();
     }
 
     public async Task<MatchupRuleDto> CreateAsync(CreateMatchupRuleRequestDto request)
@@ -47,19 +49,16 @@ public class MatchupRuleAdminService
             throw new ArgumentException("A matchup rule already exists for this role and champion matchup.");
         }
 
-        var rule = new MatchupRule
-        {
-            Role = values.Role,
-            Champion = values.Champion,
-            EnemyChampion = values.EnemyChampion,
-            ScoreModifier = request.ScoreModifier,
-            Reason = request.Reason.Trim(),
-            Plan = request.Plan?.Trim() ?? string.Empty
-        };
+        var rule = request.Adapt<MatchupRule>();
+        rule.Role = values.Role;
+        rule.Champion = values.Champion;
+        rule.EnemyChampion = values.EnemyChampion;
+        rule.Reason = request.Reason.Trim();
+        rule.Plan = request.Plan?.Trim() ?? string.Empty;
 
         await _matchupRuleRepository.AddAsync(rule);
 
-        return Map(rule);
+        return rule.Adapt<MatchupRuleDto>();
     }
 
     public async Task<MatchupRuleDto> UpdateAsync(int id, UpdateMatchupRuleRequestDto request)
@@ -92,7 +91,7 @@ public class MatchupRuleAdminService
 
         await _matchupRuleRepository.UpdateAsync(rule);
 
-        return Map(rule);
+        return rule.Adapt<MatchupRuleDto>();
     }
 
     public async Task DeleteAsync(int id)
@@ -151,17 +150,4 @@ public class MatchupRuleAdminService
         return (canonicalRole, canonicalChampion.Name, canonicalEnemyChampion.Name);
     }
 
-    private static MatchupRuleDto Map(MatchupRule rule)
-    {
-        return new MatchupRuleDto
-        {
-            Id = rule.Id,
-            Role = rule.Role,
-            Champion = rule.Champion,
-            EnemyChampion = rule.EnemyChampion,
-            ScoreModifier = rule.ScoreModifier,
-            Reason = rule.Reason,
-            Plan = rule.Plan
-        };
-    }
 }

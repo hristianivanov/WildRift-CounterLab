@@ -52,7 +52,7 @@ Provides HTTP composition and transport behavior:
 
 - Controllers and routes
 - Dependency injection
-- CORS and Swagger
+- CORS, OpenAPI generation, and Scalar API reference
 - Standard error responses
 - Global exception handling
 

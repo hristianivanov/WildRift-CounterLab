@@ -1,3 +1,5 @@
+using Mapster;
+
 using WildRiftCounterLab.Application.DTOs;
 using WildRiftCounterLab.Application.Exceptions;
 using WildRiftCounterLab.Application.Interfaces;
@@ -23,12 +25,12 @@ public class ChampionAdminService
     {
         var champions = await _championRepository.GetAllAsync();
 
-        return champions.Select(Map).ToList();
+        return champions.Adapt<List<ChampionDto>>();
     }
 
     public async Task<ChampionDto> GetByIdAsync(int id)
     {
-        return Map(await GetRequiredChampionAsync(id));
+        return (await GetRequiredChampionAsync(id)).Adapt<ChampionDto>();
     }
 
     public async Task<ChampionDto> CreateAsync(CreateChampionRequestDto request)
@@ -40,16 +42,14 @@ public class ChampionAdminService
             throw new ArgumentException("A champion with this name already exists.");
         }
 
-        var champion = new Champion
-        {
-            Name = values.Name,
-            Roles = values.Roles,
-            Tags = values.Tags
-        };
+        var champion = request.Adapt<Champion>();
+        champion.Name = values.Name;
+        champion.Roles = values.Roles;
+        champion.Tags = values.Tags;
 
         await _championRepository.AddAsync(champion);
 
-        return Map(champion);
+        return champion.Adapt<ChampionDto>();
     }
 
     public async Task<ChampionDto> UpdateAsync(int id, UpdateChampionRequestDto request)
@@ -75,7 +75,7 @@ public class ChampionAdminService
 
         await _championRepository.UpdateAsync(champion);
 
-        return Map(champion);
+        return champion.Adapt<ChampionDto>();
     }
 
     public async Task DeleteAsync(int id)
@@ -156,14 +156,4 @@ public class ChampionAdminService
         return (trimmedName, canonicalRoles, trimmedTags);
     }
 
-    private static ChampionDto Map(Champion champion)
-    {
-        return new ChampionDto
-        {
-            Id = champion.Id,
-            Name = champion.Name,
-            Roles = champion.Roles,
-            Tags = champion.Tags
-        };
-    }
 }

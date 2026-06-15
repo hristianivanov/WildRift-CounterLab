@@ -1,6 +1,7 @@
 ﻿namespace WildRiftCounterLab.Application;
 
 using Engine;
+using Mapping;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        ApplicationMappingConfig.Register();
+
         services.AddScoped<DraftService>();
         services.AddScoped<MatchupRuleAdminService>();
         services.AddScoped<ChampionAdminService>();
