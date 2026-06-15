@@ -94,15 +94,21 @@ The frontend separates API clients, hooks, reusable components, draft-specific c
 
 ## Screenshots
 
-Portfolio screenshots will be added under `docs/screenshots/`.
+### Draft Setup
 
-| Draft setup | Recommendations |
-| --- | --- |
-| _Placeholder: desktop draft form_ | _Placeholder: ranked recommendation cards_ |
+![Wild Rift Counter Lab draft setup](docs/screenshots/draft-setup.png)
 
-| AI Analysis | Mobile layout |
-| --- | --- |
-| _Placeholder: asynchronous AI explanation_ | _Placeholder: responsive draft workflow_ |
+### Recommendations
+
+![Ranked deterministic recommendations](docs/screenshots/recommendations.png)
+
+### AI Analysis
+
+![Asynchronous AI analysis for top recommendations](docs/screenshots/ai-analysis.png)
+
+### Mobile Layout
+
+<img src="docs/screenshots/mobile-layout.png" alt="Wild Rift Counter Lab mobile layout" width="390">
 
 ## Local Setup
 
