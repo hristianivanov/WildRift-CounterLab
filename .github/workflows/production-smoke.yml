@@ -1,0 +1,82 @@
+name: Production smoke tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Production smoke tests
+    runs-on: ubuntu-latest
+    env:
+      PRODUCTION_BACKEND_URL: ${{ vars.PRODUCTION_BACKEND_URL }}
+      PRODUCTION_FRONTEND_URL: ${{ vars.PRODUCTION_FRONTEND_URL }}
+
+    steps:
+      - name: Validate repository variables
+        shell: bash
+        run: |
+          if [ -z "$PRODUCTION_BACKEND_URL" ]; then
+            echo "::error::Repository variable PRODUCTION_BACKEND_URL is not configured."
+            exit 1
+          fi
+
+          if [ -z "$PRODUCTION_FRONTEND_URL" ]; then
+            echo "::error::Repository variable PRODUCTION_FRONTEND_URL is not configured."
+            exit 1
+          fi
+
+      - name: Check deployed services
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          backend_url="${PRODUCTION_BACKEND_URL%/}"
+          frontend_url="${PRODUCTION_FRONTEND_URL%/}"
+          health_body="${RUNNER_TEMP}/health-response.txt"
+          champions_body="${RUNNER_TEMP}/champions-response.json"
+
+          curl_check() {
+            local url="$1"
+            local output="$2"
+
+            curl \
+              --fail-with-body \
+              --silent \
+              --show-error \
+              --location \
+              --retry 4 \
+              --retry-delay 5 \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 60 \
+              --output "$output" \
+              "$url"
+          }
+
+          echo "Checking backend health endpoint..."
+          curl_check "${backend_url}/health" "$health_body"
+          if ! grep -Eiq 'healthy|"status"[[:space:]]*:[[:space:]]*"ok"' "$health_body"; then
+            echo "::error::Backend health endpoint did not return an OK status."
+            exit 1
+          fi
+
+          echo "Checking champions endpoint..."
+          curl_check "${backend_url}/api/champions" "$champions_body"
+          if ! python -m json.tool "$champions_body" > /dev/null; then
+            echo "::error::Champions endpoint did not return valid JSON."
+            exit 1
+          fi
+
+          echo "Checking frontend..."
+          curl_check "$frontend_url" /dev/null
+
+          echo "Production smoke checks passed."

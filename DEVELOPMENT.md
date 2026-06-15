@@ -94,6 +94,18 @@ corepack pnpm run lint
 corepack pnpm run build
 ```
 
+## CI/CD
+
+The GitHub Actions CI workflow runs backend restore/build/tests/publish validation, frontend frozen install/lint/build, and a build of the Railway backend Dockerfile. Railway and Vercel remain responsible for deploying `main`; GitHub Actions does not use deployment tokens.
+
+Configure branch protection to require:
+
+- `Backend build and tests`
+- `Frontend lint and build`
+- `Backend Docker build`
+
+Production smoke tests run daily and on demand. Add `PRODUCTION_BACKEND_URL` and `PRODUCTION_FRONTEND_URL` as public GitHub repository variables. Use origins without trailing slashes, and do not include `/api` in `PRODUCTION_BACKEND_URL`.
+
 ## Demo Checklist
 
 1. Start PostgreSQL.

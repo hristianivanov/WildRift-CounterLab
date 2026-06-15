@@ -1,0 +1,162 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend build and tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('backend/**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore backend projects
+        run: |
+          dotnet restore backend/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj
+          dotnet restore backend/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj
+
+      - name: Build backend projects
+        run: |
+          dotnet build backend/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj --configuration Release --no-restore --warnaserror
+          dotnet build backend/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj --configuration Release --no-restore --warnaserror
+
+      - name: Run backend tests
+        shell: bash
+        run: |
+          set +e
+
+          dotnet test backend/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj \
+            --configuration Release \
+            --no-restore \
+            --no-build \
+            --logger "trx;LogFileName=application-tests.trx" \
+            --results-directory backend/TestResults/Application
+          application_status=$?
+
+          dotnet test backend/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj \
+            --configuration Release \
+            --no-restore \
+            --no-build \
+            --logger "trx;LogFileName=api-tests.trx" \
+            --results-directory backend/TestResults/Api
+          api_status=$?
+
+          if [ "$application_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Upload failed backend test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: backend/TestResults/**/*.trx
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Publish API
+        run: |
+          dotnet publish backend/WildRiftCounterLab.Api/WildRiftCounterLab.Api.csproj \
+            --configuration Release \
+            --no-restore \
+            --output "${{ runner.temp }}/published-api" \
+            -p:TreatWarningsAsErrors=true
+
+      - name: Upload published API
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wildrift-counterlab-api
+          path: ${{ runner.temp }}/published-api
+          if-no-files-found: error
+          retention-days: 7
+
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint frontend
+        run: pnpm run lint
+
+      - name: Build frontend
+        run: pnpm run build
+
+      - name: Upload frontend build
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wildrift-counterlab-web
+          path: frontend/dist
+          if-no-files-found: error
+          retention-days: 7
+
+  docker:
+    name: Backend Docker build
+    needs: backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Railway backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: false
+          tags: wildrift-counterlab-api:ci

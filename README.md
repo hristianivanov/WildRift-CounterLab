@@ -178,6 +178,25 @@ corepack pnpm run build
 
 The repository includes Application unit tests and API integration tests covering validation, deterministic ranking, AI failure safety, CRUD behavior, seed idempotency, standard errors, and health checks.
 
+## CI/CD
+
+GitHub Actions validates every pull request targeting `main`, every push to `main`, and manual runs:
+
+- Backend restore, warnings-as-errors Release builds, Application/API tests, and API publish validation
+- Frontend frozen pnpm install, lint, and production build
+- Production Docker image build using the same `backend/Dockerfile` and `backend` context as Railway
+
+Railway and Vercel continue to deploy the backend and frontend from `main` through their existing Git integrations. The workflows do not deploy or require platform tokens. Configure branch protection so the three CI jobs are required before merging:
+
+- `Backend build and tests`
+- `Frontend lint and build`
+- `Backend Docker build`
+
+The scheduled and manually triggered production smoke workflow checks the deployed backend health endpoint, champions endpoint, and frontend. Configure these public URLs as GitHub repository variables:
+
+- `PRODUCTION_BACKEND_URL`: backend origin without `/api` or a trailing slash, such as `https://YOUR-BACKEND-DOMAIN`
+- `PRODUCTION_FRONTEND_URL`: frontend origin without a trailing slash, such as `https://YOUR-FRONTEND-DOMAIN`
+
 ## Roadmap
 
 Completed work, near-term improvements, and later ideas are tracked in [docs/roadmap.md](docs/roadmap.md).

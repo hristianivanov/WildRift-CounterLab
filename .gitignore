@@ -7,3 +7,4 @@ dist/
 *.suo
 .env
 .env.local
+TestResults/
