@@ -74,6 +74,24 @@ public class DraftServiceTests
     }
 
     [Fact]
+    public async Task GetRecommendations_ExcludesLaneEnemyAndSelectedEnemyTeamChampions()
+    {
+        var service = CreateService();
+
+        var response = await service.GetRecommendations(new DraftRecommendationRequestDto
+        {
+            Role = "Baron",
+            LaneEnemy = "dArIuS",
+            EnemyTeam = new List<string> { "dr. mundo" }
+        });
+
+        Assert.DoesNotContain(response.Recommendations, recommendation =>
+            recommendation.Champion.Equals("Darius", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(response.Recommendations, recommendation =>
+            recommendation.Champion.Equals("Dr. Mundo", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task GetRecommendations_IncludesScoreBreakdown()
     {
         var service = CreateService();

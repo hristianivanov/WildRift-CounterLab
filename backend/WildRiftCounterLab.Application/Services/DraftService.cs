@@ -95,7 +95,9 @@ public class DraftService
             enemies);
 
         var candidateChampions = allChampions
-            .Where(champion => champion.Roles.Contains(role))
+            .Where(champion =>
+                champion.Roles.Contains(role) &&
+                !enemies.Contains(champion.Name, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         var recommendations = candidateChampions

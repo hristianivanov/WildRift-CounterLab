@@ -54,6 +54,8 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
         Assert.Contains(
             body.Recommendations.Take(3),
             recommendation => recommendation.Champion == "Malphite");
+        Assert.DoesNotContain(body.Recommendations, recommendation =>
+            recommendation.Champion is "Darius" or "Olaf");
     }
 
     [Fact]
