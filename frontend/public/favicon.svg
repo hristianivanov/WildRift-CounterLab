@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Wild Rift Counter Lab favicon</title>
+  <desc id="desc">A dark shield with cyan counter arrows and a lab flask mark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="10" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f172a" />
+      <stop offset="1" stop-color="#042f3d" />
+    </linearGradient>
+    <linearGradient id="accent" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67e8f9" />
+      <stop offset="1" stop-color="#8b5cf6" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)" />
+  <path
+    d="M32 8 50 15v15c0 12.5-7.3 21.7-18 26-10.7-4.3-18-13.5-18-26V15l18-7Z"
+    fill="#020617"
+    stroke="url(#accent)"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M25 19h14M29 19v9l-8.5 13.5A4 4 0 0 0 24 48h16a4 4 0 0 0 3.5-6.5L35 28v-9"
+    fill="none"
+    stroke="#67e8f9"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M25 39h14M26.5 44h11"
+    fill="none"
+    stroke="#8b5cf6"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <path
+    d="M20 27c2.2-3.5 6-5.5 10.5-5.5M44 37c-2.2 3.5-6 5.5-10.5 5.5"
+    fill="none"
+    stroke="#22d3ee"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <path d="M29 16.5 33.5 21 29 25.5M35 47.5 30.5 43 35 38.5" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
