@@ -2,7 +2,7 @@
   <img src="docs/assets/wildrift-counter-lab-logo.png" alt="Wild Rift Counter Lab logo" width="720" />
 </p>
 
-## Wild Rift Counter Lab - AI Powered Recomendation Platform
+## Wild Rift Counter Lab - AI Powered Recommendation Platform
 
 Full-stack draft assistant that recommends champion picks from role, lane matchup, and enemy-team composition. It demonstrates deterministic recommendation design, Clean Architecture, full-stack API integration, and responsible use of generative AI.
 
@@ -11,7 +11,7 @@ Full-stack draft assistant that recommends champion picks from role, lane matchu
 ## Live Demo
 
 - Frontend: [wild-rift-app-mocha.vercel.app](https://wild-rift-app-mocha.vercel.app)
-- API health: replace `https://wildrift-counterlab-api-production.up.railway.app/` with the active Railway domain and open `https://wildrift-counterlab-api-production.up.railway.app/api/health`
+- API health: [wildrift-counterlab-api-production.up.railway.app/api/health](https://wildrift-counterlab-api-production.up.railway.app/api/health)
 
 ## Problem Solved
 
