@@ -1,13 +1,17 @@
-# Wild Rift Counter Lab
+<p align="center">
+  <img src="docs/assets/wildrift-counter-lab-logo.png" alt="Wild Rift Counter Lab logo" width="720" />
+</p>
 
-Wild Rift Counter Lab is a full-stack draft assistant that recommends champion picks from role, lane matchup, and enemy-team composition. It demonstrates deterministic recommendation design, Clean Architecture, full-stack API integration, and responsible use of generative AI.
+## Wild Rift Counter Lab - AI Powered Recomendation Platform
+
+Full-stack draft assistant that recommends champion picks from role, lane matchup, and enemy-team composition. It demonstrates deterministic recommendation design, Clean Architecture, full-stack API integration, and responsible use of generative AI.
 
 > **Design principle:** the recommendation engine decides; AI explains.
 
 ## Live Demo
 
 - Frontend: [wild-rift-app-mocha.vercel.app](https://wild-rift-app-mocha.vercel.app)
-- API health: replace `YOUR-BACKEND-DOMAIN` with the active Railway domain and open `https://YOUR-BACKEND-DOMAIN/api/health`
+- API health: replace `https://wildrift-counterlab-api-production.up.railway.app/` with the active Railway domain and open `https://wildrift-counterlab-api-production.up.railway.app/api/health`
 
 ## Problem Solved
 
@@ -26,31 +30,8 @@ Draft decisions involve more than a single counter matchup. A useful recommendat
 
 ## Architecture
 
-```text
-React + TypeScript
-        |
-        | HTTP / JSON
-        v
-ASP.NET Core API
-        |
-        v
-Application services + deterministic engines
-        |
-        v
-Domain entities and rules
-        ^
-        |
-Infrastructure: PostgreSQL / EF Core / configurable Groq or Gemini provider
-```
+![Architecture scheme image](docs/assets/architecture.png)
 
-Dependency direction:
-
-```text
-Api -> Application <- Infrastructure
-          |
-          v
-        Domain
-```
 
 Application contains the recommendation pipeline and contracts. Infrastructure implements persistence and AI contracts. Domain remains dependency-free. See [docs/architecture.md](docs/architecture.md) for details.
 
@@ -77,38 +58,40 @@ Groq and Gemini cannot change scores, ranking, reasons, plans, or score breakdow
 
 ## Project Structure
 
-```text
-backend/
-  WildRiftCounterLab.Api
-  WildRiftCounterLab.Application
-  WildRiftCounterLab.Domain
-  WildRiftCounterLab.Infrastructure
-  WildRiftCounterLab.Api.Tests
-  WildRiftCounterLab.Application.Tests
-frontend/
-docs/
-DEVELOPMENT.md
-```
-
-The frontend separates API clients, hooks, reusable components, draft-specific components, and pages. The backend follows strict Clean Architecture dependency boundaries.
+![Folder structure image](docs/assets/folder-structure.png)
 
 ## Screenshots
 
-### Draft Setup
-
-![Wild Rift Counter Lab draft setup](docs/screenshots/draft-setup.png)
-
-### Recommendations
-
-![Ranked deterministic recommendations](docs/screenshots/recommendations.png)
-
-### AI Analysis
-
-![Asynchronous AI analysis for top recommendations](docs/screenshots/ai-analysis.png)
-
-### Mobile Layout
-
-<img src="docs/screenshots/mobile-layout.png" alt="Wild Rift Counter Lab mobile layout" width="390">
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Draft setup</strong><br />
+      <a href="docs/screenshots/draft-setup.png">
+        <img src="docs/screenshots/previews/draft-setup-preview.png" alt="Draft setup" width="100%" />
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <strong>Recommendations</strong><br />
+      <a href="docs/screenshots/recommendations.png">
+        <img src="docs/screenshots/previews/recommendations-preview.png" alt="Recommendations" width="100%" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <strong>AI analysis</strong><br />
+      <a href="docs/screenshots/ai-analysis.png">
+        <img src="docs/screenshots/previews/ai-analysis-preview.png" alt="AI analysis" width="100%" />
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <strong>Mobile layout</strong><br />
+      <a href="docs/screenshots/mobile-layout.png">
+        <img src="docs/screenshots/previews/mobile-layout-preview.png" alt="Mobile layout" width="100%" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## Local Setup
 
