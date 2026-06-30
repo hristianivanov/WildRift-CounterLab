@@ -16,13 +16,13 @@ public class MatchupRuleRepository : IMatchupRuleRepository
         _context = context;
     }
 
-    public async Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies)
+    public async Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies, CancellationToken cancellationToken = default)
     {
         return await _context.MatchupRules
             .Where(rule =>
                 rule.Role == role &&
                 enemies.Contains(rule.EnemyChampion))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<List<MatchupRule>> GetAllAsync()

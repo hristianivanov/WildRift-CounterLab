@@ -25,7 +25,7 @@ public class GeminiAiExplanationProvider : IExternalAiExplanationProvider
         _configuration = configuration;
     }
 
-    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
     {
         var prompt = $"""
                       You are a Wild Rift draft assistant.
@@ -63,7 +63,7 @@ public class GeminiAiExplanationProvider : IExternalAiExplanationProvider
                       Do not invent patch data.
                       """;
 
-        var response = await GenerateContent(prompt);
+        var response = await GenerateContent(prompt, cancellationToken);
 
         return new AiExplanationResponseDto
         {

@@ -14,7 +14,8 @@ public class GroqAiExplanationProvider : IExternalAiExplanationProvider
 {
     private static readonly HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("https://api.groq.com/openai/v1/")
+        BaseAddress = new Uri("https://api.groq.com/openai/v1/"),
+        Timeout = TimeSpan.FromSeconds(40)
     };
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -29,9 +30,9 @@ public class GroqAiExplanationProvider : IExternalAiExplanationProvider
         _configuration = configuration;
     }
 
-    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
     {
-        var explanation = await CompleteAsync(BuildSinglePrompt(request));
+        var explanation = await CompleteAsync(BuildSinglePrompt(request), cancellationToken);
 
         return new AiExplanationResponseDto { Explanation = explanation };
     }

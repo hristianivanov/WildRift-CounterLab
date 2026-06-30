@@ -4,7 +4,7 @@ namespace WildRiftCounterLab.Application.Interfaces;
 
 public interface IChampionRepository
 {
-    Task<List<Champion>> GetAllAsync();
+    Task<List<Champion>> GetAllAsync(CancellationToken cancellationToken = default);
 
     Task<Champion?> GetByIdAsync(int id);
 

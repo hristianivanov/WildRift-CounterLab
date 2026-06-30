@@ -4,7 +4,7 @@ namespace WildRiftCounterLab.Application.Interfaces;
 
 public interface IMatchupRuleRepository
 {
-    Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies);
+    Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies, CancellationToken cancellationToken = default);
 
     Task<List<MatchupRule>> GetAllAsync();
 

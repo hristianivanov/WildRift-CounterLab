@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 using WildRiftCounterLab.Application.DTOs;
 using WildRiftCounterLab.Application.Exceptions;
 using WildRiftCounterLab.Application.Interfaces;
@@ -12,19 +14,22 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
 
     private readonly IExternalAiExplanationProvider _provider;
     private readonly IAiExplanationCacheRepository _cacheRepository;
+    private readonly ILogger<CachedAiExplanationProvider> _logger;
 
     public CachedAiExplanationProvider(
         IExternalAiExplanationProvider provider,
-        IAiExplanationCacheRepository cacheRepository)
+        IAiExplanationCacheRepository cacheRepository,
+        ILogger<CachedAiExplanationProvider> logger)
     {
         _provider = provider;
         _cacheRepository = cacheRepository;
+        _logger = logger;
     }
 
-    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+    public async Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
     {
         var cacheKey = AiExplanationCacheKeyBuilder.Build(request);
-        var cached = await TryGetCachedAsync(cacheKey);
+        var cached = await TryGetCachedAsync(cacheKey, cancellationToken);
 
         if (cached is not null)
         {
@@ -33,8 +38,8 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
 
         try
         {
-            var response = await _provider.ExplainAsync(request);
-            await TrySaveAsync(request, cacheKey, response.Explanation);
+            var response = await _provider.ExplainAsync(request, cancellationToken);
+            await TrySaveAsync(request, cacheKey, response.Explanation, cancellationToken);
 
             return response;
         }
@@ -42,8 +47,9 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
         {
             return new AiExplanationResponseDto { Explanation = RateLimitFallback };
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "AI provider failed for {Champion}", request.Champion);
             return new AiExplanationResponseDto { Explanation = BuildFallback(request) };
         }
     }
@@ -102,8 +108,11 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
                 explanations[item.Request.Champion] = RateLimitFallback;
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "AI batch provider failed for {Count} champions",
+                cacheMisses.Count);
+
             foreach (var item in cacheMisses)
             {
                 explanations[item.Request.Champion] = BuildFallback(item.Request);
@@ -121,8 +130,9 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
         {
             return await _cacheRepository.GetByCacheKeyAsync(cacheKey, cancellationToken);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Cache read failed for key {CacheKey}", cacheKey);
             return null;
         }
     }
@@ -148,9 +158,11 @@ public class CachedAiExplanationProvider : IAiExplanationProvider
                 },
                 cancellationToken);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             // Cache persistence is optional and must never break AI explanations.
+            _logger.LogWarning(ex, "Cache write failed for {Champion} (key {CacheKey})",
+                request.Champion, cacheKey);
         }
     }
 

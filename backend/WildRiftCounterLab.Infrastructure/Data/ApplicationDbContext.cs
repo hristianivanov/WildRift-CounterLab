@@ -21,5 +21,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<AiExplanationCache>()
             .HasIndex(cache => cache.CacheKey)
             .IsUnique();
+
+        // Hot path: GetRulesForDraftAsync filters by Role + EnemyChampion on every recommendation request.
+        modelBuilder.Entity<MatchupRule>()
+            .HasIndex(rule => new { rule.Role, rule.EnemyChampion });
     }
 }

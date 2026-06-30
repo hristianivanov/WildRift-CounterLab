@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Abstractions;
+
 using WildRiftCounterLab.Application.DTOs;
 using WildRiftCounterLab.Application.Exceptions;
 using WildRiftCounterLab.Application.Interfaces;
@@ -20,7 +22,7 @@ public class CachedAiExplanationProviderTests
             Explanation = "Cached explanation"
         });
         var provider = new FakeGeminiProvider();
-        var service = new CachedAiExplanationProvider(provider, cache);
+        var service = new CachedAiExplanationProvider(provider, cache, NullLogger<CachedAiExplanationProvider>.Instance);
 
         var response = await service.ExplainAsync(request);
 
@@ -33,7 +35,7 @@ public class CachedAiExplanationProviderTests
     {
         var cache = new FakeCacheRepository();
         var provider = new FakeGeminiProvider();
-        var service = new CachedAiExplanationProvider(provider, cache);
+        var service = new CachedAiExplanationProvider(provider, cache, NullLogger<CachedAiExplanationProvider>.Instance);
 
         var response = await service.ExplainAsync(CreateRequest());
 
@@ -49,7 +51,8 @@ public class CachedAiExplanationProviderTests
         var provider = new FakeGeminiProvider();
         var service = new CachedAiExplanationProvider(
             provider,
-            new FakeCacheRepository(shouldFail: true));
+            new FakeCacheRepository(shouldFail: true),
+            NullLogger<CachedAiExplanationProvider>.Instance);
 
         var response = await service.ExplainAsync(CreateRequest());
 
@@ -62,7 +65,8 @@ public class CachedAiExplanationProviderTests
     {
         var service = new CachedAiExplanationProvider(
             new FakeGeminiProvider(shouldFail: true),
-            new FakeCacheRepository());
+            new FakeCacheRepository(),
+            NullLogger<CachedAiExplanationProvider>.Instance);
 
         var response = await service.ExplainAsync(CreateRequest());
 
@@ -76,7 +80,8 @@ public class CachedAiExplanationProviderTests
     {
         var service = new CachedAiExplanationProvider(
             new FakeGeminiProvider(rateLimited: true),
-            new FakeCacheRepository());
+            new FakeCacheRepository(),
+            NullLogger<CachedAiExplanationProvider>.Instance);
 
         var response = await service.ExplainAsync(CreateRequest());
 
@@ -159,7 +164,7 @@ public class CachedAiExplanationProviderTests
 
         public int CallCount { get; private set; }
 
-        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
         {
             CallCount++;
 
