@@ -27,17 +27,19 @@ public static class DependencyInjection
                 options.UseNpgsql(connectionString);
             });
 
-        services.AddScoped<IExternalAiExplanationProvider>(_ =>
-        {
-            var provider = configuration["Ai:Provider"] ?? "Groq";
+        var aiProvider = configuration["Ai:Provider"] ?? "Groq";
 
-            return provider.Equals("Groq", StringComparison.OrdinalIgnoreCase)
+        if (!aiProvider.Equals("Groq", StringComparison.OrdinalIgnoreCase) &&
+            !aiProvider.Equals("Gemini", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                $"Unsupported AI provider '{aiProvider}'. Use 'Groq' or 'Gemini'.");
+        }
+
+        services.AddScoped<IExternalAiExplanationProvider>(_ =>
+            aiProvider.Equals("Groq", StringComparison.OrdinalIgnoreCase)
                 ? new GroqAiExplanationProvider(configuration)
-                : provider.Equals("Gemini", StringComparison.OrdinalIgnoreCase)
-                    ? new GeminiAiExplanationProvider(configuration)
-                    : throw new InvalidOperationException(
-                        $"Unsupported AI provider '{provider}'. Use 'Groq' or 'Gemini'.");
-        });
+                : new GeminiAiExplanationProvider(configuration));
         services.AddScoped<IAiExplanationProvider, CachedAiExplanationProvider>();
 
         services.AddScoped<IChampionRepository, ChampionRepository>();

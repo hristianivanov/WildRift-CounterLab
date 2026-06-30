@@ -32,10 +32,7 @@ public class AiProviderSelectionTests
     [Fact]
     public void AddInfrastructure_RejectsUnsupportedProvider()
     {
-        using var services = BuildServices("Unknown");
-
-        var exception = Assert.Throws<InvalidOperationException>(() =>
-            services.GetRequiredService<IExternalAiExplanationProvider>());
+        var exception = Assert.Throws<InvalidOperationException>(() => BuildServices("Unknown"));
 
         Assert.Contains("Unsupported AI provider", exception.Message);
     }

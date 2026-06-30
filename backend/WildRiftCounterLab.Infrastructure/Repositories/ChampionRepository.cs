@@ -16,11 +16,11 @@ public class ChampionRepository : IChampionRepository
         _context = context;
     }
 
-    public async Task<List<Champion>> GetAllAsync()
+    public async Task<List<Champion>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Champions
             .OrderBy(champion => champion.Name)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Champion?> GetByIdAsync(int id)

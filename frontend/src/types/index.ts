@@ -18,7 +18,6 @@ export interface ScoreBreakdown {
   roleFitScore: number
   safetyScore: number
   scalingScore: number
-  damageProfileScore?: number
   utilityScore: number
   totalScore: number
 }

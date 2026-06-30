@@ -271,7 +271,7 @@ public class DraftServiceTests
             _champions = champions;
         }
 
-        public Task<List<Champion>> GetAllAsync()
+        public Task<List<Champion>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_champions);
         }
@@ -320,7 +320,7 @@ public class DraftServiceTests
             _rules = rules;
         }
 
-        public Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies)
+        public Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies, CancellationToken cancellationToken = default)
         {
             var rules = _rules
                 .Where(rule =>
@@ -391,7 +391,7 @@ public class DraftServiceTests
 
         public List<IReadOnlyCollection<AiExplanationRequestDto>> BatchRequests { get; } = new();
 
-        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
         {
             SingleCallCount++;
 

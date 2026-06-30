@@ -11,9 +11,6 @@ export default function ScoreBreakdown({ breakdown }: ScoreBreakdownProps) {
     ['Role Fit', breakdown.roleFitScore],
     ['Safety', breakdown.safetyScore],
     ['Scaling', breakdown.scalingScore],
-    ...(breakdown.damageProfileScore === undefined
-      ? []
-      : [['Damage', breakdown.damageProfileScore] as const]),
     ['Utility', breakdown.utilityScore],
   ] as const
 

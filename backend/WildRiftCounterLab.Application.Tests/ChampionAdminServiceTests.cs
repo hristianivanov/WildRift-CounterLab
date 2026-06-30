@@ -157,7 +157,7 @@ public class ChampionAdminServiceTests
 
         public List<Champion> Champions { get; }
 
-        public Task<List<Champion>> GetAllAsync()
+        public Task<List<Champion>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Champions);
         }
@@ -207,7 +207,7 @@ public class ChampionAdminServiceTests
             _rules = rules ?? new List<MatchupRule>();
         }
 
-        public Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies)
+        public Task<List<MatchupRule>> GetRulesForDraftAsync(string role, List<string> enemies, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_rules);
         }

@@ -35,7 +35,8 @@ public class DraftService
     }
 
     public async Task<DraftRecommendationResponseDto> GetRecommendations(
-        DraftRecommendationRequestDto request)
+        DraftRecommendationRequestDto request,
+        CancellationToken cancellationToken = default)
     {
         var role = AllowedRoles.Values
             .SingleOrDefault(allowedRole =>
@@ -53,7 +54,7 @@ public class DraftService
 
         if (request.EnemyTeam.Count > 4)
         {
-            throw new ArgumentException("Enemy team cannot have more than 5 champions including the lane enemy.");
+            throw new ArgumentException("Enemy team cannot have more than 4 additional champions (5 total including the lane enemy).");
         }
 
         if (request.EnemyTeam.Distinct(StringComparer.OrdinalIgnoreCase).Count() != request.EnemyTeam.Count)
@@ -66,7 +67,7 @@ public class DraftService
             throw new ArgumentException("Lane enemy cannot also be inside enemy team.");
         }
 
-        var allChampions = await _championRepository.GetAllAsync();
+        var allChampions = await _championRepository.GetAllAsync(cancellationToken);
         var championsByName = allChampions.ToDictionary(
             champion => champion.Name,
             StringComparer.OrdinalIgnoreCase);
@@ -92,7 +93,8 @@ public class DraftService
 
         var rules = await _matchupRuleRepository.GetRulesForDraftAsync(
             role,
-            enemies);
+            enemies,
+            cancellationToken);
 
         var candidateChampions = allChampions
             .Where(champion =>
@@ -148,7 +150,7 @@ public class DraftService
                         })
                     .ToList();
 
-                var explanations = await _aiExplanationProvider.ExplainBatchAsync(explanationRequests);
+                var explanations = await _aiExplanationProvider.ExplainBatchAsync(explanationRequests, cancellationToken);
 
                 foreach (var recommendation in recommendationsToExplain)
                 {

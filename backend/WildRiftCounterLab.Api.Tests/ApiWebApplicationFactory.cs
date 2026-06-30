@@ -49,7 +49,7 @@ public class ApiWebApplicationFactory : WebApplicationFactory<Program>
 
     private sealed class FakeAiExplanationProvider : IAiExplanationProvider
     {
-        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request)
+        public Task<AiExplanationResponseDto> ExplainAsync(AiExplanationRequestDto request, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new AiExplanationResponseDto
             {

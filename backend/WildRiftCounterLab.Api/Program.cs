@@ -1,7 +1,10 @@
 namespace WildRiftCounterLab.Api;
 
+using System.Threading.RateLimiting;
+
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
@@ -19,8 +22,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
 
         builder.Services.AddControllers()
             .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; });
@@ -45,7 +46,39 @@ public class Program
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 }
+                // If no origins are configured, the policy allows nothing — CORS requests are denied.
             });
+        });
+
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("draft", limiter =>
+            {
+                limiter.PermitLimit = 30;
+                limiter.Window = TimeSpan.FromMinutes(1);
+                limiter.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                limiter.QueueLimit = 5;
+            });
+
+            options.AddFixedWindowLimiter("ai", limiter =>
+            {
+                limiter.PermitLimit = 10;
+                limiter.Window = TimeSpan.FromMinutes(1);
+                limiter.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                limiter.QueueLimit = 2;
+            });
+
+            options.OnRejected = async (context, cancellationToken) =>
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                await context.HttpContext.Response.WriteAsJsonAsync(
+                    new ErrorResponseDto
+                    {
+                        Error = "Too many requests. Please slow down.",
+                        TraceId = context.HttpContext.TraceIdentifier
+                    },
+                    cancellationToken);
+            };
         });
 
         builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -76,6 +109,17 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
+
+        var startupLogger = app.Services.GetRequiredService<ILogger<Program>>();
+        var configuredOrigins = builder.Configuration
+            .GetSection("Frontend:AllowedOrigins")
+            .Get<string[]>();
+
+        if (configuredOrigins is not { Length: > 0 })
+        {
+            startupLogger.LogWarning(
+                "Frontend:AllowedOrigins is not configured. All cross-origin requests will be denied.");
+        }
 
         // Configure the HTTP request pipeline.
         var apiDocumentationEnabled =
@@ -143,6 +187,13 @@ public class Program
                     return;
                 }
 
+                var logger = context.RequestServices
+                    .GetRequiredService<ILogger<Program>>();
+
+                logger.LogError(exception, "Unhandled exception for {Method} {Path}",
+                    context.Request.Method,
+                    context.Request.Path);
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
                 await context.Response.WriteAsJsonAsync(new ErrorResponseDto
@@ -153,9 +204,9 @@ public class Program
             });
         });
 
-        app.UseHttpsRedirection();
-
         app.UseCors("Frontend");
+
+        app.UseRateLimiter();
 
         app.UseAuthorization();
 

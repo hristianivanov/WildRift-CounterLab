@@ -28,13 +28,8 @@ public class AiExplanationCacheRepository : IAiExplanationCacheRepository
         AiExplanationCache cache,
         CancellationToken cancellationToken = default)
     {
-        if (await _context.AiExplanationCaches.AnyAsync(
-                existing => existing.CacheKey == cache.CacheKey,
-                cancellationToken))
-        {
-            return;
-        }
-
+        // The unique DB constraint on CacheKey prevents duplicate inserts;
+        // callers wrap this in try/catch so a race-condition conflict is harmless.
         _context.AiExplanationCaches.Add(cache);
         await _context.SaveChangesAsync(cancellationToken);
     }

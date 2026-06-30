@@ -153,7 +153,22 @@ public class ChampionAdminService
             throw new ArgumentException("Tags cannot contain duplicates.");
         }
 
-        return (trimmedName, canonicalRoles, trimmedTags);
+        var canonicalTags = new List<string>();
+
+        foreach (var tag in trimmedTags)
+        {
+            var canonicalTag = AllowedTags.Values.SingleOrDefault(
+                allowedTag => allowedTag.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+            if (canonicalTag is null)
+            {
+                throw new ArgumentException($"Invalid tag: {tag}.");
+            }
+
+            canonicalTags.Add(canonicalTag);
+        }
+
+        return (trimmedName, canonicalRoles, canonicalTags);
     }
 
 }
