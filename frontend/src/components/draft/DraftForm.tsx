@@ -1,4 +1,5 @@
 import { Bot, Info, LoaderCircle, Sparkles, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 import type { Champion, DraftRecommendationRequest } from '../../types'
 import Button from '../common/Button'
@@ -29,7 +30,45 @@ export default function DraftForm({
   onChange,
   onSubmit,
 }: DraftFormProps) {
+  const [laneEnemyQuery, setLaneEnemyQuery] = useState('')
+  const [laneEnemyOpen, setLaneEnemyOpen] = useState(false)
+  const [enemyTeamQuery, setEnemyTeamQuery] = useState('')
+  const laneEnemyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (laneEnemyRef.current && !laneEnemyRef.current.contains(event.target as Node)) {
+        setLaneEnemyOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const filteredLaneEnemies = laneEnemyQuery.trim()
+    ? champions.filter((c) => c.name.toLowerCase().includes(laneEnemyQuery.toLowerCase()))
+    : champions
+
+  const filteredTeamChampions = enemyTeamQuery.trim()
+    ? champions.filter((c) => c.name.toLowerCase().includes(enemyTeamQuery.toLowerCase()))
+    : champions
+
   const selectedEnemies = new Set([value.laneEnemy, ...value.enemyTeam])
+
+  function selectLaneEnemy(name: string) {
+    onChange({
+      ...value,
+      laneEnemy: name,
+      enemyTeam: value.enemyTeam.filter((e) => e !== name),
+    })
+    setLaneEnemyQuery('')
+    setLaneEnemyOpen(false)
+  }
+
+  function clearLaneEnemy() {
+    onChange({ ...value, laneEnemy: '' })
+    setLaneEnemyQuery('')
+  }
 
   function toggleEnemy(name: string) {
     const exists = value.enemyTeam.includes(name)
@@ -92,43 +131,70 @@ export default function DraftForm({
       </div>
 
       <div className="mt-5">
-        <label className="space-y-2 text-sm text-slate-300">
-          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Lane enemy
-          </span>
-          <select
-            className={fieldClass}
-            value={value.laneEnemy}
-            onChange={(event) =>
-              onChange({
-                ...value,
-                laneEnemy: event.target.value,
-                enemyTeam: value.enemyTeam.filter((name) => name !== event.target.value),
-              })
-            }
-          >
-            <option value="">Select a champion</option>
-            {champions.map((champion) => (
-              <option key={champion.id || champion.name} value={champion.name}>
-                {champion.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        {value.laneEnemy && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/8 bg-black/15 p-2.5">
-            <ChampionPortrait
-              championName={value.laneEnemy}
-              className="size-10 rounded-xl border border-white/10 text-xs"
-            />
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Lane opponent
-              </p>
-              <p className="truncate text-sm font-semibold text-slate-200">{value.laneEnemy}</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Lane enemy
+        </p>
+        <div ref={laneEnemyRef} className="relative">
+          {value.laneEnemy ? (
+            <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-950/75 px-3 py-2.5">
+              <ChampionPortrait
+                championName={value.laneEnemy}
+                className="size-7 rounded-lg border border-white/10 text-[8px]"
+              />
+              <span className="flex-1 truncate text-sm text-slate-100">{value.laneEnemy}</span>
+              <button
+                type="button"
+                onClick={clearLaneEnemy}
+                aria-label="Clear lane enemy"
+                className="text-slate-500 hover:text-slate-200 transition"
+              >
+                <X className="size-3.5" />
+              </button>
             </div>
-          </div>
-        )}
+          ) : (
+            <input
+              type="text"
+              placeholder="Type to search a champion..."
+              className={fieldClass}
+              value={laneEnemyQuery}
+              onChange={(e) => {
+                setLaneEnemyQuery(e.target.value)
+                setLaneEnemyOpen(true)
+              }}
+              onFocus={() => setLaneEnemyOpen(true)}
+              aria-label="Search lane enemy champion"
+              aria-expanded={laneEnemyOpen}
+              aria-haspopup="listbox"
+            />
+          )}
+          {laneEnemyOpen && !value.laneEnemy && (
+            <ul
+              role="listbox"
+              aria-label="Champion suggestions"
+              className="absolute z-20 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-white/10 bg-slate-900 shadow-xl"
+            >
+              {filteredLaneEnemies.length === 0 ? (
+                <li className="px-3 py-2.5 text-sm text-slate-500">No champions found.</li>
+              ) : (
+                filteredLaneEnemies.map((champion) => (
+                  <li
+                    key={champion.id || champion.name}
+                    role="option"
+                    aria-selected={false}
+                    onMouseDown={() => selectLaneEnemy(champion.name)}
+                    className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-sm text-slate-200 hover:bg-white/[0.06]"
+                  >
+                    <ChampionPortrait
+                      championName={champion.name}
+                      className="size-6 rounded-md text-[8px]"
+                    />
+                    {champion.name}
+                  </li>
+                ))
+              )}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="mt-6">
@@ -159,8 +225,17 @@ export default function DraftForm({
           </div>
         )}
 
+        <input
+          type="text"
+          placeholder="Filter champions..."
+          className={`${fieldClass} mb-3`}
+          value={enemyTeamQuery}
+          onChange={(e) => setEnemyTeamQuery(e.target.value)}
+          aria-label="Filter enemy team champions"
+        />
+
         <div className="flex max-h-44 min-w-0 flex-wrap gap-2 overflow-y-auto pr-1">
-          {champions.map((champion) => {
+          {filteredTeamChampions.map((champion) => {
             const selected = value.enemyTeam.includes(champion.name)
             const unavailable = champion.name === value.laneEnemy
 
