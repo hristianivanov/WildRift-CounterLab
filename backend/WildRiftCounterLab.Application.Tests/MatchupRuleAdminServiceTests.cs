@@ -138,6 +138,12 @@ public class MatchupRuleAdminServiceTests
             return Task.CompletedTask;
         }
 
+        public Task AddRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+        {
+            _champions.AddRange(champions);
+            return Task.CompletedTask;
+        }
+
         public Task UpdateAsync(Champion champion)
         {
             return Task.CompletedTask;

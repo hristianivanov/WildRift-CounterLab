@@ -40,6 +40,12 @@ public class ChampionRepository : IChampionRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task AddRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+    {
+        _context.Champions.AddRange(champions);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task UpdateAsync(Champion champion)
     {
         _context.Champions.Update(champion);

@@ -8,6 +8,7 @@ using Application.Interfaces;
 using AI;
 using Data;
 using Repositories;
+using Services;
 
 public static class DependencyInjection
 {
@@ -45,6 +46,12 @@ public static class DependencyInjection
         services.AddScoped<IChampionRepository, ChampionRepository>();
         services.AddScoped<IMatchupRuleRepository, MatchupRuleRepository>();
         services.AddScoped<IAiExplanationCacheRepository, AiExplanationCacheRepository>();
+
+        services.AddHttpClient("DataDragon", client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(15);
+        });
+        services.AddScoped<IChampionSyncService, ChampionSyncService>();
 
         return services;
     }
