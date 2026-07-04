@@ -197,6 +197,12 @@ public class ChampionAdminServiceTests
             return Task.CompletedTask;
         }
 
+        public Task DeleteRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+        {
+            foreach (var c in champions) Champions.Remove(c);
+            return Task.CompletedTask;
+        }
+
         public Task<bool> ExistsByNameAsync(string name)
         {
             return Task.FromResult(Champions.Any(champion =>

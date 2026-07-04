@@ -11,6 +11,28 @@ namespace WildRiftCounterLab.Infrastructure.Services;
 
 public sealed class ChampionSyncService : IChampionSyncService
 {
+    // Confirmed Wild Rift champion pool — update this list when new champions release on WR.
+    // Names must match Data Dragon's "name" field exactly.
+    private static readonly HashSet<string> WildRiftRoster = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu",
+        "Annie", "Ashe", "Aurelion Sol", "Blitzcrank", "Braum",
+        "Caitlyn", "Camille", "Corki", "Darius", "Diana", "Dr. Mundo",
+        "Draven", "Ekko", "Evelynn", "Ezreal", "Fiora", "Fizz",
+        "Galio", "Garen", "Gragas", "Graves", "Gwen",
+        "Irelia", "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin",
+        "Jinx", "Kai'Sa", "Karma", "Katarina", "Kayle", "Kennen",
+        "Kha'Zix", "Lee Sin", "Leona", "Lissandra", "Lucian", "Lulu",
+        "Lux", "Malphite", "Master Yi", "Miss Fortune", "Morgana",
+        "Nami", "Nasus", "Nautilus", "Nunu & Willump", "Olaf",
+        "Orianna", "Ornn", "Pantheon", "Pyke", "Rammus", "Rakan",
+        "Renekton", "Riven", "Samira", "Senna", "Seraphine", "Sett",
+        "Shen", "Shyvana", "Singed", "Sona", "Soraka", "Teemo",
+        "Thresh", "Tristana", "Twisted Fate", "Varus", "Vayne", "Vex",
+        "Vi", "Warwick", "Wukong", "Xayah", "Xin Zhao", "Yasuo",
+        "Yone", "Yuumi", "Zed", "Ziggs", "Zoe", "Zyra",
+    };
+
     // Tags Data Dragon uses → our AllowedTags equivalents
     private static readonly Dictionary<string, string> TagMap = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -52,29 +74,43 @@ public sealed class ChampionSyncService : IChampionSyncService
         }
 
         var existing = await _champions.GetAllAsync(cancellationToken);
-        var existingNames = existing
-            .Select(c => c.Name)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existingByName = existing.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
+
+        // Remove champions not in WR that have no roles (safe to delete — no roles means never
+        // manually configured, so these were incorrectly synced entries).
+        var toRemove = existing
+            .Where(c => !WildRiftRoster.Contains(c.Name) && c.Roles.Count == 0)
+            .ToList();
+
+        if (toRemove.Count > 0)
+        {
+            await _champions.DeleteRangeAsync(toRemove, cancellationToken);
+            foreach (var c in toRemove) existingByName.Remove(c.Name);
+            _logger.LogInformation("Removed {Count} non-WR champions with no roles", toRemove.Count);
+        }
+
+        // Add WR champions missing from DB using Data Dragon for tags
+        var ddByName = response.Data.Values
+            .ToDictionary(e => e.Name, StringComparer.OrdinalIgnoreCase);
 
         var toAdd = new List<Champion>();
         var added = new List<string>();
         var skipped = 0;
 
-        foreach (var entry in response.Data.Values)
+        foreach (var name in WildRiftRoster)
         {
-            if (existingNames.Contains(entry.Name))
+            if (existingByName.ContainsKey(name))
             {
                 skipped++;
                 continue;
             }
 
-            var tags = entry.Tags
-                .Where(t => TagMap.ContainsKey(t))
-                .Select(t => TagMap[t])
-                .ToList();
+            var tags = ddByName.TryGetValue(name, out var entry)
+                ? entry.Tags.Where(t => TagMap.ContainsKey(t)).Select(t => TagMap[t]).ToList()
+                : new List<string>();
 
-            toAdd.Add(new Champion { Name = entry.Name, Roles = [], Tags = tags });
-            added.Add(entry.Name);
+            toAdd.Add(new Champion { Name = name, Roles = [], Tags = tags });
+            added.Add(name);
         }
 
         if (toAdd.Count > 0)
@@ -83,14 +119,16 @@ public sealed class ChampionSyncService : IChampionSyncService
         }
 
         _logger.LogInformation(
-            "Data Dragon sync complete: {Added} added, {Skipped} already present",
-            added.Count, skipped);
+            "Data Dragon sync complete: {Added} added, {Removed} removed, {Skipped} already present",
+            added.Count, toRemove.Count, skipped);
 
         return new ChampionSyncResultDto
         {
             Added = added.Count,
+            Removed = toRemove.Count,
             Skipped = skipped,
             AddedNames = added,
+            RemovedNames = toRemove.Select(c => c.Name).ToList(),
         };
     }
 

@@ -58,6 +58,12 @@ public class ChampionRepository : IChampionRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task DeleteRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+    {
+        _context.Champions.RemoveRange(champions);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsByNameAsync(string name)
     {
         return await _context.Champions.AnyAsync(champion =>
