@@ -12,6 +12,8 @@ public interface IChampionRepository
 
     Task AddAsync(Champion champion);
 
+    Task AddRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default);
+
     Task UpdateAsync(Champion champion);
 
     Task DeleteAsync(Champion champion);

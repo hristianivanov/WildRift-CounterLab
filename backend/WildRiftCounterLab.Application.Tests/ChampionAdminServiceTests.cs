@@ -180,6 +180,12 @@ public class ChampionAdminServiceTests
             return Task.CompletedTask;
         }
 
+        public Task AddRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+        {
+            Champions.AddRange(champions);
+            return Task.CompletedTask;
+        }
+
         public Task UpdateAsync(Champion champion)
         {
             return Task.CompletedTask;

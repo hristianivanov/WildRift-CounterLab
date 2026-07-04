@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using WildRiftCounterLab.Application.DTOs;
+using WildRiftCounterLab.Application.Interfaces;
 using WildRiftCounterLab.Application.Services;
 
 namespace WildRiftCounterLab.Api.Controllers;
@@ -14,10 +15,14 @@ namespace WildRiftCounterLab.Api.Controllers;
 public class ChampionsController : ControllerBase
 {
     private readonly ChampionAdminService _championAdminService;
+    private readonly IChampionSyncService _championSyncService;
 
-    public ChampionsController(ChampionAdminService championAdminService)
+    public ChampionsController(
+        ChampionAdminService championAdminService,
+        IChampionSyncService championSyncService)
     {
         _championAdminService = championAdminService;
+        _championSyncService = championSyncService;
     }
 
     [HttpGet]
@@ -56,6 +61,14 @@ public class ChampionsController : ControllerBase
     public async Task<IActionResult> UpdateChampion(int id, [FromBody] UpdateChampionRequestDto request)
     {
         return Ok(await _championAdminService.UpdateAsync(id, request));
+    }
+
+    [HttpPost("sync")]
+    [ProducesResponseType(typeof(ChampionSyncResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SyncChampions(CancellationToken cancellationToken)
+    {
+        return Ok(await _championSyncService.SyncFromDataDragonAsync(cancellationToken));
     }
 
     [HttpDelete("{id:int}")]
