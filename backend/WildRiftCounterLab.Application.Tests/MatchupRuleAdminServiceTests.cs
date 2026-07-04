@@ -155,6 +155,12 @@ public class MatchupRuleAdminServiceTests
             return Task.CompletedTask;
         }
 
+        public Task DeleteRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default)
+        {
+            foreach (var c in champions) _champions.Remove(c);
+            return Task.CompletedTask;
+        }
+
         public Task<bool> ExistsByNameAsync(string name)
         {
             return Task.FromResult(_champions.Any(champion =>

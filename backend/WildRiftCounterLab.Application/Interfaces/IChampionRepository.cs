@@ -18,5 +18,7 @@ public interface IChampionRepository
 
     Task DeleteAsync(Champion champion);
 
+    Task DeleteRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default);
+
     Task<bool> ExistsByNameAsync(string name);
 }
