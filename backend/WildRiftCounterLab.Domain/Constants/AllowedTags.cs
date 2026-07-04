@@ -24,6 +24,13 @@ public static class AllowedTags
         "anti-dash",
         "teamfight",
 
+        // Enemy composition labels (used by EnemyDraftProfile to classify enemy team)
+        "poke",
+        "burst",
+        "pick",
+        "immobile",
+        "dive",
+
         // General labels (used in reason/plan engines but not scored directly)
         "tank",
         "fighter",
