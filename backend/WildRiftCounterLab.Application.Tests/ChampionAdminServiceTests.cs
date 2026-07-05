@@ -167,12 +167,6 @@ public class ChampionAdminServiceTests
             return Task.FromResult(Champions.SingleOrDefault(champion => champion.Id == id));
         }
 
-        public Task<Champion?> GetByNameAsync(string name)
-        {
-            return Task.FromResult(Champions.SingleOrDefault(champion =>
-                champion.Name.Equals(name, StringComparison.OrdinalIgnoreCase)));
-        }
-
         public Task AddAsync(Champion champion)
         {
             champion.Id = Champions.Count == 0 ? 1 : Champions.Max(item => item.Id) + 1;

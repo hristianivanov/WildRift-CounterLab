@@ -8,8 +8,6 @@ public interface IChampionRepository
 
     Task<Champion?> GetByIdAsync(int id);
 
-    Task<Champion?> GetByNameAsync(string name);
-
     Task AddAsync(Champion champion);
 
     Task AddRangeAsync(IEnumerable<Champion> champions, CancellationToken cancellationToken = default);
