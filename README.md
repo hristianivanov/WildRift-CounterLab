@@ -114,7 +114,7 @@ corepack pnpm dev
 The production target is:
 
 - Vercel for the React frontend
-- Railway for the ASP.NET Core API, with Render as fallback
+- Railway for the ASP.NET Core API
 - Supabase PostgreSQL
 
 The repository includes:
@@ -122,7 +122,6 @@ The repository includes:
 - `frontend/vercel.json`
 - `backend/Dockerfile`
 - `backend/railway.toml`
-- `render.yaml`
 - Optional startup migration configuration
 - Environment-driven production CORS
 
