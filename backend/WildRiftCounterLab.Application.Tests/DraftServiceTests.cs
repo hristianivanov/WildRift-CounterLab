@@ -281,12 +281,6 @@ public class DraftServiceTests
             return Task.FromResult(_champions.SingleOrDefault(champion => champion.Id == id));
         }
 
-        public Task<Champion?> GetByNameAsync(string name)
-        {
-            return Task.FromResult(_champions.SingleOrDefault(champion =>
-                champion.Name.Equals(name, StringComparison.OrdinalIgnoreCase)));
-        }
-
         public Task AddAsync(Champion champion)
         {
             _champions.Add(champion);

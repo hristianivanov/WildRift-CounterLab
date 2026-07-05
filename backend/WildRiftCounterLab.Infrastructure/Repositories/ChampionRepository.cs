@@ -28,12 +28,6 @@ public class ChampionRepository : IChampionRepository
         return await _context.Champions.FindAsync(id);
     }
 
-    public async Task<Champion?> GetByNameAsync(string name)
-    {
-        return await _context.Champions.FirstOrDefaultAsync(champion =>
-            champion.Name.ToLower() == name.ToLower());
-    }
-
     public async Task AddAsync(Champion champion)
     {
         _context.Champions.Add(champion);
