@@ -95,8 +95,6 @@ Groq and Gemini cannot change scores, ranking, reasons, plans, or score breakdow
 
 ## Local Setup
 
-Detailed PostgreSQL, AI provider secrets, troubleshooting, and demo instructions are in [DEVELOPMENT.md](DEVELOPMENT.md).
-
 ```powershell
 # Backend
 cd backend
