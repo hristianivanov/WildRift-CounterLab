@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/wildrift-counter-lab-logo.png" alt="Wild Rift Counter Lab logo" width="720" />
+  <img src="docs/assets/wildrift-counter-lab-logo-removebg-preview.png" alt="Wild Rift Counter Lab logo" width="720" />
 </p>
 
 ## Wild Rift Counter Lab - AI Powered Recommendation Platform
@@ -176,7 +176,3 @@ The scheduled and manually triggered production smoke workflow checks the deploy
 
 - `PRODUCTION_BACKEND_URL`: backend origin without `/api` or a trailing slash, such as `https://YOUR-BACKEND-DOMAIN`
 - `PRODUCTION_FRONTEND_URL`: frontend origin without a trailing slash, such as `https://YOUR-FRONTEND-DOMAIN`
-
-## Roadmap
-
-Completed work, near-term improvements, and later ideas are tracked in [docs/roadmap.md](docs/roadmap.md).
