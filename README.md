@@ -8,9 +8,7 @@
 
 </br>
 
-<p align="center">
-  <img src="docs/assets/wildrift-counter-lab-logo.png" alt="Wild Rift Counter Lab logo" width="720" />
-</p>
+![Wild Rift Counter Lab logo](docs/assets/wildrift-counter-lab-logo-removebg-preview.png)
 
 <div align="center">
 
@@ -29,29 +27,35 @@ and uses **AI only to explain** what the engine already decided.
 ## Live Demo
 
 - Frontend: [wild-rift-app-mocha.vercel.app](https://wild-rift-app-mocha.vercel.app)
-- API health: [wildrift-counterlab-api-production.up.railway.app/api/health](https://wildrift-counterlab-api-production.up.railway.app/api/health)
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/187shots_so.png" alt="Desktop mockup" width="100%"/></td>
+    <td><img src="docs/screenshots/800shots_so.png" alt="Mobile mockup" width="100%"/></td>
+  </tr>
+</table>
 
 ## Quick Highlights
 
-| Area           | Details                                                                          |
-| -------------- | -------------------------------------------------------------------------------- |
+| Area           | Details                                                                         |
+| -------------- | ------------------------------------------------------------------------------- |
 | Recommendation | Deterministic multi-category scorer — lane, team fit, role, safety, scale, util |
-| Architecture   | Clean Architecture (Domain / Application / Infrastructure / API)                 |
-| AI Role        | Explains ranked results; cannot change scores, reasons, or plans                 |
-| Champion Data  | Synced from Riot Data Dragon public API — no hard-coded champion list             |
-| Data           | PostgreSQL with Entity Framework Core                                            |
-| Testing        | xUnit unit tests and ASP.NET Core integration tests                              |
-| Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks             |
-| Deployment     | Vercel (frontend) · Railway (API) · Supabase PostgreSQL                          |
+| Architecture   | Clean Architecture (Domain / Application / Infrastructure / API)                |
+| AI Role        | Explains ranked results; cannot change scores, reasons, or plans                |
+| Champion Data  | Synced from Riot Data Dragon public API — no hard-coded champion list           |
+| Data           | PostgreSQL with Entity Framework Core                                           |
+| Testing        | xUnit unit tests and ASP.NET Core integration tests                             |
+| Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks            |
+| Deployment     | Vercel (frontend) · Railway (API) · Supabase PostgreSQL                         |
 
 ## Screenshots
 
-| Draft setup | Recommendations |
-| ----------- | --------------- |
+| Draft setup                                                                                           | Recommendations                                                                                                   |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | [![Draft setup](docs/screenshots/previews/draft-setup-preview.png)](docs/screenshots/draft-setup.png) | [![Recommendations](docs/screenshots/previews/recommendations-preview.png)](docs/screenshots/recommendations.png) |
 
-| AI analysis | Mobile layout |
-| ----------- | ------------- |
+| AI analysis                                                                                           | Mobile layout                                                                                               |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | [![AI analysis](docs/screenshots/previews/ai-analysis-preview.png)](docs/screenshots/ai-analysis.png) | [![Mobile layout](docs/screenshots/previews/mobile-layout-preview.png)](docs/screenshots/mobile-layout.png) |
 
 ## Recommendation Pipeline
@@ -82,15 +86,15 @@ Application contains the recommendation pipeline and contracts. Infrastructure i
 
 ## Main API Routes
 
-| Method | Route | Description |
-| ------ | ----- | ----------- |
-| `GET` | `/api/health` | Health check |
-| `GET` | `/api/champions` | List all champions |
-| `POST` | `/api/champions/sync` | Sync champions from Riot Data Dragon |
-| `POST` | `/api/draft/recommendations` | Get ranked counter picks |
-| `POST` | `/api/ai/explain` | Generate AI explanation for a recommendation |
-| `GET\|POST\|PUT\|DELETE` | `/api/champions` | Champion CRUD |
-| `GET\|POST\|PUT\|DELETE` | `/api/matchup-rules` | Matchup rule CRUD |
+| Method                   | Route                        | Description                                  |
+| ------------------------ | ---------------------------- | -------------------------------------------- |
+| `GET`                    | `/api/health`                | Health check                                 |
+| `GET`                    | `/api/champions`             | List all champions                           |
+| `POST`                   | `/api/champions/sync`        | Sync champions from Riot Data Dragon         |
+| `POST`                   | `/api/draft/recommendations` | Get ranked counter picks                     |
+| `POST`                   | `/api/ai/explain`            | Generate AI explanation for a recommendation |
+| `GET\|POST\|PUT\|DELETE` | `/api/champions`             | Champion CRUD                                |
+| `GET\|POST\|PUT\|DELETE` | `/api/matchup-rules`         | Matchup rule CRUD                            |
 
 Interactive Scalar API reference is available in Development at `http://localhost:5069/scalar`.
 
@@ -162,11 +166,11 @@ corepack pnpm run build
 
 ## Deployment
 
-| Platform | Purpose |
-| -------- | ------- |
-| Vercel | React frontend — `frontend/vercel.json` |
-| Railway | ASP.NET Core API — `backend/Dockerfile` + `backend/railway.toml` |
-| Supabase | PostgreSQL database |
+| Platform | Purpose                                                          |
+| -------- | ---------------------------------------------------------------- |
+| Vercel   | React frontend — `frontend/vercel.json`                          |
+| Railway  | ASP.NET Core API — `backend/Dockerfile` + `backend/railway.toml` |
+| Supabase | PostgreSQL database                                              |
 
 See [docs/deployment.md](docs/deployment.md) for environment variables, Supabase migration procedure, AI provider verification, and health check configuration.
 
@@ -184,3 +188,7 @@ If you find this project useful, please consider giving it a star!
 
 [ci-img]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml
+unterLab/actions/workflows/ci.yml
+
+[forks-img]: https://img.shields.io/github/forks/hristianivanov/WildRift-CounterLab
+[forks-url]: https://github.com/hristianivanov/WildRift-CounterLab/network/members
