@@ -66,7 +66,7 @@ and uses **AI only to explain** what the engine already decided.
 
 ![Architecture scheme](docs/assets/architecture.png)
 
-Application contains the recommendation pipeline and contracts. Infrastructure implements persistence and AI contracts. Domain remains dependency-free. See [docs/architecture.md](docs/architecture.md) for details.
+Application contains the recommendation pipeline and contracts. Infrastructure implements persistence and AI contracts. Domain remains dependency-free.
 
 ## Main API Routes
 

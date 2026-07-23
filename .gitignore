@@ -8,3 +8,12 @@ dist/
 .env
 .env.local
 TestResults/
+
+# Claude Code
+.claude/
+.agents/
+
+# IDE
+.idea/
+.vs/
+*.DS_Store
