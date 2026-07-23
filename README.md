@@ -20,20 +20,14 @@ picks champions based on **role**, **lane matchup**, and **enemy team compositio
 
 and uses **AI only to explain** what the engine already decided.
 
-> **Design principle:** the recommendation engine decides; AI explains.
 
 </div>
 
-## Live Demo
 
-- Frontend: [wild-rift-app-mocha.vercel.app](https://wild-rift-app-mocha.vercel.app)
+## Live Demo [https://wild-riftcounterlab.app](https://wild-rift-app-mocha.vercel.app)
 
-<table>
-  <tr>
-    <td><img src="docs/screenshots/187shots_so.png" alt="Desktop mockup" width="100%"/></td>
-    <td><img src="docs/screenshots/800shots_so.png" alt="Mobile mockup" width="100%"/></td>
-  </tr>
-</table>
+![App mockup](docs/screenshots/mockup.png)
+
 
 ## Quick Highlights
 
@@ -47,16 +41,6 @@ and uses **AI only to explain** what the engine already decided.
 | Testing        | xUnit unit tests and ASP.NET Core integration tests                             |
 | Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks            |
 | Deployment     | Vercel (frontend) · Railway (API) · Supabase PostgreSQL                         |
-
-## Screenshots
-
-| Draft setup                                                                                           | Recommendations                                                                                                   |
-| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [![Draft setup](docs/screenshots/previews/draft-setup-preview.png)](docs/screenshots/draft-setup.png) | [![Recommendations](docs/screenshots/previews/recommendations-preview.png)](docs/screenshots/recommendations.png) |
-
-| AI analysis                                                                                           | Mobile layout                                                                                               |
-| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [![AI analysis](docs/screenshots/previews/ai-analysis-preview.png)](docs/screenshots/ai-analysis.png) | [![Mobile layout](docs/screenshots/previews/mobile-layout-preview.png)](docs/screenshots/mobile-layout.png) |
 
 ## Recommendation Pipeline
 
@@ -76,7 +60,7 @@ and uses **AI only to explain** what the engine already decided.
 | Data     | PostgreSQL, Entity Framework Core                              |
 | AI       | GroqCloud chat completions, optional Gemini fallback, PG cache |
 | Testing  | xUnit, ASP.NET Core integration testing, EF Core InMemory      |
-| Delivery | GitHub Actions CI, Vercel, Railway                             |
+| Delivery | GitHub Actions CI, Vercel, Render                              |
 
 ## Architecture
 
@@ -164,16 +148,6 @@ corepack pnpm run lint
 corepack pnpm run build
 ```
 
-## Deployment
-
-| Platform | Purpose                                                          |
-| -------- | ---------------------------------------------------------------- |
-| Vercel   | React frontend — `frontend/vercel.json`                          |
-| Railway  | ASP.NET Core API — `backend/Dockerfile` + `backend/railway.toml` |
-| Supabase | PostgreSQL database                                              |
-
-See [docs/deployment.md](docs/deployment.md) for environment variables, Supabase migration procedure, AI provider verification, and health check configuration.
-
 ## Give a Star ⭐
 
 If you find this project useful, please consider giving it a star!
@@ -188,7 +162,3 @@ If you find this project useful, please consider giving it a star!
 
 [ci-img]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml
-unterLab/actions/workflows/ci.yml
-
-[forks-img]: https://img.shields.io/github/forks/hristianivanov/WildRift-CounterLab
-[forks-url]: https://github.com/hristianivanov/WildRift-CounterLab/network/members
