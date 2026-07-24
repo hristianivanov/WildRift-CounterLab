@@ -8,7 +8,7 @@
 
 </br>
 
-![Wild Rift Counter Lab logo](docs/assets/wildrift-counter-lab-logo-removebg-preview.png)
+![Wild Rift Counter Lab logo](docs/assets/wildrift-counter-lab-logo.png)
 
 <div align="center">
 
