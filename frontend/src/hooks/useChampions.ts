@@ -36,7 +36,8 @@ function writeCache(champions: Champion[]): void {
 export function useChampions() {
   const cached = readCache()
   const [champions, setChampions] = useState<Champion[]>(cached ?? fallbackChampions)
-  const [usingFallback, setUsingFallback] = useState(cached === null)
+  const [usingFallback, setUsingFallback] = useState(false)
+  const [loading, setLoading] = useState(cached === null)
 
   useEffect(() => {
     if (cached !== null) {
@@ -56,6 +57,8 @@ export function useChampions() {
         if (controller.signal.aborted) return
         setChampions(fallbackChampions)
         setUsingFallback(true)
+      } finally {
+        if (!controller.signal.aborted) setLoading(false)
       }
     }
 
@@ -64,5 +67,5 @@ export function useChampions() {
     return () => controller.abort()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { champions, usingFallback }
+  return { champions, usingFallback: !loading && usingFallback }
 }

@@ -24,7 +24,7 @@ and uses **AI only to explain** what the engine already decided.
 </div>
 
 
-## Live Demo [https://wild-riftcounterlab.app](https://wild-rift-app-mocha.vercel.app)
+## Live Demo [https://wild-riftcounterlab.app](https://wildrift-counterlab.vercel.app)
 
 ![App mockup](docs/screenshots/mockup.png)
 
