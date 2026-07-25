@@ -3,10 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "pnpm": {
-    "allowBuild": ["esbuild"]
-  },
-  "scripts": {
+"scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "lint": "eslint .",
