@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   api:
-    name: Backend build and tests
+    name: API — build and test
     runs-on: ubuntu-latest
 
     steps:
@@ -38,17 +38,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Restore api projects
+      - name: Restore
         run: |
           dotnet restore api/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj
           dotnet restore api/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj
 
-      - name: Build api projects
+      - name: Build
         run: |
           dotnet build api/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj --configuration Release --no-restore --warnaserror
           dotnet build api/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj --configuration Release --no-restore --warnaserror
 
-      - name: Run api tests
+      - name: Test
         shell: bash
         run: |
           set +e
@@ -73,7 +73,7 @@ jobs:
             exit 1
           fi
 
-      - name: Upload failed api test results
+      - name: Upload failed test results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -82,7 +82,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      - name: Publish API
+      - name: Publish
         run: |
           dotnet publish api/WildRiftCounterLab.Api/WildRiftCounterLab.Api.csproj \
             --configuration Release \
@@ -90,17 +90,8 @@ jobs:
             --output "${{ runner.temp }}/published-api" \
             -p:TreatWarningsAsErrors=true
 
-      - name: Upload published API
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: wildrift-counterlab-api
-          path: ${{ runner.temp }}/published-api
-          if-no-files-found: error
-          retention-days: 7
-
   client:
-    name: Frontend lint and build
+    name: Client — lint and build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -123,27 +114,18 @@ jobs:
           cache: pnpm
           cache-dependency-path: client/pnpm-lock.yaml
 
-      - name: Install client dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint client
+      - name: Lint
         run: pnpm run lint
 
-      - name: Build client
+      - name: Build
         run: pnpm run build
 
-      - name: Upload client build
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: wildrift-counterlab-web
-          path: client/dist
-          if-no-files-found: error
-          retention-days: 7
-
   docker:
-    name: Backend Docker build
-    needs: api
+    name: Docker — build image
+    needs: [api, client]
     runs-on: ubuntu-latest
 
     steps:
@@ -153,10 +135,27 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Railway api image
+      - name: Build image
         uses: docker/build-push-action@v6
         with:
           context: api
           file: api/Dockerfile
           push: false
           tags: wildrift-counterlab-api:ci
+
+  deploy:
+    name: Deploy — Render + Vercel
+    needs: [docker]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy API to Render
+        run: |
+          curl --silent --show-error --fail \
+            -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+      - name: Deploy client to Vercel
+        run: |
+          curl --silent --show-error --fail \
+            -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
