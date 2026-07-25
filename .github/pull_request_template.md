@@ -20,8 +20,8 @@ Describe migrations, environment variables, hosting changes, or write `None`.
 
 ## Checklist
 
-- [ ] Backend tests pass when backend code changed
-- [ ] Frontend lint and production build pass when frontend code changed
+- [ ] API tests pass when backend code changed
+- [ ] Client lint and production build pass when frontend code changed
 - [ ] Docker build implications were considered
 - [ ] Documentation was updated when behavior or configuration changed
 - [ ] No secrets, environment files, generated outputs, or IDE files were committed

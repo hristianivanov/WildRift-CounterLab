@@ -2,14 +2,14 @@ version: 2
 
 updates:
   - package-ecosystem: nuget
-    directory: /backend
+    directory: /api
     schedule:
       interval: weekly
       day: monday
     open-pull-requests-limit: 3
 
   - package-ecosystem: npm
-    directory: /frontend
+    directory: /client
     schedule:
       interval: weekly
       day: monday

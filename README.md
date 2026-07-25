@@ -40,7 +40,7 @@ and uses **AI only to explain** what the engine already decided.
 | Data           | PostgreSQL with Entity Framework Core                                           |
 | Testing        | xUnit unit tests and ASP.NET Core integration tests                             |
 | Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks            |
-| Deployment     | Vercel (frontend) · Railway (API) · Supabase PostgreSQL                         |
+| Deployment     | Vercel (client) · Render (API) · Supabase PostgreSQL                            |
 
 ## Recommendation Pipeline
 
@@ -55,8 +55,8 @@ and uses **AI only to explain** what the engine already decided.
 
 | Area     | Technologies                                                   |
 | -------- | -------------------------------------------------------------- |
-| Frontend | React, Vite, TypeScript, Tailwind CSS, Framer Motion, axios    |
-| Backend  | ASP.NET Core Web API, Clean Architecture, .NET 8               |
+| Client   | React, Vite, TypeScript, Tailwind CSS, Framer Motion, axios    |
+| API      | ASP.NET Core Web API, Clean Architecture, .NET 8               |
 | Data     | PostgreSQL, Entity Framework Core                              |
 | AI       | GroqCloud chat completions, optional Gemini fallback, PG cache |
 | Testing  | xUnit, ASP.NET Core integration testing, EF Core InMemory      |
@@ -99,19 +99,19 @@ cd WildRift-CounterLab
 **2. Set your connection string**
 
 ```powershell
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=wildriftcounterlab;Username=postgres;Password=YOUR_PASSWORD" --project backend/WildRiftCounterLab.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=wildriftcounterlab;Username=postgres;Password=YOUR_PASSWORD" --project api/WildRiftCounterLab.Api
 ```
 
 **3. Run the backend**
 
 ```powershell
-dotnet run --project backend/WildRiftCounterLab.Api --launch-profile http
+dotnet run --project api/WildRiftCounterLab.Api --launch-profile http
 ```
 
-**4. Install frontend dependencies and start the dev server**
+**4. Install client dependencies and start the dev server**
 
 ```powershell
-cd frontend
+cd client
 corepack pnpm install
 corepack pnpm dev
 ```
@@ -122,8 +122,8 @@ corepack pnpm dev
 Set at least one AI provider key to enable the AI explanation step:
 
 ```powershell
-dotnet user-secrets set "Groq:ApiKey" "your_groq_api_key" --project backend/WildRiftCounterLab.Api
-dotnet user-secrets set "Gemini:ApiKey" "your_gemini_api_key" --project backend/WildRiftCounterLab.Api
+dotnet user-secrets set "Groq:ApiKey" "your_groq_api_key" --project api/WildRiftCounterLab.Api
+dotnet user-secrets set "Gemini:ApiKey" "your_gemini_api_key" --project api/WildRiftCounterLab.Api
 ```
 
 Groq is the primary provider; Gemini is the fallback. Recommendations work without either — the AI explanation step is skipped.
@@ -133,16 +133,16 @@ Groq is the primary provider; Gemini is the fallback. Recommendations work witho
 ## Verification
 
 ```powershell
-# Backend
-cd backend
+# API
+cd api
 dotnet restore
 dotnet build --warnaserror --configuration Release
 dotnet test
 ```
 
 ```powershell
-# Frontend
-cd frontend
+# Client
+cd client
 corepack pnpm install
 corepack pnpm run lint
 corepack pnpm run build
