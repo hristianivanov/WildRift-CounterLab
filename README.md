@@ -160,5 +160,5 @@ If you find this project useful, please consider giving it a star!
 [forks-img]: https://img.shields.io/github/forks/hristianivanov/WildRift-CounterLab
 [forks-url]: https://github.com/hristianivanov/WildRift-CounterLab/network/members
 
-[ci-img]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml/badge.svg
-[ci-url]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/ci.yml
+[ci-img]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/workflow.yml/badge.svg
+[ci-url]: https://github.com/hristianivanov/WildRift-CounterLab/actions/workflows/workflow.yml
