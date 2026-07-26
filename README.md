@@ -64,7 +64,7 @@ and uses **AI only to explain** what the engine already decided.
 
 ## Architecture
 
-![Architecture scheme](docs/assets/architecture-bg.png)
+![Architecture scheme](docs/assets/project-architecture.svg)
 
 Application contains the recommendation pipeline and contracts. Infrastructure implements persistence and AI contracts. Domain remains dependency-free.
 
