@@ -57,9 +57,12 @@ and uses **AI only to explain** what the engine already decided.
 
 </br>
 
-## Architecture
+## Project Architecture
 
-The backend follows **Clean Architecture** — domain logic is fully isolated from infrastructure and the API layer. The client communicates only with the API; AI providers are called server-side and never exposed to the browser.
+>The backend follows **Clean Architecture** — domain logic is fully isolated from infrastructure and the API layer. 
+>The client communicates only with the >API; AI providers are called server-side and never exposed to the browser.
+
+</br>
 
 ![Architecture scheme](docs/assets/project-architecture.svg)
 
@@ -140,14 +143,6 @@ cd api && dotnet restore && dotnet build --warnaserror --configuration Release &
 # Client
 cd client && corepack pnpm install && corepack pnpm run lint && corepack pnpm run build
 ```
-
-## Contributing
-
-Issues and pull requests are welcome. Please open an issue first to discuss any significant changes.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ## Give a Star ⭐
 
