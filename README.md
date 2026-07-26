@@ -14,17 +14,18 @@
 
 # Wild Rift Counter Lab — **AI Powered Draft Assistant**
 
+
 Full-stack **champion recommendation platform** for Wild Rift
 
 picks champions based on **role**, **lane matchup**, and **enemy team composition**
 
 and uses **AI only to explain** what the engine already decided.
 
-
 </div>
 
+</br>
 
-## Live Demo [https://wild-riftcounterlab.app](https://wildrift-counterlab.vercel.app)
+## Live App [https://wild-riftcounterlab.app](https://wildrift-counterlab.vercel.app)
 
 ![App mockup](docs/screenshots/mockup.png)
 
@@ -42,58 +43,55 @@ and uses **AI only to explain** what the engine already decided.
 | Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks            |
 | Deployment     | Vercel (client) · Render (API) · Supabase PostgreSQL                            |
 
-## Recommendation Pipeline
-
-1. Validate role and selected enemy champions.
-2. Load champions and matchup rules from PostgreSQL.
-3. Calculate deterministic score categories.
-4. Build rule and tag-based reasons and game plans.
-5. Rank and select the top recommendations.
-6. Optionally enrich top results with AI explanations — generated after ranking, cached in PostgreSQL.
+</br>
 
 ## Tech Stack
 
-| Area     | Technologies                                                   |
-| -------- | -------------------------------------------------------------- |
-| Client   | React, Vite, TypeScript, Tailwind CSS, Framer Motion, axios    |
-| API      | ASP.NET Core Web API, Clean Architecture, .NET 8               |
-| Data     | PostgreSQL, Entity Framework Core                              |
-| AI       | GroqCloud chat completions, optional Gemini fallback, PG cache |
-| Testing  | xUnit, ASP.NET Core integration testing, EF Core InMemory      |
-| Delivery | GitHub Actions CI, Vercel, Render                              |
+| Area     | Technologies                                                                                                                                       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client   | ![React][badge-react] ![Vite][badge-vite] ![TypeScript][badge-ts] ![Tailwind][badge-tailwind] ![Framer Motion][badge-framer] ![Axios][badge-axios] |
+| API      | ![ASP.NET Core][badge-aspnet] ![.NET 8][badge-dotnet]                                                                                              |
+| Data     | ![PostgreSQL][badge-postgres] ![EF Core][badge-efcore]                                                                                             |
+| AI       | ![Groq][badge-groq] ![Gemini][badge-gemini]                                                                                                        |
+| Testing  | ![xUnit][badge-xunit]                                                                                                                              |
+| Delivery | ![GitHub Actions][badge-gha] ![Vercel][badge-vercel] ![Render][badge-render]                                                                       |
+
+</br>
 
 ## Architecture
 
 ![Architecture scheme](docs/assets/project-architecture.svg)
 
-Application contains the recommendation pipeline and contracts. Infrastructure implements persistence and AI contracts. Domain remains dependency-free.
+</br>
 
 ## Main API Routes
 
-| Method                   | Route                        | Description                                  |
-| ------------------------ | ---------------------------- | -------------------------------------------- |
-| `GET`                    | `/api/health`                | Health check                                 |
-| `GET`                    | `/api/champions`             | List all champions                           |
-| `POST`                   | `/api/champions/sync`        | Sync champions from Riot Data Dragon         |
-| `POST`                   | `/api/draft/recommendations` | Get ranked counter picks                     |
-| `POST`                   | `/api/ai/explain`            | Generate AI explanation for a recommendation |
-| `GET\|POST\|PUT\|DELETE` | `/api/champions`             | Champion CRUD                                |
-| `GET\|POST\|PUT\|DELETE` | `/api/matchup-rules`         | Matchup rule CRUD                            |
+| Method                                                                          | Route                            | Description                                  |
+| ------------------------------------------------------------------------------- | -------------------------------- | -------------------------------------------- |
+| ![GET][badge-get]                                                               | **`/api/health`**                | Health check                                 |
+| ![GET][badge-get]                                                               | **`/api/champions`**             | List all champions                           |
+| ![POST][badge-post]                                                             | **`/api/champions/sync`**        | Sync champions from Riot Data Dragon         |
+| ![POST][badge-post]                                                             | **`/api/draft/recommendations`** | Get ranked counter picks                     |
+| ![POST][badge-post]                                                             | **`/api/ai/explain`**            | Generate AI explanation for a recommendation |
+| ![GET][badge-get] ![POST][badge-post] ![PUT][badge-put] ![DELETE][badge-delete] | **`/api/champions`**             | Champion CRUD                                |
+| ![GET][badge-get] ![POST][badge-post] ![PUT][badge-put] ![DELETE][badge-delete] | **`/api/matchup-rules`**         | Matchup rule CRUD                            |
 
-Interactive Scalar API reference is available in Development at `http://localhost:5069/scalar`.
+> [!NOTE]
+> Interactive __Scalar API__ reference is available in Development at `http://localhost:5069/scalar`.
+
+</br>
 
 ## Local Setup
 
 > [!IMPORTANT]
 > - [x] **.NET 8 SDK**
-> - [x] **Node.js 20+ with corepack enabled** (`corepack enable`)
-> - [x] **PostgreSQL** running locally
+> - [x] **Node.js 20+ _with corepack enabled_**
+> - [x] **PostgreSQL** *running locally*
 
 **1. Clone the repository**
 
 ```bash
 git clone https://github.com/hristianivanov/WildRift-CounterLab.git
-cd WildRift-CounterLab
 ```
 
 **2. Set your connection string**
@@ -130,22 +128,16 @@ Groq is the primary provider; Gemini is the fallback. Recommendations work witho
 
 </details>
 
-## Verification
+## Running Tests
 
 ```powershell
 # API
-cd api
-dotnet restore
-dotnet build --warnaserror --configuration Release
-dotnet test
+cd api && dotnet restore && dotnet build --warnaserror --configuration Release && dotnet test
 ```
 
 ```powershell
 # Client
-cd client
-corepack pnpm install
-corepack pnpm run lint
-corepack pnpm run build
+cd client && corepack pnpm install && corepack pnpm run lint && corepack pnpm run build
 ```
 
 ## Give a Star ⭐
@@ -153,6 +145,28 @@ corepack pnpm run build
 If you find this project useful, please consider giving it a star!
 
 <!---------------------------------- LINKS ------------------------------------->
+
+[badge-react]:    https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[badge-vite]:     https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
+[badge-ts]:       https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[badge-tailwind]: https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
+[badge-framer]:   https://img.shields.io/badge/Framer-FF0050?style=for-the-badge&logo=framer&logoColor=white
+[badge-axios]:    https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white
+[badge-aspnet]:   https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white
+[badge-dotnet]:   https://img.shields.io/badge/.NET_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white
+[badge-postgres]: https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white
+[badge-efcore]:   https://img.shields.io/badge/EF_Core-68217A?style=for-the-badge&logo=dotnet&logoColor=white
+[badge-groq]:     https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white
+[badge-gemini]:   https://img.shields.io/badge/Gemini-4285F4?style=for-the-badge&logo=googlegemini&logoColor=white
+[badge-xunit]:    https://img.shields.io/badge/xUnit-7B3F00?style=for-the-badge&logo=dotnet&logoColor=white
+[badge-gha]:      https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white
+[badge-vercel]:   https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white
+[badge-render]:   https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white
+
+[badge-get]:    https://img.shields.io/badge/GET-61affe?style=flat-square
+[badge-post]:   https://img.shields.io/badge/POST-49cc90?style=flat-square
+[badge-put]:    https://img.shields.io/badge/PUT-fca130?style=flat-square
+[badge-delete]: https://img.shields.io/badge/DELETE-f93e3e?style=flat-square
 
 [stars-img]: https://img.shields.io/github/stars/hristianivanov/WildRift-CounterLab
 [stars-url]: https://github.com/hristianivanov/WildRift-CounterLab/stargazers
