@@ -25,7 +25,9 @@ and uses **AI only to explain** what the engine already decided.
 
 </br>
 
-## Live App [https://wild-riftcounterlab.app](https://wildrift-counterlab.vercel.app)
+## Live App
+
+[![Live App](https://img.shields.io/badge/Open_Live_App-wildrift--counterlab.vercel.app-4f46e5?style=for-the-badge&logo=vercel&logoColor=white)](https://wildrift-counterlab.vercel.app)
 
 ![App mockup](docs/screenshots/mockup.png)
 
@@ -35,12 +37,9 @@ and uses **AI only to explain** what the engine already decided.
 | Area           | Details                                                                         |
 | -------------- | ------------------------------------------------------------------------------- |
 | Recommendation | Deterministic multi-category scorer — lane, team fit, role, safety, scale, util |
-| Architecture   | Clean Architecture (Domain / Application / Infrastructure / API)                |
 | AI Role        | Explains ranked results; cannot change scores, reasons, or plans                |
 | Champion Data  | Synced from Riot Data Dragon public API — no hard-coded champion list           |
-| Data           | PostgreSQL with Entity Framework Core                                           |
-| Testing        | xUnit unit tests and ASP.NET Core integration tests                             |
-| Delivery       | GitHub Actions CI — build, test, Docker, and production smoke checks            |
+| Architecture   | Clean Architecture (Domain / Application / Infrastructure / API)                |
 | Deployment     | Vercel (client) · Render (API) · Supabase PostgreSQL                            |
 
 </br>
@@ -59,6 +58,8 @@ and uses **AI only to explain** what the engine already decided.
 </br>
 
 ## Architecture
+
+The backend follows **Clean Architecture** — domain logic is fully isolated from infrastructure and the API layer. The client communicates only with the API; AI providers are called server-side and never exposed to the browser.
 
 ![Architecture scheme](docs/assets/project-architecture.svg)
 
@@ -140,9 +141,17 @@ cd api && dotnet restore && dotnet build --warnaserror --configuration Release &
 cd client && corepack pnpm install && corepack pnpm run lint && corepack pnpm run build
 ```
 
+## Contributing
+
+Issues and pull requests are welcome. Please open an issue first to discuss any significant changes.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ## Give a Star ⭐
 
-If you find this project useful, please consider giving it a star!
+If you find this project useful, please consider giving it a star — it helps others discover it!
 
 <!---------------------------------- LINKS ------------------------------------->
 
