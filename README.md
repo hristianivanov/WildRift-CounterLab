@@ -59,12 +59,15 @@ and uses **AI only to explain** what the engine already decided.
 
 ## Project Architecture
 
->The backend follows **Clean Architecture** — domain logic is fully isolated from infrastructure and the API layer. 
->The client communicates only with the >API; AI providers are called server-side and never exposed to the browser.
-
 </br>
 
 ![Architecture scheme](docs/assets/project-architecture.svg)
+
+> [!NOTE]
+> The backend follows **Clean Architecture** — domain logic is fully isolated from infrastructure and the API layer. 
+> **The client** communicates only with the API.
+> **AI providers** are called **server-side** and never exposed to the browser.
+
 
 </br>
 
