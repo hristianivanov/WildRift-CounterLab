@@ -1,7 +1,7 @@
+namespace WildRiftCounterLab.Api.Controllers;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-namespace WildRiftCounterLab.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -1,3 +1,5 @@
+namespace WildRiftCounterLab.Infrastructure.AI;
+
 using System.Text.Json;
 
 using Microsoft.Extensions.Configuration;
@@ -5,13 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Types;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
-using WildRiftCounterLab.Application.Interfaces;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Services.Models;
 
-namespace WildRiftCounterLab.Infrastructure.AI;
-
-public class GeminiAiExplanationProvider : IExternalAiExplanationProvider
+public class GeminiAiExplanationProvider : IAiExplanationProvider
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {

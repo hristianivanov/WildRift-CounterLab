@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+namespace WildRiftCounterLab.Api.Controllers;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Interfaces;
-
-namespace WildRiftCounterLab.Api.Controllers;
+using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Services.Models;
 
 [ApiController]
 [Route("api/[controller]")]

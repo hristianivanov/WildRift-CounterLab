@@ -2,6 +2,8 @@ namespace WildRiftCounterLab.Api;
 
 using System.Threading.RateLimiting;
 
+using WildRiftCounterLab.Infrastructure;
+
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -9,13 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
 
-using Application;
-using Application.DTOs;
-using Application.Exceptions;
-
-using Infrastructure;
-using Infrastructure.Data;
-using Infrastructure.Seed;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Data;
+using WildRiftCounterLab.Data.Seed;
+using WildRiftCounterLab.Services;
+using WildRiftCounterLab.Services.Models;
 
 public class Program
 {
@@ -101,7 +101,8 @@ public class Program
             };
         });
 
-        builder.Services.AddApplication();
+        builder.Services.AddServices();
+        builder.Services.AddData(builder.Configuration);
         builder.Services.AddInfrastructure(builder.Configuration);
 
         // Swashbuckle generates the OpenAPI document consumed by Scalar.

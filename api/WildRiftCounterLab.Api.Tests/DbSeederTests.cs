@@ -1,10 +1,10 @@
+namespace WildRiftCounterLab.Api.Tests;
+
 using Microsoft.EntityFrameworkCore;
 
-using WildRiftCounterLab.Domain.Entities;
-using WildRiftCounterLab.Infrastructure.Data;
-using WildRiftCounterLab.Infrastructure.Seed;
-
-namespace WildRiftCounterLab.Api.Tests;
+using WildRiftCounterLab.Data;
+using WildRiftCounterLab.Data.Models;
+using WildRiftCounterLab.Data.Seed;
 
 public class DbSeederTests
 {

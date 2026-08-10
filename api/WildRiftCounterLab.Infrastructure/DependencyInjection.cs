@@ -1,14 +1,12 @@
-﻿namespace WildRiftCounterLab.Infrastructure;
+namespace WildRiftCounterLab.Infrastructure;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Application.Interfaces;
-using AI;
-using Data;
-using Repositories;
-using Services;
+using WildRiftCounterLab.Contracts;
+
+using WildRiftCounterLab.Infrastructure.AI;
+using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
 
 public static class DependencyInjection
 {
@@ -16,18 +14,6 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured. Ensure appsettings.json or environment variables provide it.");
-        }
-
-        services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-            });
-
         var aiProvider = configuration["Ai:Provider"] ?? "Groq";
 
         if (!aiProvider.Equals("Groq", StringComparison.OrdinalIgnoreCase) &&
@@ -37,21 +23,17 @@ public static class DependencyInjection
                 $"Unsupported AI provider '{aiProvider}'. Use 'Groq' or 'Gemini'.");
         }
 
-        services.AddScoped<IExternalAiExplanationProvider>(_ =>
+        services.AddKeyedScoped<IAiExplanationProvider>("external", (_, _) =>
             aiProvider.Equals("Groq", StringComparison.OrdinalIgnoreCase)
-                ? new GroqAiExplanationProvider(configuration)
+                ? (IAiExplanationProvider)new GroqAiExplanationProvider(configuration)
                 : new GeminiAiExplanationProvider(configuration));
         services.AddScoped<IAiExplanationProvider, CachedAiExplanationProvider>();
-
-        services.AddScoped<IChampionRepository, ChampionRepository>();
-        services.AddScoped<IMatchupRuleRepository, MatchupRuleRepository>();
-        services.AddScoped<IAiExplanationCacheRepository, AiExplanationCacheRepository>();
 
         services.AddHttpClient("DataDragon", client =>
         {
             client.Timeout = TimeSpan.FromSeconds(15);
         });
-        services.AddScoped<IChampionSyncService, ChampionSyncService>();
+        services.AddScoped<IDataDragonClient, DataDragonClient>();
 
         return services;
     }

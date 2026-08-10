@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
-
 namespace WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
+
+using System.Text.Json.Serialization;
 
 internal sealed class DataDragonChampionResponse
 {

@@ -1,13 +1,12 @@
+namespace WildRiftCounterLab.Api.Tests;
+
 using Microsoft.Extensions.Logging.Abstractions;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
-using WildRiftCounterLab.Application.Interfaces;
-using WildRiftCounterLab.Application.Services;
-using WildRiftCounterLab.Domain.Entities;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Infrastructure.AI;
-
-namespace WildRiftCounterLab.Api.Tests;
+using WildRiftCounterLab.Services.Models;
 
 public class CachedAiExplanationProviderTests
 {
@@ -151,7 +150,7 @@ public class CachedAiExplanationProviderTests
         }
     }
 
-    private sealed class FakeGeminiProvider : IExternalAiExplanationProvider
+    private sealed class FakeGeminiProvider : IAiExplanationProvider
     {
         private readonly bool _shouldFail;
         private readonly bool _rateLimited;

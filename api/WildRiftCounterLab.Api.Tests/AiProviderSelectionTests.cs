@@ -1,10 +1,11 @@
+namespace WildRiftCounterLab.Api.Tests;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Infrastructure;
 using WildRiftCounterLab.Infrastructure.AI;
-
-namespace WildRiftCounterLab.Api.Tests;
 
 public class AiProviderSelectionTests
 {
@@ -17,7 +18,7 @@ public class AiProviderSelectionTests
         using var services = BuildServices(providerName);
 
         Assert.IsType<GroqAiExplanationProvider>(
-            services.GetRequiredService<IExternalAiExplanationProvider>());
+            services.GetRequiredKeyedService<IAiExplanationProvider>("external"));
     }
 
     [Fact]
@@ -26,7 +27,7 @@ public class AiProviderSelectionTests
         using var services = BuildServices("Gemini");
 
         Assert.IsType<GeminiAiExplanationProvider>(
-            services.GetRequiredService<IExternalAiExplanationProvider>());
+            services.GetRequiredKeyedService<IAiExplanationProvider>("external"));
     }
 
     [Fact]
@@ -41,8 +42,6 @@ public class AiProviderSelectionTests
     {
         var values = new Dictionary<string, string?>
         {
-            ["ConnectionStrings:DefaultConnection"] =
-                "Host=localhost;Database=provider-tests;Username=provider-tests",
             ["Ai:Provider"] = providerName
         };
         var configuration = new ConfigurationBuilder()
