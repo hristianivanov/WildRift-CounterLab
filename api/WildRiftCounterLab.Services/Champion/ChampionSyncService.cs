@@ -1,14 +1,10 @@
-using System.Net.Http.Json;
+namespace WildRiftCounterLab.Services;
 
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services.Models;
-
-using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
-
-namespace WildRiftCounterLab.Infrastructure.Services;
 
 public sealed class ChampionSyncService : IChampionSyncService
 {
@@ -34,7 +30,6 @@ public sealed class ChampionSyncService : IChampionSyncService
         "Yone", "Yuumi", "Zed", "Ziggs", "Zoe", "Zyra",
     };
 
-    // Tags Data Dragon uses → our AllowedTags equivalents
     private static readonly Dictionary<string, string> TagMap = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Fighter"] = "fighter",
@@ -46,39 +41,28 @@ public sealed class ChampionSyncService : IChampionSyncService
     };
 
     private readonly IChampionRepository _champions;
-    private readonly HttpClient _http;
+    private readonly IDataDragonClient _dataDragon;
     private readonly ILogger<ChampionSyncService> _logger;
 
     public ChampionSyncService(
         IChampionRepository champions,
-        IHttpClientFactory httpClientFactory,
+        IDataDragonClient dataDragon,
         ILogger<ChampionSyncService> logger)
     {
         _champions = champions;
-        _http = httpClientFactory.CreateClient("DataDragon");
+        _dataDragon = dataDragon;
         _logger = logger;
     }
 
     public async Task<ChampionSyncResultDto> SyncFromDataDragonAsync(
         CancellationToken cancellationToken = default)
     {
-        var version = await FetchLatestVersionAsync(cancellationToken);
-        _logger.LogInformation("Syncing champions from Data Dragon version {Version}", version);
-
-        var response = await _http.GetFromJsonAsync<DataDragonChampionResponse>(
-            $"https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json",
-            cancellationToken);
-
-        if (response is null)
-        {
-            throw new InvalidOperationException("Data Dragon returned an empty champion list.");
-        }
+        var ddTags = await _dataDragon.FetchChampionTagsAsync(cancellationToken);
+        _logger.LogInformation("Syncing champions from Data Dragon");
 
         var existing = await _champions.GetAllAsync(cancellationToken);
         var existingByName = existing.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
 
-        // Remove champions not in WR that have no roles (safe to delete — no roles means never
-        // manually configured, so these were incorrectly synced entries).
         var toRemove = existing
             .Where(c => !WildRiftRoster.Contains(c.Name) && c.Roles.Count == 0)
             .ToList();
@@ -89,10 +73,6 @@ public sealed class ChampionSyncService : IChampionSyncService
             foreach (var c in toRemove) existingByName.Remove(c.Name);
             _logger.LogInformation("Removed {Count} non-WR champions with no roles", toRemove.Count);
         }
-
-        // Add WR champions missing from DB using Data Dragon for tags
-        var ddByName = response.Data.Values
-            .ToDictionary(e => e.Name, StringComparer.OrdinalIgnoreCase);
 
         var toAdd = new List<Champion>();
         var added = new List<string>();
@@ -106,8 +86,8 @@ public sealed class ChampionSyncService : IChampionSyncService
                 continue;
             }
 
-            var tags = ddByName.TryGetValue(name, out var entry)
-                ? entry.Tags.Where(t => TagMap.ContainsKey(t)).Select(t => TagMap[t]).ToList()
+            var tags = ddTags.TryGetValue(name, out var rawTags)
+                ? rawTags.Where(t => TagMap.ContainsKey(t)).Select(t => TagMap[t]).ToList()
                 : new List<string>();
 
             toAdd.Add(new Champion { Name = name, Roles = [], Tags = tags });
@@ -115,9 +95,7 @@ public sealed class ChampionSyncService : IChampionSyncService
         }
 
         if (toAdd.Count > 0)
-        {
             await _champions.AddRangeAsync(toAdd, cancellationToken);
-        }
 
         _logger.LogInformation(
             "Data Dragon sync complete: {Added} added, {Removed} removed, {Skipped} already present",
@@ -131,19 +109,5 @@ public sealed class ChampionSyncService : IChampionSyncService
             AddedNames = added,
             RemovedNames = toRemove.Select(c => c.Name).ToList(),
         };
-    }
-
-    private async Task<string> FetchLatestVersionAsync(CancellationToken cancellationToken)
-    {
-        var versions = await _http.GetFromJsonAsync<List<string>>(
-            "https://ddragon.leagueoflegends.com/api/versions.json",
-            cancellationToken);
-
-        if (versions is null || versions.Count == 0)
-        {
-            throw new InvalidOperationException("Could not retrieve versions from Data Dragon.");
-        }
-
-        return versions[0];
     }
 }

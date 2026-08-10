@@ -1,23 +1,23 @@
+namespace WildRiftCounterLab.Infrastructure.AI;
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Services;
 using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Infrastructure.AI;
 
 public class CachedAiExplanationProvider : IAiExplanationProvider
 {
     public const string RateLimitFallback = "AI explanation unavailable due to provider rate limit.";
 
-    private readonly IExternalAiExplanationProvider _provider;
+    private readonly IAiExplanationProvider _provider;
     private readonly IAiExplanationCacheRepository _cacheRepository;
     private readonly ILogger<CachedAiExplanationProvider> _logger;
 
     public CachedAiExplanationProvider(
-        IExternalAiExplanationProvider provider,
+        [FromKeyedServices("external")] IAiExplanationProvider provider,
         IAiExplanationCacheRepository cacheRepository,
         ILogger<CachedAiExplanationProvider> logger)
     {

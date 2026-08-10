@@ -1,9 +1,7 @@
+namespace WildRiftCounterLab.Services.Models;
+
 using System.Security.Cryptography;
 using System.Text;
-
-using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Services;
 
 public static class AiExplanationCacheKeyBuilder
 {
@@ -33,13 +31,8 @@ public static class AiExplanationCacheKeyBuilder
                 .OrderBy(name => name, StringComparer.Ordinal)));
     }
 
-    private static string Normalize(string value)
-    {
-        return value.Trim().ToUpperInvariant();
-    }
+    private static string Normalize(string value) => value.Trim().ToUpperInvariant();
 
     private static string Hash(string value)
-    {
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
-    }
+        => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
 }

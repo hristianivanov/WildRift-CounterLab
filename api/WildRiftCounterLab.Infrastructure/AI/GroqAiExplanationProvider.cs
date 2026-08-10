@@ -1,3 +1,5 @@
+namespace WildRiftCounterLab.Infrastructure.AI;
+
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -6,11 +8,10 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
 using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 
-namespace WildRiftCounterLab.Infrastructure.AI;
-
-public class GroqAiExplanationProvider : IExternalAiExplanationProvider
+public class GroqAiExplanationProvider : IAiExplanationProvider
 {
     private static readonly HttpClient HttpClient = new()
     {

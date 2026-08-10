@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using WildRiftCounterLab.Contracts;
 
-using AI;
-using Services;
+using WildRiftCounterLab.Infrastructure.AI;
+using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
 
 public static class DependencyInjection
 {
@@ -23,9 +23,9 @@ public static class DependencyInjection
                 $"Unsupported AI provider '{aiProvider}'. Use 'Groq' or 'Gemini'.");
         }
 
-        services.AddScoped<IExternalAiExplanationProvider>(_ =>
+        services.AddKeyedScoped<IAiExplanationProvider>("external", (_, _) =>
             aiProvider.Equals("Groq", StringComparison.OrdinalIgnoreCase)
-                ? new GroqAiExplanationProvider(configuration)
+                ? (IAiExplanationProvider)new GroqAiExplanationProvider(configuration)
                 : new GeminiAiExplanationProvider(configuration));
         services.AddScoped<IAiExplanationProvider, CachedAiExplanationProvider>();
 
@@ -33,7 +33,7 @@ public static class DependencyInjection
         {
             client.Timeout = TimeSpan.FromSeconds(15);
         });
-        services.AddScoped<IChampionSyncService, ChampionSyncService>();
+        services.AddScoped<IDataDragonClient, DataDragonClient>();
 
         return services;
     }
