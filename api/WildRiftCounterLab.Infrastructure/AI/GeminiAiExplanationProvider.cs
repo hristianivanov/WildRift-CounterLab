@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Types;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
-using WildRiftCounterLab.Application.Interfaces;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Infrastructure.AI;
 

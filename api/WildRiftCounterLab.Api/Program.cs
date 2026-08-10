@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
 
-using Application;
-using Application.DTOs;
-using Application.Exceptions;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Services.Models;
+using WildRiftCounterLab.Services;
+using WildRiftCounterLab.Data;
+using WildRiftCounterLab.Data.Seed;
 
 using Infrastructure;
-using Infrastructure.Data;
-using Infrastructure.Seed;
 
 public class Program
 {
@@ -101,7 +101,8 @@ public class Program
             };
         });
 
-        builder.Services.AddApplication();
+        builder.Services.AddServices();
+        builder.Services.AddData(builder.Configuration);
         builder.Services.AddInfrastructure(builder.Configuration);
 
         // Swashbuckle generates the OpenAPI document consumed by Scalar.

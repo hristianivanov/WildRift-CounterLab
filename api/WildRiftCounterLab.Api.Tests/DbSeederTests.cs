@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-using WildRiftCounterLab.Domain.Entities;
-using WildRiftCounterLab.Infrastructure.Data;
-using WildRiftCounterLab.Infrastructure.Seed;
+using WildRiftCounterLab.Data.Models;
+using WildRiftCounterLab.Data;
+using WildRiftCounterLab.Data.Seed;
 
 namespace WildRiftCounterLab.Api.Tests;
 

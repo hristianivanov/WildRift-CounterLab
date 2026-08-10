@@ -41,8 +41,6 @@ public class AiProviderSelectionTests
     {
         var values = new Dictionary<string, string?>
         {
-            ["ConnectionStrings:DefaultConnection"] =
-                "Host=localhost;Database=provider-tests;Username=provider-tests",
             ["Ai:Provider"] = providerName
         };
         var configuration = new ConfigurationBuilder()

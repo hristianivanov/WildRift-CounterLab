@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,17 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Mscc.GenerativeAI" Version="3.1.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WildRiftCounterLab.Application\WildRiftCounterLab.Application.csproj" />
-    <ProjectReference Include="..\WildRiftCounterLab.Domain\WildRiftCounterLab.Domain.csproj" />
+    <ProjectReference Include="..\WildRiftCounterLab.Services\WildRiftCounterLab.Services.csproj" />
   </ItemGroup>
 
 </Project>

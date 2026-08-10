@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Interfaces;
-using WildRiftCounterLab.Infrastructure.Data;
+using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Services.Models;
+using WildRiftCounterLab.Data;
 
 namespace WildRiftCounterLab.Api.Tests;
 

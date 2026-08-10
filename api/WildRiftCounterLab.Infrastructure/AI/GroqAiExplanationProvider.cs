@@ -5,8 +5,8 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Configuration;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Infrastructure.AI;
 

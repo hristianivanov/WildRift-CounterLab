@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Logging.Abstractions;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Exceptions;
-using WildRiftCounterLab.Application.Interfaces;
-using WildRiftCounterLab.Application.Services;
-using WildRiftCounterLab.Domain.Entities;
+using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Data.Models;
+using WildRiftCounterLab.Services;
+using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Services.Models;
 using WildRiftCounterLab.Infrastructure.AI;
 
 namespace WildRiftCounterLab.Api.Tests;

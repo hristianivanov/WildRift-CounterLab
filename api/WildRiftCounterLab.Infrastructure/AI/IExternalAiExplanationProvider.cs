@@ -1,4 +1,4 @@
-using WildRiftCounterLab.Application.Interfaces;
+using WildRiftCounterLab.Services.Interfaces;
 
 namespace WildRiftCounterLab.Infrastructure.AI;
 

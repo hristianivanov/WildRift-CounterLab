@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 using Microsoft.AspNetCore.Hosting;
 
-using WildRiftCounterLab.Application.DTOs;
+using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Api.Tests;
 

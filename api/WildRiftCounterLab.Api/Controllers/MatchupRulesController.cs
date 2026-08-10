@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Services;
+using WildRiftCounterLab.Services;
+using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Api.Controllers;
 

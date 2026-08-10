@@ -2,9 +2,10 @@ using System.Net.Http.Json;
 
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Application.DTOs;
-using WildRiftCounterLab.Application.Interfaces;
-using WildRiftCounterLab.Domain.Entities;
+using WildRiftCounterLab.Data.Models;
+using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Services.Models;
+
 using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
 
 namespace WildRiftCounterLab.Infrastructure.Services;
