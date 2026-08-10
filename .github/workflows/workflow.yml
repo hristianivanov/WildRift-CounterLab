@@ -39,27 +39,23 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: |
-          dotnet restore api/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj
-          dotnet restore api/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj
+        run: dotnet restore api/WildRiftCounterLab.Api.slnx
 
       - name: Build
-        run: |
-          dotnet build api/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj --configuration Release --no-restore --warnaserror
-          dotnet build api/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj --configuration Release --no-restore --warnaserror
+        run: dotnet build api/WildRiftCounterLab.Api.slnx --configuration Release --no-restore --warnaserror
 
       - name: Test
         shell: bash
         run: |
           set +e
 
-          dotnet test api/WildRiftCounterLab.Application.Tests/WildRiftCounterLab.Application.Tests.csproj \
+          dotnet test api/WildRiftCounterLab.Services.Tests/WildRiftCounterLab.Services.Tests.csproj \
             --configuration Release \
             --no-restore \
             --no-build \
-            --logger "trx;LogFileName=application-tests.trx" \
-            --results-directory api/TestResults/Application
-          application_status=$?
+            --logger "trx;LogFileName=services-tests.trx" \
+            --results-directory api/TestResults/Services
+          services_status=$?
 
           dotnet test api/WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj \
             --configuration Release \
@@ -69,7 +65,7 @@ jobs:
             --results-directory api/TestResults/Api
           api_status=$?
 
-          if [ "$application_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
+          if [ "$services_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
             exit 1
           fi
 
