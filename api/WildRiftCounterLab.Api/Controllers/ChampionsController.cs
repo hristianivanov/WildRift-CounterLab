@@ -1,14 +1,14 @@
+namespace WildRiftCounterLab.Api.Controllers;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using WildRiftCounterLab.Services;
 using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Services;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

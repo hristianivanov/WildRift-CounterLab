@@ -1,9 +1,9 @@
+namespace WildRiftCounterLab.Data.Repositories;
+
 using Microsoft.EntityFrameworkCore;
 
-using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Contracts;
-
-namespace WildRiftCounterLab.Data.Repositories;
+using WildRiftCounterLab.Data.Models;
 
 public class ChampionRepository : IChampionRepository
 {

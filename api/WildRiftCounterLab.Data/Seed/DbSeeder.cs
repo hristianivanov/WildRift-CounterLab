@@ -1,6 +1,6 @@
-using WildRiftCounterLab.Data.Models;
-
 namespace WildRiftCounterLab.Data.Seed;
+
+using WildRiftCounterLab.Data.Models;
 
 public static class DbSeeder
 {

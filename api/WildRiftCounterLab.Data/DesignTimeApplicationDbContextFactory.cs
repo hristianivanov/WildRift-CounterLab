@@ -1,7 +1,7 @@
+namespace WildRiftCounterLab.Data;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-
-namespace WildRiftCounterLab.Data;
 
 public class DesignTimeApplicationDbContextFactory
     : IDesignTimeDbContextFactory<ApplicationDbContext>

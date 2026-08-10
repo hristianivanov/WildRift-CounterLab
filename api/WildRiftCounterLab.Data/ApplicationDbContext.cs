@@ -1,8 +1,8 @@
+namespace WildRiftCounterLab.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 using WildRiftCounterLab.Data.Models;
-
-namespace WildRiftCounterLab.Data;
 
 public class ApplicationDbContext : DbContext
 {

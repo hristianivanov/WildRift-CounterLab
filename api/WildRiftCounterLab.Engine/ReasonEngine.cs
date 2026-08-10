@@ -1,6 +1,6 @@
-using WildRiftCounterLab.Data.Models;
-
 namespace WildRiftCounterLab.Engine;
+
+using WildRiftCounterLab.Data.Models;
 
 public class ReasonEngine
 {

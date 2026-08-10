@@ -1,9 +1,9 @@
+namespace WildRiftCounterLab.Services.Mapping;
+
 using Mapster;
 
 using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Services.Mapping;
 
 public static class ServicesMappingConfig
 {

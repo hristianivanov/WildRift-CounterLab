@@ -1,6 +1,6 @@
-using WildRiftCounterLab.Data.Models;
-
 namespace WildRiftCounterLab.Contracts;
+
+using WildRiftCounterLab.Data.Models;
 
 public interface IMatchupRuleRepository
 {

@@ -1,7 +1,7 @@
+namespace WildRiftCounterLab.Engine;
+
 using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Engine;
 
 public class ScoreEngine
 {

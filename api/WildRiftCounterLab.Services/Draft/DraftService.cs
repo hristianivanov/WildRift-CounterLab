@@ -1,10 +1,10 @@
+namespace WildRiftCounterLab.Services;
+
 using WildRiftCounterLab.Common;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Engine;
-using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Services;
 
 public class DraftService
 {

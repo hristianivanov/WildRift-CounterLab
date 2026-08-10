@@ -1,11 +1,11 @@
+namespace WildRiftCounterLab.Services;
+
 using Mapster;
 
 using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Contracts;
+using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services.Models;
-
-namespace WildRiftCounterLab.Services;
 
 public class ChampionAdminService
 {

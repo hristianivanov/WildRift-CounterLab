@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace WildRiftCounterLab.Services.Models;
+
+using System.ComponentModel.DataAnnotations;
 
 public class CreateMatchupRuleRequestDto
 {

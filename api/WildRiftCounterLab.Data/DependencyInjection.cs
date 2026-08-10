@@ -1,11 +1,11 @@
+namespace WildRiftCounterLab.Data;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using WildRiftCounterLab.Data.Repositories;
 using WildRiftCounterLab.Contracts;
-
-namespace WildRiftCounterLab.Data;
+using WildRiftCounterLab.Data.Repositories;
 
 public static class DependencyInjection
 {

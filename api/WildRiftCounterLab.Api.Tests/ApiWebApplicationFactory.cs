@@ -1,3 +1,5 @@
+namespace WildRiftCounterLab.Api.Tests;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +8,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Services.Models;
 using WildRiftCounterLab.Data;
-
-namespace WildRiftCounterLab.Api.Tests;
+using WildRiftCounterLab.Services.Models;
 
 public class ApiWebApplicationFactory : WebApplicationFactory<Program>
 {
