@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using WildRiftCounterLab.Data.Repositories;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 
 namespace WildRiftCounterLab.Data;
 

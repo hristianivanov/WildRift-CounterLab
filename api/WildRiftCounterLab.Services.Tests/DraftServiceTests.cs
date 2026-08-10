@@ -1,6 +1,6 @@
 using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Services.Engine;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Engine;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Services.Tests;

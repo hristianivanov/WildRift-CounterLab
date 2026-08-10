@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using WildRiftCounterLab.Services.Engine;
+using WildRiftCounterLab.Engine;
 using WildRiftCounterLab.Services.Mapping;
 
 namespace WildRiftCounterLab.Services;

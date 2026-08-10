@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Api.Controllers;

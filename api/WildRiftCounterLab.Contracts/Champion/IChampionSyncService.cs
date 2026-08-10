@@ -1,6 +1,6 @@
 using WildRiftCounterLab.Services.Models;
 
-namespace WildRiftCounterLab.Services.Interfaces;
+namespace WildRiftCounterLab.Contracts;
 
 public interface IChampionSyncService
 {

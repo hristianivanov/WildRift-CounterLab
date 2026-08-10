@@ -1,6 +1,6 @@
 using WildRiftCounterLab.Data.Models;
 
-namespace WildRiftCounterLab.Services.Engine;
+namespace WildRiftCounterLab.Engine;
 
 public class ReasonEngine
 {
@@ -28,16 +28,12 @@ public class ReasonEngine
             .ToList();
 
         if (reasons.Count == 0)
-        {
             reasons.Add("Solid role fit with a dependable general game plan.");
-        }
 
         return reasons;
     }
 
-    private static List<string> BuildProfileReasons(
-        HashSet<string> championTags,
-        EnemyDraftProfile profile)
+    private static List<string> BuildProfileReasons(HashSet<string> championTags, EnemyDraftProfile profile)
     {
         var reasons = new List<string>();
 
@@ -49,8 +45,7 @@ public class ReasonEngine
             "Tank shred directly answers the enemy team's tank-heavy frontline.");
         AddReason(reasons, championTags.Contains("true-damage") && profile.DurableEnemyCount > 0,
             "True damage stays effective into durable tanks and fighters.");
-        AddReason(reasons, championTags.Contains("engage") &&
-            (profile.SquishyBackline || profile.ImmobileCarries),
+        AddReason(reasons, championTags.Contains("engage") && (profile.SquishyBackline || profile.ImmobileCarries),
             "Reliable engage can reach the enemy team's vulnerable backline.");
         AddReason(reasons, championTags.Contains("peel") && profile.DiveComp,
             "Peel protects allied carries from the enemy team's dive threats.");
@@ -71,8 +66,6 @@ public class ReasonEngine
     private static void AddReason(List<string> reasons, bool condition, string reason)
     {
         if (condition)
-        {
             reasons.Add(reason);
-        }
     }
 }

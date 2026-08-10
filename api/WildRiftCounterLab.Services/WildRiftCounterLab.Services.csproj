@@ -14,5 +14,7 @@
     <ProjectReference Include="..\WildRiftCounterLab.Services.Models\WildRiftCounterLab.Services.Models.csproj" />
     <ProjectReference Include="..\WildRiftCounterLab.Data.Models\WildRiftCounterLab.Data.Models.csproj" />
     <ProjectReference Include="..\WildRiftCounterLab.Common\WildRiftCounterLab.Common.csproj" />
+    <ProjectReference Include="..\WildRiftCounterLab.Engine\WildRiftCounterLab.Engine.csproj" />
+    <ProjectReference Include="..\WildRiftCounterLab.Contracts\WildRiftCounterLab.Contracts.csproj" />
   </ItemGroup>
 </Project>

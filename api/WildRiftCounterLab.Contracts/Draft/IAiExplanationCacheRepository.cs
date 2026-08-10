@@ -1,6 +1,6 @@
 using WildRiftCounterLab.Data.Models;
 
-namespace WildRiftCounterLab.Services.Interfaces;
+namespace WildRiftCounterLab.Contracts;
 
 public interface IAiExplanationCacheRepository
 {

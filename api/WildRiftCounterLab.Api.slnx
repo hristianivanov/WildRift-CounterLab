@@ -1,27 +1,21 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path=".editorconfig" />
-    <File Path="railway.toml" />
-  </Folder>
-  <Folder Name="/Domain/">
-    <Project Path="WildRiftCounterLab.Common/WildRiftCounterLab.Common.csproj" />
-  </Folder>
-  <Folder Name="/Application/">
-    <Project Path="WildRiftCounterLab.Services.Models/WildRiftCounterLab.Services.Models.csproj" />
-    <Project Path="WildRiftCounterLab.Services/WildRiftCounterLab.Services.csproj" />
-  </Folder>
   <Folder Name="/Data/">
     <Project Path="WildRiftCounterLab.Data.Models/WildRiftCounterLab.Data.Models.csproj" />
     <Project Path="WildRiftCounterLab.Data/WildRiftCounterLab.Data.csproj" />
   </Folder>
-  <Folder Name="/Infrastructure/">
-    <Project Path="WildRiftCounterLab.Infrastructure/WildRiftCounterLab.Infrastructure.csproj" Id="267c03bb-f2ab-4213-b147-3b9605d63e62" />
+  <Folder Name="/Services/">
+    <Project Path="WildRiftCounterLab.Services.Models/WildRiftCounterLab.Services.Models.csproj" />
+    <Project Path="WildRiftCounterLab.Services/WildRiftCounterLab.Services.csproj" />
+    <Project Path="WildRiftCounterLab.Engine/WildRiftCounterLab.Engine.csproj" />
+    <Project Path="WildRiftCounterLab.Contracts/WildRiftCounterLab.Contracts.csproj" />
   </Folder>
-  <Folder Name="/Presentation/">
+  <Folder Name="/Web/">
     <Project Path="WildRiftCounterLab.Api/WildRiftCounterLab.Api.csproj" />
+    <Project Path="WildRiftCounterLab.Infrastructure/WildRiftCounterLab.Infrastructure.csproj" Id="267c03bb-f2ab-4213-b147-3b9605d63e62" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="WildRiftCounterLab.Api.Tests/WildRiftCounterLab.Api.Tests.csproj" />
     <Project Path="WildRiftCounterLab.Services.Tests/WildRiftCounterLab.Services.Tests.csproj" />
   </Folder>
+  <Project Path="WildRiftCounterLab.Common/WildRiftCounterLab.Common.csproj" />
 </Solution>

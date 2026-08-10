@@ -3,7 +3,7 @@ namespace WildRiftCounterLab.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 
 using AI;
 using Services;

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WildRiftCounterLab.Contracts\WildRiftCounterLab.Contracts.csproj" />
     <ProjectReference Include="..\WildRiftCounterLab.Services\WildRiftCounterLab.Services.csproj" />
   </ItemGroup>
 

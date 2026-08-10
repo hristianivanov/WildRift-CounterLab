@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 
 namespace WildRiftCounterLab.Data.Repositories;
 

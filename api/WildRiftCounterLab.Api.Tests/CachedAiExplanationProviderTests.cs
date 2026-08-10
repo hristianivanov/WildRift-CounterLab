@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using WildRiftCounterLab.Common;
 using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Services;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 using WildRiftCounterLab.Infrastructure.AI;
 

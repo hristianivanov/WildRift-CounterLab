@@ -6,7 +6,7 @@ using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Types;
 
 using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 
 namespace WildRiftCounterLab.Infrastructure.AI;

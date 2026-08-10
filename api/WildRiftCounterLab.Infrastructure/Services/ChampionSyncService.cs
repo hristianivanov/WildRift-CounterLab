@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 
 using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Services.Interfaces;
+using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Services.Models;
 
 using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;

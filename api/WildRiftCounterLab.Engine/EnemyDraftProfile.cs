@@ -1,6 +1,6 @@
 using WildRiftCounterLab.Data.Models;
 
-namespace WildRiftCounterLab.Services.Engine;
+namespace WildRiftCounterLab.Engine;
 
 public sealed class EnemyDraftProfile
 {
