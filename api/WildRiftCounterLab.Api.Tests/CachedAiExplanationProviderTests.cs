@@ -2,11 +2,11 @@ namespace WildRiftCounterLab.Api.Tests;
 
 using Microsoft.Extensions.Logging.Abstractions;
 
-using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Infrastructure.AI;
-using WildRiftCounterLab.Services.Models;
+using Common;
+using Contracts;
+using Data.Models;
+using Infrastructure.AI;
+using Services.Models;
 
 public class CachedAiExplanationProviderTests
 {

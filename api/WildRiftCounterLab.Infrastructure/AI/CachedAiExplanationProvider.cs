@@ -3,10 +3,10 @@ namespace WildRiftCounterLab.Infrastructure.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Data.Models;
-using WildRiftCounterLab.Services.Models;
+using Common;
+using Contracts;
+using Data.Models;
+using Services.Models;
 
 public class CachedAiExplanationProvider : IAiExplanationProvider
 {

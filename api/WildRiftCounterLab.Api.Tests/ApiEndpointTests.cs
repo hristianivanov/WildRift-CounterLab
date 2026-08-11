@@ -3,9 +3,7 @@ namespace WildRiftCounterLab.Api.Tests;
 using System.Net;
 using System.Net.Http.Json;
 
-using Microsoft.AspNetCore.Hosting;
-
-using WildRiftCounterLab.Services.Models;
+using Services.Models;
 
 public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
 {

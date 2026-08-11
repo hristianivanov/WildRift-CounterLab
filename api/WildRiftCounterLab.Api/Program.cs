@@ -2,7 +2,7 @@ namespace WildRiftCounterLab.Api;
 
 using System.Threading.RateLimiting;
 
-using WildRiftCounterLab.Infrastructure;
+using Infrastructure;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
 
-using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Data;
-using WildRiftCounterLab.Data.Seed;
-using WildRiftCounterLab.Services;
-using WildRiftCounterLab.Services.Models;
+using Common;
+using Data;
+using Data.Seed;
+using Services;
+using Services.Models;
 
 public class Program
 {

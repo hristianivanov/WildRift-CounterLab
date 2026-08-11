@@ -3,10 +3,10 @@ namespace WildRiftCounterLab.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using WildRiftCounterLab.Contracts;
+using Contracts;
 
-using WildRiftCounterLab.Infrastructure.AI;
-using WildRiftCounterLab.Infrastructure.ExternalApis.DataDragon;
+using AI;
+using ExternalApis.DataDragon;
 
 public static class DependencyInjection
 {

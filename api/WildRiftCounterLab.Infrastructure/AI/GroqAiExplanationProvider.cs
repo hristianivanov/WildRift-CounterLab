@@ -7,9 +7,9 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Configuration;
 
-using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Services.Models;
+using Common;
+using Contracts;
+using Services.Models;
 
 public class GroqAiExplanationProvider : IAiExplanationProvider
 {

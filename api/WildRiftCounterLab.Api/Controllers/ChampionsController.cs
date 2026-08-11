@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Services;
-using WildRiftCounterLab.Services.Models;
+using Contracts;
+using Services;
+using Services.Models;
 
 [ApiController]
 [Route("api/[controller]")]

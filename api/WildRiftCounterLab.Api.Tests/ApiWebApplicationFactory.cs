@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Data;
-using WildRiftCounterLab.Services.Models;
+using Contracts;
+using Data;
+using Services.Models;
 
 public class ApiWebApplicationFactory : WebApplicationFactory<Program>
 {

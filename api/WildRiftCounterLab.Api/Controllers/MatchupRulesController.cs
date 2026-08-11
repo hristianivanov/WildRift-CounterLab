@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using WildRiftCounterLab.Services;
-using WildRiftCounterLab.Services.Models;
+using Services;
+using Services.Models;
 
 [ApiController]
 [Route("api/matchup-rules")]

@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Types;
 
-using WildRiftCounterLab.Common;
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Services.Models;
+using Common;
+using Contracts;
+using Services.Models;
 
 public class GeminiAiExplanationProvider : IAiExplanationProvider
 {

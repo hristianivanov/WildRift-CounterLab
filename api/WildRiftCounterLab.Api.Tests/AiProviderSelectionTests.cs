@@ -3,9 +3,9 @@ namespace WildRiftCounterLab.Api.Tests;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Infrastructure;
-using WildRiftCounterLab.Infrastructure.AI;
+using Contracts;
+using Infrastructure;
+using Infrastructure.AI;
 
 public class AiProviderSelectionTests
 {

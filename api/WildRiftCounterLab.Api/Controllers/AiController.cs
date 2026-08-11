@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-using WildRiftCounterLab.Contracts;
-using WildRiftCounterLab.Services.Models;
+using Contracts;
+using Services.Models;
 
 [ApiController]
 [Route("api/[controller]")]
