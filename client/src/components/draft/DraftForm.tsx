@@ -32,8 +32,10 @@ export default function DraftForm({
 }: DraftFormProps) {
   const [laneEnemyQuery, setLaneEnemyQuery] = useState('')
   const [laneEnemyOpen, setLaneEnemyOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
   const [enemyTeamQuery, setEnemyTeamQuery] = useState('')
   const laneEnemyRef = useRef<HTMLDivElement>(null)
+  const activeItemRef = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -49,6 +51,32 @@ export default function DraftForm({
     ? champions.filter((c) => c.name.toLowerCase().includes(laneEnemyQuery.toLowerCase()))
     : champions
 
+  useEffect(() => {
+    setActiveIndex(-1)
+  }, [laneEnemyQuery])
+
+  useEffect(() => {
+    activeItemRef.current?.scrollIntoView({ block: 'nearest' })
+  }, [activeIndex])
+
+  function handleLaneEnemyKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (!laneEnemyOpen || filteredLaneEnemies.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((prev) => Math.min(prev + 1, filteredLaneEnemies.length - 1))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((prev) => Math.max(prev - 1, 0))
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (activeIndex >= 0) selectLaneEnemy(filteredLaneEnemies[activeIndex].name)
+    } else if (e.key === 'Escape') {
+      setLaneEnemyOpen(false)
+      setActiveIndex(-1)
+    }
+  }
+
   const filteredTeamChampions = enemyTeamQuery.trim()
     ? champions.filter((c) => c.name.toLowerCase().includes(enemyTeamQuery.toLowerCase()))
     : champions
@@ -63,6 +91,7 @@ export default function DraftForm({
     })
     setLaneEnemyQuery('')
     setLaneEnemyOpen(false)
+    setActiveIndex(-1)
   }
 
   function clearLaneEnemy() {
@@ -162,9 +191,11 @@ export default function DraftForm({
                 setLaneEnemyOpen(true)
               }}
               onFocus={() => setLaneEnemyOpen(true)}
+              onKeyDown={handleLaneEnemyKeyDown}
               aria-label="Search lane enemy champion"
               aria-expanded={laneEnemyOpen}
               aria-haspopup="listbox"
+              aria-activedescendant={activeIndex >= 0 ? `lane-enemy-option-${activeIndex}` : undefined}
             />
           )}
           {laneEnemyOpen && !value.laneEnemy && (
@@ -176,13 +207,20 @@ export default function DraftForm({
               {filteredLaneEnemies.length === 0 ? (
                 <li className="px-3 py-2.5 text-sm text-slate-500">No champions found.</li>
               ) : (
-                filteredLaneEnemies.map((champion) => (
+                filteredLaneEnemies.map((champion, index) => (
                   <li
                     key={champion.id || champion.name}
+                    id={`lane-enemy-option-${index}`}
+                    ref={index === activeIndex ? activeItemRef : null}
                     role="option"
-                    aria-selected={false}
+                    aria-selected={index === activeIndex}
                     onMouseDown={() => selectLaneEnemy(champion.name)}
-                    className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-sm text-slate-200 hover:bg-white/[0.06]"
+                    onMouseEnter={() => setActiveIndex(index)}
+                    className={`flex cursor-pointer items-center gap-2.5 px-3 py-2 text-sm text-slate-200 transition-colors ${
+                      index === activeIndex
+                        ? 'bg-cyan-400/10 text-white'
+                        : 'hover:bg-white/[0.06]'
+                    }`}
                   >
                     <ChampionPortrait
                       championName={champion.name}
