@@ -332,7 +332,7 @@ export default function DraftForm({
       <Button
         type="button"
         className="mt-6 w-full py-3.5"
-        disabled={isLoading || !value.laneEnemy}
+        disabled={isLoading || (!value.laneEnemy && value.enemyTeam.length === 0)}
         onClick={onSubmit}
       >
         {isLoading ? (

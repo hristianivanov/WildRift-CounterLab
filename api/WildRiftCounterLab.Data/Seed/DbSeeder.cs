@@ -337,6 +337,130 @@ public static class DbSeeder
             // Gragas
             Tip("Gragas", "Katarina", "E",
                 "Body Slam (E) interrupts Katarina's Death Lotus (R) channel immediately."),
+
+            // Galio
+            Tip("Galio", "Veigar", "E",
+                "Justice Punch (E) dashes through Veigar's Event Horizon walls — use it to escape the cage before it stuns you."),
+            Tip("Galio", "Katarina", "R",
+                "Hero's Entrance (R) knock-up interrupts Katarina's Death Lotus (R) channel immediately."),
+            Tip("Galio", "Zed", "W",
+                "Colossal Smash (W) taunt forces Zed's shadows to auto-attack Galio, wasting his Death Mark damage window."),
+            Tip("Galio", "Yasuo", "R",
+                "Hero's Entrance (R) launches Yasuo airborne — combine with an ally knock-up setup for maximum chain CC."),
+            Tip("Galio", "Annie", "E",
+                "Justice Punch (E) dash can dodge Annie's Tibbers cast or reposition away from the stun radius."),
+
+            // Lux
+            Tip("Lux", "Yasuo", "Q",
+                "Light Binding (Q) roots Yasuo in place — throw it when he dashes through a minion so he can't immediately dash away again."),
+            Tip("Lux", "Zed", "W",
+                "Prismatic Barrier (W) shield can absorb a large portion of Zed's Death Mark detonation — activate it just after the mark lands."),
+            Tip("Lux", "Katarina", "Q",
+                "Light Binding (Q) roots Katarina out of Death Lotus (R) if she's channeling — or use it the moment she jumps in."),
+            Tip("Lux", "Morgana", "E",
+                "Lucent Singularity (E) placed near Morgana's feet forces her to move, making her Dark Binding (Q) harder to land."),
+
+            // Ahri
+            Tip("Ahri", "Veigar", "R",
+                "Spirit Rush (R) dashes can escape Veigar's Event Horizon cage — save at least one charge for his combo."),
+            Tip("Ahri", "Zed", "R",
+                "Use the third Spirit Rush (R) dash reactively when Zed's Death Mark detonates to dodge the burst zone."),
+            Tip("Ahri", "Fizz", "E",
+                "Charm (E) locks Fizz down before he can use Playful/Trickster — land it the moment he steps forward to trade."),
+            Tip("Ahri", "Katarina", "E",
+                "Charm (E) cancels Katarina's Death Lotus (R) channel — bait her jump in then immediately cast E."),
+
+            // Orianna
+            Tip("Orianna", "Yasuo", "R",
+                "Command: Shockwave (R) launches Yasuo airborne — coordinate with a team knock-up to chain his own passive for ally Yasuo R."),
+            Tip("Orianna", "Zed", "W",
+                "Command: Protect (W) shield on yourself absorbs a significant portion of Zed's Death Mark burst if timed on impact."),
+            Tip("Orianna", "Katarina", "R",
+                "Shockwave (R) interrupts Katarina's Death Lotus (R) — keep the ball near her jump target to cast instantly."),
+
+            // Lissandra
+            Tip("Lissandra", "Yasuo", "E",
+                "Glacial Path (E) passes through Yasuo's Wind Wall — use it to engage safely without your spells being blocked."),
+            Tip("Lissandra", "Zed", "R",
+                "Frozen Tomb (R) on yourself makes Lissandra untargetable during Zed's Death Mark detonation — activate immediately after the mark lands."),
+            Tip("Lissandra", "Katarina", "Q",
+                "Ice Shard (Q) shatters into multiple pieces — hitting Katarina through minions can stack her slow and set up a follow-up Claw (E)."),
+
+            // Vex
+            Tip("Vex", "Yasuo", "E",
+                "Shadow Surge (E) hits Yasuo after he dashes, automatically granting the Fear Beyond Death (R) reset if he's low — track his dash count."),
+            Tip("Vex", "Akali", "Q",
+                "Mistral Bolt (Q) applies Gloom on Akali when she dashes, triggering an empowered auto — punish every shroud exit."),
+            Tip("Vex", "Zed", "passive",
+                "Every time Zed shadow-dashes, Vex's Doom 'n Gloom (passive) marks him — proc the mark immediately for bonus damage and an auto-reset."),
+            Tip("Vex", "Fizz", "Q",
+                "Mistral Bolt (Q) accelerates over distance — fire it right as Fizz uses Playful/Trickster (E) so it hits him on landing."),
+
+            // Vladimir
+            Tip("Vladimir", "Zed", "W",
+                "Sanguine Pool (W) makes Vladimir untargetable — activate it immediately after Zed's Death Mark lands to completely dodge the detonation."),
+            Tip("Vladimir", "Veigar", "W",
+                "Sanguine Pool (W) dodges Event Horizon's stun and Primordial Burst (R) — pool the moment you see the cage forming."),
+            Tip("Vladimir", "Fizz", "W",
+                "Sanguine Pool (W) avoids Fizz's Chum the Waters (R) shark hit and removes the mark before it detonates."),
+            Tip("Vladimir", "Annie", "W",
+                "Pool (W) during Annie's Tibbers stun animation to become untargetable and reposition before the damage arrives."),
+
+            // Morgana
+            Tip("Morgana", "Veigar", "E",
+                "Black Shield (E) on yourself or an ally fully blocks Veigar's Event Horizon stun — cast it the moment the cage begins forming."),
+            Tip("Morgana", "Leona", "E",
+                "Black Shield (E) blocks Leona's Zenith Blade (E) root and Solar Flare (R) stun — prioritise shielding the carry."),
+            Tip("Morgana", "Nautilus", "E",
+                "Black Shield absorbs Nautilus's Dredge Line (Q) hook and Depth Charge (R) knock-up entirely."),
+            Tip("Morgana", "Lissandra", "E",
+                "Black Shield (E) blocks all of Lissandra's CC chain — cast it before she initiates with Glacial Path."),
+
+            // Malphite (extra tips)
+            Tip("Malphite", "Zed", "passive",
+                "Malphite's passive Granite Shield regenerates between Zed's poke windows — stack armor items to make his AD damage negligible."),
+            Tip("Malphite", "Caitlyn", "passive",
+                "Granite Shield absorbs Caitlyn's Headshot procs — let the shield regenerate between her empowered shots to minimize poke damage."),
+            Tip("Malphite", "Darius", "R",
+                "Unstoppable Force (R) interrupts Darius's Noxian Guillotine (R) channel — use it the moment he jumps on your carry."),
+
+            // Leona
+            Tip("Leona", "Caitlyn", "Q",
+                "Shield of Daybreak (Q) stuns Caitlyn right after gap-closing — cancel her Headshot setup and force a Flash or summoner."),
+            Tip("Leona", "Jhin", "W",
+                "Eclipse (W) movement speed burst lets Leona close the gap on Jhin even without minion walls — dash through terrain brush."),
+            Tip("Leona", "Jinx", "E",
+                "Zenith Blade (E) dashes through Jinx's Flame Chompers (E) traps without triggering them."),
+            Tip("Leona", "Miss Fortune", "R",
+                "Solar Flare (R) or Zenith Blade (E) interrupts Miss Fortune's Bullet Time (R) channel — engage as soon as she begins casting."),
+
+            // Nautilus
+            Tip("Nautilus", "Caitlyn", "Q",
+                "Dredge Line (Q) hook pulls Nautilus to Caitlyn — cancel her Headshot winddown immediately with Riptide (E) after landing."),
+            Tip("Nautilus", "Jinx", "R",
+                "Depth Charge (R) knock-up interrupts Jinx's Super Mega Death Rocket (R) channel if she's in the AoE."),
+            Tip("Nautilus", "Jhin", "Q",
+                "Dredge Line (Q) to terrain closes the gap on Jhin and brings him into stasis range before Curtain Call (R) finishes."),
+
+            // Thresh
+            Tip("Thresh", "Caitlyn", "E",
+                "Flay (E) interrupts Caitlyn's 90 Caliber Net (E) repositioning — use it as she activates the net to cancel her escape."),
+            Tip("Thresh", "Jinx", "Q",
+                "Death Sentence (Q) hook on Jinx during her Super Mega Death Rocket (R) channel immediately cancels the cast."),
+            Tip("Thresh", "Miss Fortune", "E",
+                "Flay (E) or Death Sentence (Q) interrupts Bullet Time (R) — Thresh has two tools to cancel her channel."),
+
+            // Katarina
+            Tip("Katarina", "Lux", "E",
+                "Shunpo (E) jumps to Lux's ward or a nearby dagger to dodge her Final Spark (R) beam if you can reposition diagonally."),
+            Tip("Katarina", "Veigar", "E",
+                "Shunpo (E) to a dagger outside Veigar's Event Horizon can let you escape the cage before it fully stuns."),
+
+            // Akali
+            Tip("Akali", "Veigar", "W",
+                "Twilight Shroud (W) makes Akali invisible inside the smoke — drop it inside Veigar's cage to wait out the stun duration."),
+            Tip("Akali", "Zed", "W",
+                "Twilight Shroud (W) causes Zed's Living Shadow to lose track of Akali — use it immediately after Death Mark lands."),
         };
     }
 
