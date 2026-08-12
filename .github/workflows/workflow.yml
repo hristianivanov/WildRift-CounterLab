@@ -146,12 +146,27 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Deploy API to Render
         run: |
           curl --silent --show-error --fail \
             -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
 
+      - name: Check if client changed
+        id: client_changed
+        run: |
+          if git diff --quiet HEAD^ HEAD -- client/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy client to Vercel
+        if: steps.client_changed.outputs.changed == 'true'
         run: |
           curl --silent --show-error --fail \
             -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
