@@ -34,12 +34,14 @@ public sealed class DataDragonClient : IDataDragonClient
     public async Task<IReadOnlyDictionary<string, IReadOnlyList<string>>> FetchWildRiftRosterAsync(
         CancellationToken cancellationToken = default)
     {
+        // The /wildrift/ CDragon path is defunct. PC LoL CDragon (/latest/) includes all
+        // WR champions (including WR-first releases like Yunara and Mel) and is kept current.
         var champions = await _http.GetFromJsonAsync<List<CdChampionSummary>>(
-            "https://raw.communitydragon.org/wildrift/plugins/rcp-be-lol-game-data/global/en_us/v1/champion-summary.json",
+            "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json",
             cancellationToken);
 
         if (champions is null)
-            throw new InvalidOperationException("Community Dragon returned an empty Wild Rift champion list.");
+            throw new InvalidOperationException("Community Dragon returned an empty champion list.");
 
         return champions
             .Where(c => c.Id > 0 && !string.IsNullOrWhiteSpace(c.Name))

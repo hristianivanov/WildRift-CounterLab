@@ -8,6 +8,46 @@ using WildRiftCounterLab.Services.Models;
 
 public sealed class ChampionSyncService : IChampionSyncService
 {
+    // Source of truth for which champions are available in Wild Rift.
+    // CDragon PC LoL data includes all of these; we filter down to this set.
+    // Add new names here when a champion releases on WR.
+    private static readonly HashSet<string> WildRiftRoster = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Aatrox", "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu",
+        "Annie", "Ashe", "Aurelion Sol", "Aurora",
+        "Bard", "Blitzcrank", "Brand", "Braum",
+        "Caitlyn", "Camille", "Cho'Gath", "Corki",
+        "Darius", "Diana", "Dr. Mundo", "Draven",
+        "Ekko", "Evelynn", "Ezreal",
+        "Fiddlesticks", "Fiora", "Fizz",
+        "Galio", "Garen", "Gnar", "Gragas", "Graves", "Gwen",
+        "Hecarim", "Heimerdinger",
+        "Irelia",
+        "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin", "Jinx",
+        "K'Sante", "Kai'Sa", "Kalista", "Karma", "Kassadin", "Katarina", "Kayle", "Kayn", "Kennen", "Kha'Zix", "Kindred", "Kog'Maw",
+        "Lee Sin", "Leona", "Lillia", "Lissandra", "Lucian", "Lulu", "Lux",
+        "Malphite", "Maokai", "Master Yi", "Mel", "Milio", "Miss Fortune", "Mordekaiser", "Morgana",
+        "Nami", "Nasus", "Nautilus", "Nidalee", "Nilah", "Nocturne", "Norra", "Nunu & Willump",
+        "Olaf", "Orianna", "Ornn",
+        "Pantheon", "Poppy", "Pyke",
+        "Rakan", "Rammus", "Rell", "Renekton", "Rengar", "Riven", "Rumble", "Ryze",
+        "Samira", "Senna", "Seraphine", "Sett", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Skarner", "Smolder", "Sona", "Soraka", "Swain", "Syndra",
+        "Taliyah", "Talon", "Teemo", "Thresh", "Tristana", "Tryndamere", "Twisted Fate", "Twitch",
+        "Urgot",
+        "Varus", "Vayne", "Veigar", "Vel'Koz", "Vex", "Vi", "Viego", "Viktor", "Vladimir", "Volibear",
+        "Warwick", "Wukong",
+        "Xayah", "Xin Zhao",
+        "Yasuo", "Yone", "Yunara", "Yuumi",
+        "Zed", "Zeri", "Ziggs", "Zilean", "Zoe", "Zyra",
+    };
+
+    // Champions that are WR-exclusive and not present in PC LoL CDragon data.
+    // They are added to the roster with no class tags.
+    private static readonly HashSet<string> WrExclusiveChampions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Norra",
+    };
+
     private readonly IChampionRepository _champions;
     private readonly IDataDragonClient _dataDragon;
     private readonly ILogger<ChampionSyncService> _logger;
@@ -27,14 +67,13 @@ public sealed class ChampionSyncService : IChampionSyncService
     {
         _logger.LogInformation("Syncing Wild Rift champion roster from Community Dragon");
 
-        var roster = await _dataDragon.FetchWildRiftRosterAsync(cancellationToken);
+        var cdData = await _dataDragon.FetchWildRiftRosterAsync(cancellationToken);
 
         var existing = await _champions.GetAllAsync(cancellationToken);
         var existingByName = existing.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
 
-        // Remove DB entries that are no longer in the WR roster and have no custom roles set
         var toRemove = existing
-            .Where(c => !roster.ContainsKey(c.Name) && c.Roles.Count == 0)
+            .Where(c => !WildRiftRoster.Contains(c.Name) && c.Roles.Count == 0)
             .ToList();
 
         if (toRemove.Count > 0)
@@ -48,7 +87,7 @@ public sealed class ChampionSyncService : IChampionSyncService
         var added = new List<string>();
         var skipped = 0;
 
-        foreach (var (name, cdRoles) in roster)
+        foreach (var name in WildRiftRoster)
         {
             if (existingByName.ContainsKey(name))
             {
@@ -56,8 +95,11 @@ public sealed class ChampionSyncService : IChampionSyncService
                 continue;
             }
 
-            // CDragon already provides lowercase class roles: fighter, mage, tank, assassin, marksman, support
-            var tags = cdRoles.Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
+            var tags = WrExclusiveChampions.Contains(name)
+                ? new List<string>()
+                : cdData.TryGetValue(name, out var cdRoles)
+                    ? cdRoles.Where(r => !string.IsNullOrWhiteSpace(r)).ToList()
+                    : new List<string>();
 
             toAdd.Add(new Champion { Name = name, Roles = [], Tags = tags });
             added.Add(name);
