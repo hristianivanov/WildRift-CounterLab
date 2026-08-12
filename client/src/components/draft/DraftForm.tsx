@@ -1,12 +1,12 @@
 import { Bot, Info, LoaderCircle, Sparkles, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+import { ROLES } from '../../constants/roles'
 import type { Champion, DraftRecommendationRequest } from '../../types'
 import Button from '../common/Button'
 import ChampionPortrait from '../common/ChampionPortrait'
 import SectionCard from '../common/SectionCard'
 
-const roles = ['Baron', 'Jungle', 'Mid', 'Dragon', 'Support']
 
 interface DraftFormProps {
   champions: Champion[]
@@ -140,7 +140,7 @@ export default function DraftForm({
           Your role
         </p>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-3 xl:grid-cols-5">
-          {roles.map((role) => (
+          {ROLES.map((role) => (
             <button
               key={role}
               type="button"

@@ -14,6 +14,7 @@ public class ApiEndpointTests : IClassFixture<ApiWebApplicationFactory>
     {
         _factory = factory;
         _client = factory.CreateClient();
+        _client.DefaultRequestHeaders.Add("X-Api-Key", "test-api-key");
     }
 
     [Fact]

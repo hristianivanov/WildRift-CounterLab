@@ -1,5 +1,7 @@
 namespace WildRiftCounterLab.Services;
 
+using Microsoft.Extensions.Logging;
+
 using WildRiftCounterLab.Common;
 using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Data.Models;
@@ -18,6 +20,7 @@ public class DraftService
     private readonly IMatchupRuleRepository _matchupRuleRepository;
     private readonly IMatchupTipRepository _matchupTipRepository;
     private readonly IAiExplanationProvider _aiExplanationProvider;
+    private readonly ILogger<DraftService> _logger;
 
     public DraftService(
         ScoreEngine scoreEngine,
@@ -26,7 +29,8 @@ public class DraftService
         IChampionRepository championRepository,
         IMatchupRuleRepository matchupRuleRepository,
         IMatchupTipRepository matchupTipRepository,
-        IAiExplanationProvider aiExplanationProvider)
+        IAiExplanationProvider aiExplanationProvider,
+        ILogger<DraftService> logger)
     {
         _scoreEngine = scoreEngine;
         _reasonEngine = reasonEngine;
@@ -35,6 +39,7 @@ public class DraftService
         _matchupTipRepository = matchupTipRepository;
         _aiExplanationProvider = aiExplanationProvider;
         _planEngine = planEngine;
+        _logger = logger;
     }
 
     public async Task<DraftRecommendationResponseDto> GetRecommendations(
@@ -128,17 +133,20 @@ public class DraftService
             .Take(5)
             .ToList();
 
+        var topChampions = topRecommendations.Select(r => r.Champion).ToList();
+        var allTips = await _matchupTipRepository.GetTipsForChampionsAsync(topChampions, enemies, cancellationToken);
+        var tipsByChampion = allTips.GroupBy(t => t.Champion).ToDictionary(g => g.Key, g => g.ToList());
+
         foreach (var rec in topRecommendations)
         {
-            var tips = await _matchupTipRepository.GetTipsForDraftAsync(rec.Champion, enemies, cancellationToken);
-            rec.MechanicTips = tips
-                .Select(t => new MechanicTipDto
+            rec.MechanicTips = tipsByChampion.TryGetValue(rec.Champion, out var tips)
+                ? tips.Select(t => new MechanicTipDto
                 {
                     EnemyChampion = t.EnemyChampion,
                     Tip = t.Tip,
                     AbilityTag = t.AbilityTag
-                })
-                .ToList();
+                }).ToList()
+                : [];
         }
 
         var recommendations = topRecommendations;
@@ -180,8 +188,9 @@ public class DraftService
                             : "AI explanation unavailable.";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogWarning(ex, "AI explanation batch failed for {Count} recommendations", recommendationsToExplain.Count);
                 foreach (var recommendation in recommendationsToExplain)
                 {
                     recommendation.AiExplanation = "AI explanation unavailable.";

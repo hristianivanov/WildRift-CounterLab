@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Contracts;
+using Filters;
 using Services;
 using Services.Models;
 using WildRiftCounterLab.Services.Patch;
@@ -47,8 +48,10 @@ public class ChampionsController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(typeof(ChampionDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateChampion([FromBody] CreateChampionRequestDto request)
     {
@@ -58,8 +61,10 @@ public class ChampionsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(typeof(ChampionDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateChampion(int id, [FromBody] UpdateChampionRequestDto request)
@@ -68,7 +73,9 @@ public class ChampionsController : ControllerBase
     }
 
     [HttpPost("sync")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(typeof(ChampionSyncResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SyncChampions(CancellationToken cancellationToken)
     {
@@ -76,16 +83,26 @@ public class ChampionsController : ControllerBase
     }
 
     [HttpPost("patch-check")]
-    [ProducesResponseType(typeof(PatchCheckResult), StatusCodes.Status200OK)]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
+    [ProducesResponseType(typeof(PatchCheckResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CheckPatch(CancellationToken cancellationToken)
     {
-        return Ok(await _patchChecker.CheckAndSyncAsync(cancellationToken));
+        var result = await _patchChecker.CheckAndSyncAsync(cancellationToken);
+        return Ok(new PatchCheckResultDto
+        {
+            LatestVersion = result.LatestVersion,
+            PreviousVersion = result.PreviousVersion,
+            SyncTriggered = result.SyncTriggered,
+            SyncResult = result.SyncResult,
+        });
     }
 
     [HttpDelete("{id:int}")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteChampion(int id)

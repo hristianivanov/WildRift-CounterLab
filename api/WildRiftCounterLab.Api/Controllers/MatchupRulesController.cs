@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Filters;
 using Services;
 using Services.Models;
 
@@ -38,8 +39,10 @@ public class MatchupRulesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(typeof(MatchupRuleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create([FromBody] CreateMatchupRuleRequestDto request)
     {
@@ -49,8 +52,10 @@ public class MatchupRulesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(typeof(MatchupRuleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateMatchupRuleRequestDto request)
@@ -59,7 +64,9 @@ public class MatchupRulesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(int id)

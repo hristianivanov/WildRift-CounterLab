@@ -21,6 +21,7 @@ public class ApiWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseSetting(
             "ConnectionStrings:DefaultConnection",
             "Host=localhost;Database=integration-tests;Username=integration-tests");
+        builder.UseSetting("Admin:ApiKey", "test-api-key");
         builder.ConfigureLogging(logging => logging.ClearProviders());
 
         builder.ConfigureServices(services =>

@@ -14,6 +14,7 @@ using Scalar.AspNetCore;
 using Common;
 using Data;
 using Data.Seed;
+using Filters;
 using Services;
 using Services.Models;
 
@@ -101,6 +102,7 @@ public class Program
             };
         });
 
+        builder.Services.AddScoped<ApiKeyAuthFilter>();
         builder.Services.AddServices();
         builder.Services.AddData(builder.Configuration);
         builder.Services.AddInfrastructure(builder.Configuration);

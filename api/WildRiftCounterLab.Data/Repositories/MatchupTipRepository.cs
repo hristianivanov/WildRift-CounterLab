@@ -14,6 +14,15 @@ public class MatchupTipRepository : IMatchupTipRepository
         _context = context;
     }
 
+    public async Task<List<MatchupTip>> GetTipsForChampionsAsync(List<string> champions, List<string> enemies, CancellationToken cancellationToken = default)
+    {
+        return await _context.MatchupTips
+            .Where(tip =>
+                champions.Contains(tip.Champion) &&
+                enemies.Contains(tip.EnemyChampion))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<MatchupTip>> GetTipsForDraftAsync(string champion, List<string> enemies, CancellationToken cancellationToken = default)
     {
         return await _context.MatchupTips

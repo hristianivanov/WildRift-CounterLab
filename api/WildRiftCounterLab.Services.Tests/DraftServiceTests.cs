@@ -1,5 +1,7 @@
 namespace WildRiftCounterLab.Services.Tests;
 
+using Microsoft.Extensions.Logging.Abstractions;
+
 using WildRiftCounterLab.Contracts;
 using WildRiftCounterLab.Data.Models;
 using WildRiftCounterLab.Engine;
@@ -259,7 +261,8 @@ public class DraftServiceTests
             new FakeChampionRepository(champions),
             new FakeMatchupRuleRepository(rules),
             new FakeMatchupTipRepository(),
-            aiProvider ?? new FakeAiExplanationProvider());
+            aiProvider ?? new FakeAiExplanationProvider(),
+            NullLogger<DraftService>.Instance);
     }
 
     private sealed class FakeChampionRepository : IChampionRepository
@@ -383,6 +386,9 @@ public class DraftServiceTests
     private sealed class FakeMatchupTipRepository : IMatchupTipRepository
     {
         public Task<List<MatchupTip>> GetTipsForDraftAsync(string champion, List<string> enemies, CancellationToken cancellationToken = default)
+            => Task.FromResult(new List<MatchupTip>());
+
+        public Task<List<MatchupTip>> GetTipsForChampionsAsync(List<string> champions, List<string> enemies, CancellationToken cancellationToken = default)
             => Task.FromResult(new List<MatchupTip>());
 
         public Task<List<MatchupTip>> GetAllAsync()

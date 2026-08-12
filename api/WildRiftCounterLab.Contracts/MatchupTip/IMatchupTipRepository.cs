@@ -6,6 +6,8 @@ public interface IMatchupTipRepository
 {
     Task<List<MatchupTip>> GetTipsForDraftAsync(string champion, List<string> enemies, CancellationToken cancellationToken = default);
 
+    Task<List<MatchupTip>> GetTipsForChampionsAsync(List<string> champions, List<string> enemies, CancellationToken cancellationToken = default);
+
     Task<List<MatchupTip>> GetAllAsync();
 
     Task<MatchupTip?> GetByIdAsync(int id);

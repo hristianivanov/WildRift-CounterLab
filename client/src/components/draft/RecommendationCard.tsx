@@ -114,7 +114,7 @@ export default function RecommendationCard({
           </div>
           <ul className="space-y-2">
             {recommendation.mechanicTips.map((tip, i) => (
-              <li key={i} className="flex gap-2 text-sm text-slate-300">
+              <li key={`${tip.enemyChampion}-${tip.abilityTag ?? ''}-${i}`} className="flex gap-2 text-sm text-slate-300">
                 <ChevronRight className="mt-0.5 size-4 shrink-0 text-yellow-300" />
                 <span>
                   {tip.abilityTag && (
