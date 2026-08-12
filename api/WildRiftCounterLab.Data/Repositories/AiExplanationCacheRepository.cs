@@ -14,13 +14,23 @@ public class AiExplanationCacheRepository : IAiExplanationCacheRepository
         _context = context;
     }
 
+    private static readonly TimeSpan CacheTtl = TimeSpan.FromDays(30);
+
     public Task<AiExplanationCache?> GetByCacheKeyAsync(
         string cacheKey,
         CancellationToken cancellationToken = default)
     {
+        var expiryThreshold = DateTime.UtcNow - CacheTtl;
         return _context.AiExplanationCaches
             .AsNoTracking()
-            .SingleOrDefaultAsync(cache => cache.CacheKey == cacheKey, cancellationToken);
+            .SingleOrDefaultAsync(
+                cache => cache.CacheKey == cacheKey && cache.CreatedAt >= expiryThreshold,
+                cancellationToken);
+    }
+
+    public async Task InvalidateAllAsync(CancellationToken cancellationToken = default)
+    {
+        await _context.AiExplanationCaches.ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task SaveAsync(

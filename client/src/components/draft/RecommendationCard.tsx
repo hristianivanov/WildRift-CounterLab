@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Bot, ChevronRight, Crown, ShieldCheck, Sparkles, Swords } from 'lucide-react'
+import { Bot, ChevronRight, Crown, ShieldCheck, Sparkles, Swords, Zap } from 'lucide-react'
 
 import type { DraftRecommendation } from '../../types'
 import ChampionPortrait from '../common/ChampionPortrait'
@@ -105,6 +105,31 @@ export default function RecommendationCard({
           <p className="text-sm leading-6 text-slate-300">{recommendation.plan}</p>
         </div>
       </div>
+
+      {recommendation.mechanicTips?.length > 0 && (
+        <div className="relative mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+            <Zap className="size-4 text-yellow-300" />
+            Mechanic Tips
+          </div>
+          <ul className="space-y-2">
+            {recommendation.mechanicTips.map((tip, i) => (
+              <li key={i} className="flex gap-2 text-sm text-slate-300">
+                <ChevronRight className="mt-0.5 size-4 shrink-0 text-yellow-300" />
+                <span>
+                  {tip.abilityTag && (
+                    <span className="mr-1.5 inline-flex items-center rounded-md border border-yellow-300/20 bg-yellow-300/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-yellow-200">
+                      {tip.abilityTag}
+                    </span>
+                  )}
+                  <span className="text-slate-400 font-medium">{tip.enemyChampion}: </span>
+                  {tip.tip}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {(isAiLoading || recommendation.aiExplanation) && (
         <div className="relative mt-4 overflow-hidden rounded-2xl border border-violet-300/25 bg-gradient-to-br from-violet-300/[0.12] via-violet-300/[0.06] to-cyan-300/[0.05] p-4 shadow-lg shadow-violet-950/10 sm:p-5">

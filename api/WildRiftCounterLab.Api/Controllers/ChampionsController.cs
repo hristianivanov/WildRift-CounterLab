@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Contracts;
 using Services;
 using Services.Models;
-using Services.Patch;
+using WildRiftCounterLab.Services.Patch;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,16 +17,16 @@ public class ChampionsController : ControllerBase
 {
     private readonly ChampionAdminService _championAdminService;
     private readonly IChampionSyncService _championSyncService;
-    private readonly PatchMonitorService _patchMonitor;
+    private readonly PatchCheckService _patchChecker;
 
     public ChampionsController(
         ChampionAdminService championAdminService,
         IChampionSyncService championSyncService,
-        PatchMonitorService patchMonitor)
+        PatchCheckService patchChecker)
     {
         _championAdminService = championAdminService;
         _championSyncService = championSyncService;
-        _patchMonitor = patchMonitor;
+        _patchChecker = patchChecker;
     }
 
     [HttpGet]
@@ -80,7 +80,7 @@ public class ChampionsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CheckPatch(CancellationToken cancellationToken)
     {
-        return Ok(await _patchMonitor.CheckAndSyncAsync(cancellationToken));
+        return Ok(await _patchChecker.CheckAndSyncAsync(cancellationToken));
     }
 
     [HttpDelete("{id:int}")]

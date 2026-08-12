@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<MatchupRuleAdminService>();
         services.AddScoped<ChampionAdminService>();
         services.AddScoped<IChampionSyncService, ChampionSyncService>();
+        services.AddScoped<PatchCheckService>();
         services.AddSingleton<PatchMonitorService>();
         services.AddHostedService(sp => sp.GetRequiredService<PatchMonitorService>());
 

@@ -148,6 +148,12 @@ public class CachedAiExplanationProviderTests
             Items.Add(cache);
             return Task.CompletedTask;
         }
+
+        public Task InvalidateAllAsync(CancellationToken cancellationToken = default)
+        {
+            Items.Clear();
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class FakeGeminiProvider : IAiExplanationProvider

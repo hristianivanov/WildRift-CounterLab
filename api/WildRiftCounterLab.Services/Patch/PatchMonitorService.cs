@@ -4,8 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using WildRiftCounterLab.Contracts;
-
 public sealed class PatchMonitorService : BackgroundService
 {
     public const string LastSyncedVersionKey = "PatchMonitor:LastSyncedVersion";
@@ -30,7 +28,9 @@ public sealed class PatchMonitorService : BackgroundService
         {
             try
             {
-                await CheckAndSyncAsync(stoppingToken);
+                await using var scope = _scopeFactory.CreateAsyncScope();
+                var checker = scope.ServiceProvider.GetRequiredService<PatchCheckService>();
+                await checker.CheckAndSyncAsync(stoppingToken);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
@@ -43,41 +43,5 @@ public sealed class PatchMonitorService : BackgroundService
 
             await Task.Delay(CheckInterval, stoppingToken);
         }
-    }
-
-    public async Task<PatchCheckResult> CheckAndSyncAsync(CancellationToken cancellationToken = default)
-    {
-        await using var scope = _scopeFactory.CreateAsyncScope();
-        var dataDragon = scope.ServiceProvider.GetRequiredService<IDataDragonClient>();
-        var settings = scope.ServiceProvider.GetRequiredService<IAppSettingRepository>();
-        var syncService = scope.ServiceProvider.GetRequiredService<IChampionSyncService>();
-
-        var latestVersion = await dataDragon.FetchLatestVersionAsync(cancellationToken);
-        var lastSynced = await settings.GetAsync(LastSyncedVersionKey, cancellationToken);
-
-        if (latestVersion == lastSynced)
-        {
-            _logger.LogDebug("Patch monitor: already on {Version}, no sync needed", latestVersion);
-            return new PatchCheckResult { LatestVersion = latestVersion, PreviousVersion = lastSynced, SyncTriggered = false };
-        }
-
-        _logger.LogInformation(
-            "Patch monitor: new Data Dragon version detected ({Previous} → {Latest}), starting champion sync",
-            lastSynced ?? "none", latestVersion);
-
-        var syncResult = await syncService.SyncFromDataDragonAsync(cancellationToken);
-        await settings.SetAsync(LastSyncedVersionKey, latestVersion, cancellationToken);
-
-        _logger.LogInformation(
-            "Patch monitor: sync complete for {Version} — {Added} added, {Removed} removed",
-            latestVersion, syncResult.Added, syncResult.Removed);
-
-        return new PatchCheckResult
-        {
-            LatestVersion = latestVersion,
-            PreviousVersion = lastSynced,
-            SyncTriggered = true,
-            SyncResult = syncResult,
-        };
     }
 }

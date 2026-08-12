@@ -11,4 +11,6 @@ public interface IAiExplanationCacheRepository
     Task SaveAsync(
         AiExplanationCache cache,
         CancellationToken cancellationToken = default);
+
+    Task InvalidateAllAsync(CancellationToken cancellationToken = default);
 }

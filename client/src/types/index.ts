@@ -22,12 +22,19 @@ export interface ScoreBreakdown {
   totalScore: number
 }
 
+export interface MechanicTip {
+  enemyChampion: string
+  tip: string
+  abilityTag: string | null
+}
+
 export interface DraftRecommendation {
   champion: string
   score: number
   scoreBreakdown: ScoreBreakdown
   reasons: string[]
   plan: string
+  mechanicTips: MechanicTip[]
   aiExplanation: string | null
 }
 
