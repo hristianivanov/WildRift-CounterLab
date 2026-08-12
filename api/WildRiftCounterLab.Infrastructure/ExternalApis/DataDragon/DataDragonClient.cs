@@ -31,6 +31,24 @@ public sealed class DataDragonClient : IDataDragonClient
             StringComparer.OrdinalIgnoreCase);
     }
 
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<string>>> FetchWildRiftRosterAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var champions = await _http.GetFromJsonAsync<List<CdChampionSummary>>(
+            "https://raw.communitydragon.org/wildrift/plugins/rcp-be-lol-game-data/global/en_us/v1/champion-summary.json",
+            cancellationToken);
+
+        if (champions is null)
+            throw new InvalidOperationException("Community Dragon returned an empty Wild Rift champion list.");
+
+        return champions
+            .Where(c => c.Id > 0 && !string.IsNullOrWhiteSpace(c.Name))
+            .ToDictionary(
+                c => c.Name,
+                c => (IReadOnlyList<string>)c.Roles,
+                StringComparer.OrdinalIgnoreCase);
+    }
+
     private async Task<string> FetchLatestVersionAsync(CancellationToken cancellationToken)
     {
         var versions = await _http.GetFromJsonAsync<List<string>>(
@@ -41,5 +59,12 @@ public sealed class DataDragonClient : IDataDragonClient
             throw new InvalidOperationException("Could not retrieve versions from Data Dragon.");
 
         return versions[0];
+    }
+
+    private sealed class CdChampionSummary
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public List<string> Roles { get; set; } = new();
     }
 }

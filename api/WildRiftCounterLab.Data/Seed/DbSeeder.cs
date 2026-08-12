@@ -122,7 +122,60 @@ public static class DbSeeder
             Champion("Karma", ["Support", "Mid"], ["mage", "support", "poke", "peel"]),
             Champion("Alistar", ["Support"], ["tank", "engage", "peel", "cc"]),
             Champion("Rakan", ["Support"], ["support", "engage", "peel", "mobile"]),
-            Champion("Pyke", ["Support"], ["assassin", "support", "engage", "mobile"])
+            Champion("Pyke", ["Support"], ["assassin", "support", "engage", "mobile"]),
+
+            // Baron / Solo-lane additions
+            Champion("Aatrox", ["Baron"], ["fighter", "sustain", "lane-bully", "dive", "ad"]),
+            Champion("Cho'Gath", ["Baron", "Mid"], ["tank", "sustain", "scaling", "cc"]),
+            Champion("Gnar", ["Baron"], ["fighter", "poke", "cc", "mobile"]),
+            Champion("Hecarim", ["Jungle"], ["fighter", "engage", "mobile", "dive"]),
+            Champion("Heimerdinger", ["Mid", "Baron"], ["mage", "poke", "immobile"]),
+            Champion("K'Sante", ["Baron"], ["tank", "engage", "peel", "cc"]),
+            Champion("Kassadin", ["Mid"], ["assassin", "mobile", "scaling", "anti-mage"]),
+            Champion("Kayn", ["Jungle"], ["assassin", "mobile", "dive", "sustain"]),
+            Champion("Mordekaiser", ["Baron"], ["fighter", "sustain", "scaling", "cc"]),
+            Champion("Nocturne", ["Jungle"], ["assassin", "mobile", "dive", "burst"]),
+            Champion("Poppy", ["Jungle", "Support", "Baron"], ["tank", "cc", "peel", "anti-dash"]),
+            Champion("Rell", ["Support"], ["tank", "engage", "cc", "support"]),
+            Champion("Rengar", ["Jungle"], ["assassin", "burst", "mobile", "dive"]),
+            Champion("Rumble", ["Baron", "Mid"], ["mage", "poke", "cc"]),
+            Champion("Ryze", ["Mid"], ["mage", "scaling", "immobile", "cc"]),
+            Champion("Sion", ["Baron", "Support"], ["tank", "cc", "engage", "scaling"]),
+            Champion("Skarner", ["Jungle"], ["tank", "engage", "cc", "dive"]),
+            Champion("Swain", ["Support", "Mid"], ["mage", "sustain", "cc", "scaling"]),
+            Champion("Syndra", ["Mid"], ["mage", "burst", "poke", "cc"]),
+            Champion("Talon", ["Mid", "Jungle"], ["assassin", "burst", "mobile", "dive"]),
+            Champion("Tryndamere", ["Baron"], ["fighter", "scaling", "mobile", "dive"]),
+            Champion("Urgot", ["Baron"], ["fighter", "lane-bully", "tank-shred"]),
+            Champion("Viego", ["Jungle"], ["assassin", "mobile", "dive", "scaling"]),
+            Champion("Viktor", ["Mid"], ["mage", "poke", "scaling", "immobile"]),
+            Champion("Vladimir", ["Mid", "Baron"], ["mage", "sustain", "scaling", "safe"]),
+            Champion("Volibear", ["Jungle", "Baron"], ["tank", "engage", "cc", "dive"]),
+
+            // Dragon / ADC additions
+            Champion("Aurora", ["Mid", "Baron"], ["mage", "mobile", "burst"]),
+            Champion("Kalista", ["Dragon"], ["marksman", "mobile", "poke"]),
+            Champion("Kindred", ["Jungle"], ["marksman", "mobile", "scaling"]),
+            Champion("Kog'Maw", ["Dragon"], ["marksman", "poke", "scaling", "immobile"]),
+            Champion("Nilah", ["Dragon"], ["fighter", "mobile", "scaling", "dive"]),
+            Champion("Sivir", ["Dragon"], ["marksman", "poke", "safe", "teamfight"]),
+            Champion("Smolder", ["Dragon"], ["marksman", "poke", "scaling"]),
+            Champion("Twitch", ["Dragon", "Jungle"], ["marksman", "scaling", "mobile"]),
+            Champion("Zeri", ["Dragon"], ["marksman", "mobile", "scaling"]),
+
+            // Support additions
+            Champion("Bard", ["Support"], ["support", "peel", "mobile", "cc"]),
+            Champion("Brand", ["Support", "Mid"], ["mage", "burst", "poke"]),
+            Champion("Fiddlesticks", ["Jungle"], ["mage", "burst", "cc"]),
+            Champion("Lillia", ["Jungle"], ["mage", "mobile", "cc", "scaling"]),
+            Champion("Maokai", ["Support", "Baron"], ["tank", "cc", "peel", "engage"]),
+            Champion("Mel", ["Mid"], ["mage", "poke", "safe", "cc"]),
+            Champion("Milio", ["Support"], ["support", "peel", "safe"]),
+            Champion("Nidalee", ["Jungle", "Mid"], ["mage", "poke", "mobile"]),
+            Champion("Norra", ["Support"], ["support", "peel", "mage"]),
+            Champion("Vel'Koz", ["Support", "Mid"], ["mage", "poke", "burst", "immobile"]),
+            Champion("Yunara", ["Dragon", "Mid"], ["marksman", "mobile", "burst"]),
+            Champion("Zilean", ["Support", "Mid"], ["support", "peel", "cc"])
         };
     }
 

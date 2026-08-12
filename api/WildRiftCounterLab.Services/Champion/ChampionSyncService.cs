@@ -8,38 +8,6 @@ using WildRiftCounterLab.Services.Models;
 
 public sealed class ChampionSyncService : IChampionSyncService
 {
-    // Confirmed Wild Rift champion pool — update this list when new champions release on WR.
-    // Names must match Data Dragon's "name" field exactly.
-    private static readonly HashSet<string> WildRiftRoster = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu",
-        "Annie", "Ashe", "Aurelion Sol", "Blitzcrank", "Braum",
-        "Caitlyn", "Camille", "Cho'Gath", "Corki", "Darius", "Diana", "Dr. Mundo",
-        "Draven", "Ekko", "Evelynn", "Ezreal", "Fiora", "Fizz",
-        "Galio", "Garen", "Gragas", "Graves", "Gwen",
-        "Irelia", "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin",
-        "Jinx", "Kai'Sa", "Karma", "Katarina", "Kayle", "Kennen",
-        "Kha'Zix", "Lee Sin", "Leona", "Lissandra", "Lucian", "Lulu",
-        "Lux", "Malphite", "Master Yi", "Miss Fortune", "Morgana",
-        "Nami", "Nasus", "Nautilus", "Nunu & Willump", "Olaf",
-        "Orianna", "Ornn", "Pantheon", "Pyke", "Rammus", "Rakan",
-        "Renekton", "Riven", "Samira", "Senna", "Seraphine", "Sett",
-        "Shen", "Shyvana", "Singed", "Sona", "Soraka", "Taliyah", "Teemo",
-        "Thresh", "Tristana", "Twisted Fate", "Varus", "Vayne", "Veigar", "Vex",
-        "Vi", "Warwick", "Wukong", "Xayah", "Xin Zhao", "Yasuo",
-        "Yone", "Yuumi", "Zed", "Ziggs", "Zoe", "Zyra",
-    };
-
-    private static readonly Dictionary<string, string> TagMap = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["Fighter"] = "fighter",
-        ["Tank"] = "tank",
-        ["Mage"] = "mage",
-        ["Assassin"] = "assassin",
-        ["Marksman"] = "marksman",
-        ["Support"] = "support",
-    };
-
     private readonly IChampionRepository _champions;
     private readonly IDataDragonClient _dataDragon;
     private readonly ILogger<ChampionSyncService> _logger;
@@ -57,28 +25,30 @@ public sealed class ChampionSyncService : IChampionSyncService
     public async Task<ChampionSyncResultDto> SyncFromDataDragonAsync(
         CancellationToken cancellationToken = default)
     {
-        var ddTags = await _dataDragon.FetchChampionTagsAsync(cancellationToken);
-        _logger.LogInformation("Syncing champions from Data Dragon");
+        _logger.LogInformation("Syncing Wild Rift champion roster from Community Dragon");
+
+        var roster = await _dataDragon.FetchWildRiftRosterAsync(cancellationToken);
 
         var existing = await _champions.GetAllAsync(cancellationToken);
         var existingByName = existing.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
 
+        // Remove DB entries that are no longer in the WR roster and have no custom roles set
         var toRemove = existing
-            .Where(c => !WildRiftRoster.Contains(c.Name) && c.Roles.Count == 0)
+            .Where(c => !roster.ContainsKey(c.Name) && c.Roles.Count == 0)
             .ToList();
 
         if (toRemove.Count > 0)
         {
             await _champions.DeleteRangeAsync(toRemove, cancellationToken);
             foreach (var c in toRemove) existingByName.Remove(c.Name);
-            _logger.LogInformation("Removed {Count} non-WR champions with no roles", toRemove.Count);
+            _logger.LogInformation("Removed {Count} champions no longer in the Wild Rift roster", toRemove.Count);
         }
 
         var toAdd = new List<Champion>();
         var added = new List<string>();
         var skipped = 0;
 
-        foreach (var name in WildRiftRoster)
+        foreach (var (name, cdRoles) in roster)
         {
             if (existingByName.ContainsKey(name))
             {
@@ -86,9 +56,8 @@ public sealed class ChampionSyncService : IChampionSyncService
                 continue;
             }
 
-            var tags = ddTags.TryGetValue(name, out var rawTags)
-                ? rawTags.Where(t => TagMap.ContainsKey(t)).Select(t => TagMap[t]).ToList()
-                : new List<string>();
+            // CDragon already provides lowercase class roles: fighter, mage, tank, assassin, marksman, support
+            var tags = cdRoles.Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
 
             toAdd.Add(new Champion { Name = name, Roles = [], Tags = tags });
             added.Add(name);
@@ -98,7 +67,7 @@ public sealed class ChampionSyncService : IChampionSyncService
             await _champions.AddRangeAsync(toAdd, cancellationToken);
 
         _logger.LogInformation(
-            "Data Dragon sync complete: {Added} added, {Removed} removed, {Skipped} already present",
+            "Wild Rift roster sync complete: {Added} added, {Removed} removed, {Skipped} already present",
             added.Count, toRemove.Count, skipped);
 
         return new ChampionSyncResultDto
