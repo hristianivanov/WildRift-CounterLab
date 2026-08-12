@@ -8,6 +8,7 @@ public static class DbSeeder
     {
         AddMissingChampions(db);
         AddMissingMatchupRules(db);
+        AddMissingMatchupTips(db);
         db.SaveChanges();
     }
 
@@ -94,6 +95,9 @@ public static class DbSeeder
             Champion("Orianna", ["Mid"], ["mage", "scaling", "peel", "immobile"]),
             Champion("Vex", ["Mid"], ["mage", "burst", "anti-dash", "cc"]),
             Champion("Lissandra", ["Mid"], ["mage", "engage", "anti-dash", "cc"]),
+            Champion("Veigar", ["Mid"], ["mage", "burst", "immobile", "cc"]),
+            Champion("Taliyah", ["Mid", "Jungle"], ["mage", "burst", "mobile", "cc"]),
+            Champion("Cho'Gath", ["Baron", "Mid"], ["tank", "sustain", "scaling", "cc"]),
 
             Champion("Jinx", ["Dragon"], ["marksman", "scaling", "immobile", "dragon"]),
             Champion("Kai'Sa", ["Dragon"], ["marksman", "scaling", "mobile", "dive"]),
@@ -162,6 +166,135 @@ public static class DbSeeder
             Rule("Support", "Nautilus", "Yuumi", 24,
                 "Reliable engage pressures Yuumi's lane partner.",
                 "Target the exposed carry and force early summoner spells.")
+        };
+    }
+
+    private static void AddMissingMatchupTips(ApplicationDbContext db)
+    {
+        var existingKeys = db.MatchupTips
+            .AsEnumerable()
+            .Select(TipKey)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var missingTips = InitialMatchupTips()
+            .Where(tip => existingKeys.Add(TipKey(tip)))
+            .ToList();
+
+        if (missingTips.Count > 0)
+        {
+            db.MatchupTips.AddRange(missingTips);
+        }
+    }
+
+    private static string TipKey(MatchupTip tip)
+    {
+        return $"{tip.Champion}|{tip.EnemyChampion}|{tip.Tip}";
+    }
+
+    private static IReadOnlyCollection<MatchupTip> InitialMatchupTips()
+    {
+        return new List<MatchupTip>
+        {
+            // Fizz
+            Tip("Fizz", "Veigar", "E",
+                "Use Playful/Trickster (E) to hop over Veigar's Event Horizon cage — time it just before the walls fully form."),
+            Tip("Fizz", "Annie", "E",
+                "Playful/Trickster (E) makes Fizz untargetable, dodging Annie's Tibbers stun entirely."),
+            Tip("Fizz", "Lux", "E",
+                "Hop over or dodge Lux's Lucent Singularity (E) and Final Spark (R) with Playful/Trickster."),
+            Tip("Fizz", "Morgana", "E",
+                "Fizz E removes the binding from Dark Binding (Q) mid-flight if cast early enough."),
+
+            // Nocturne
+            Tip("Nocturne", "Veigar", "W",
+                "Nocturne's Shroud of Darkness (W) spell shield blocks Veigar's Event Horizon stun — activate it right as the cage appears."),
+            Tip("Nocturne", "Lux", "W",
+                "Spell shield absorbs Lux's Light Binding (Q) or Final Spark (R) — save W specifically for her R."),
+            Tip("Nocturne", "Morgana", "W",
+                "Shroud of Darkness (W) absorbs Dark Binding (Q) completely, nullifying her main CC tool."),
+
+            // Yasuo
+            Tip("Yasuo", "Veigar", "W",
+                "Wind Wall (W) can block Veigar's Baleful Strike (Q) and Primordial Burst (R) projectiles — position it between you and Veigar."),
+            Tip("Yasuo", "Jinx", "W",
+                "Wind Wall blocks Jinx's Fishbones rockets and Super Mega Death Rocket (R) — use it as soon as she fires."),
+            Tip("Yasuo", "Caitlyn", "W",
+                "Wind Wall blocks Caitlyn's Piltover Peacemaker (Q) and Ace in the Hole (R)."),
+            Tip("Yasuo", "Jhin", "W",
+                "Wind Wall blocks all of Jhin's Curtain Call (R) shots — deploy it when he begins channeling."),
+            Tip("Yasuo", "Miss Fortune", "W",
+                "Wind Wall completely negates Miss Fortune's Bullet Time (R) — place it directly in the cone."),
+            Tip("Yasuo", "Draven", "W",
+                "Wind Wall blocks Draven's Whirling Death (R) axes on the way in AND the return."),
+            Tip("Yasuo", "Lux", "W",
+                "Wind Wall absorbs Final Spark (R) — react to the cast animation, not the beam."),
+
+            // Braum
+            Tip("Braum", "Jinx", "E",
+                "Unbreakable (E) fully absorbs Jinx's Super Mega Death Rocket (R) if you stand between it and your carry."),
+            Tip("Braum", "Caitlyn", "E",
+                "Unbreakable (E) blocks Ace in the Hole (R) — face toward Caitlyn to intercept it for your carry."),
+            Tip("Braum", "Jhin", "E",
+                "Unbreakable absorbs all Curtain Call (R) shots — activate and face Jhin when he starts channeling."),
+            Tip("Braum", "Miss Fortune", "E",
+                "Unbreakable negates Bullet Time (R) — stand in the cone and face her to tank the entire channel."),
+
+            // Garen
+            Tip("Garen", "Lissandra", "passive",
+                "Garen's passive regeneration is not interrupted by Lissandra's frost slow — keep fighting through the slow, your regen still ticks."),
+            Tip("Garen", "Teemo", "Q",
+                "Decisive Strike (Q) cleanses Teemo's blind on cast — activate Q immediately after being blinded."),
+
+            // Malphite
+            Tip("Malphite", "Yasuo", "R",
+                "Unstoppable Force (R) launches Yasuo airborne, setting up your team's abilities and enabling Yasuo's own R if he's allied — but against enemy Yasuo, it hard counters his dashes."),
+
+            // Alistar
+            Tip("Alistar", "Veigar", "QW",
+                "Headbutt–Pulverize (W–Q) combo can knock Veigar out of his own Event Horizon cage before he casts it."),
+
+            // Xayah
+            Tip("Xayah", "Veigar", "R",
+                "Clean Cuts (R) makes Xayah untargetable, completely avoiding Veigar's Event Horizon and Primordial Burst (R)."),
+            Tip("Xayah", "Caitlyn", "R",
+                "Recall (R) dodges Caitlyn's Ace in the Hole (R) if activated before the shot arrives."),
+
+            // Zed
+            Tip("Zed", "Lux", "R",
+                "Living Shadow (R) swaps can reposition Zed away from Lux's Final Spark — bait the cast then swap."),
+            Tip("Zed", "Annie", "R",
+                "Death Mark (R) makes Zed untargetable during the leap — use it to dodge Annie's Tibbers stun cast."),
+
+            // Ekko
+            Tip("Ekko", "Veigar", "R",
+                "Chronobreak (R) teleports Ekko to his ghost position from 3 seconds ago — if you stepped into Veigar's cage, R out immediately."),
+
+            // Shen
+            Tip("Shen", "Zed", "E",
+                "Shadow Dash (E) taunts Zed, forcing his auto-attacks onto Shen and wasting his damage window during Death Mark (R)."),
+
+            // Wukong
+            Tip("Wukong", "Teemo", "W",
+                "Warrior Trickster (W) clone can tank Teemo's poison shrooms — use the decoy to find and trigger shrooms safely."),
+
+            // Janna
+            Tip("Janna", "Katarina", "R",
+                "Monsoon (R) interrupts and pushes Katarina out of her Death Lotus (R) channel — react to the spinning animation."),
+
+            // Gragas
+            Tip("Gragas", "Katarina", "E",
+                "Body Slam (E) interrupts Katarina's Death Lotus (R) channel immediately."),
+        };
+    }
+
+    private static MatchupTip Tip(string champion, string enemyChampion, string abilityTag, string tip)
+    {
+        return new MatchupTip
+        {
+            Champion = champion,
+            EnemyChampion = enemyChampion,
+            AbilityTag = abilityTag,
+            Tip = tip
         };
     }
 

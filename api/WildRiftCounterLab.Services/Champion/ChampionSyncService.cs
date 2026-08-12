@@ -14,7 +14,7 @@ public sealed class ChampionSyncService : IChampionSyncService
     {
         "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu",
         "Annie", "Ashe", "Aurelion Sol", "Blitzcrank", "Braum",
-        "Caitlyn", "Camille", "Corki", "Darius", "Diana", "Dr. Mundo",
+        "Caitlyn", "Camille", "Cho'Gath", "Corki", "Darius", "Diana", "Dr. Mundo",
         "Draven", "Ekko", "Evelynn", "Ezreal", "Fiora", "Fizz",
         "Galio", "Garen", "Gragas", "Graves", "Gwen",
         "Irelia", "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin",
@@ -24,8 +24,8 @@ public sealed class ChampionSyncService : IChampionSyncService
         "Nami", "Nasus", "Nautilus", "Nunu & Willump", "Olaf",
         "Orianna", "Ornn", "Pantheon", "Pyke", "Rammus", "Rakan",
         "Renekton", "Riven", "Samira", "Senna", "Seraphine", "Sett",
-        "Shen", "Shyvana", "Singed", "Sona", "Soraka", "Teemo",
-        "Thresh", "Tristana", "Twisted Fate", "Varus", "Vayne", "Vex",
+        "Shen", "Shyvana", "Singed", "Sona", "Soraka", "Taliyah", "Teemo",
+        "Thresh", "Tristana", "Twisted Fate", "Varus", "Vayne", "Veigar", "Vex",
         "Vi", "Warwick", "Wukong", "Xayah", "Xin Zhao", "Yasuo",
         "Yone", "Yuumi", "Zed", "Ziggs", "Zoe", "Zyra",
     };

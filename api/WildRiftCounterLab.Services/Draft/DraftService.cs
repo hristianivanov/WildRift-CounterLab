@@ -16,6 +16,7 @@ public class DraftService
 
     private readonly IChampionRepository _championRepository;
     private readonly IMatchupRuleRepository _matchupRuleRepository;
+    private readonly IMatchupTipRepository _matchupTipRepository;
     private readonly IAiExplanationProvider _aiExplanationProvider;
 
     public DraftService(
@@ -24,12 +25,14 @@ public class DraftService
         PlanEngine planEngine,
         IChampionRepository championRepository,
         IMatchupRuleRepository matchupRuleRepository,
+        IMatchupTipRepository matchupTipRepository,
         IAiExplanationProvider aiExplanationProvider)
     {
         _scoreEngine = scoreEngine;
         _reasonEngine = reasonEngine;
         _championRepository = championRepository;
         _matchupRuleRepository = matchupRuleRepository;
+        _matchupTipRepository = matchupTipRepository;
         _aiExplanationProvider = aiExplanationProvider;
         _planEngine = planEngine;
     }
@@ -102,7 +105,7 @@ public class DraftService
                 !enemies.Contains(champion.Name, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
-        var recommendations = candidateChampions
+        var topRecommendations = candidateChampions
             .Select(champion =>
             {
                 var scoreBreakdown = _scoreEngine.CalculateScore(
@@ -124,6 +127,21 @@ public class DraftService
             .OrderByDescending(x => x.Score)
             .Take(5)
             .ToList();
+
+        foreach (var rec in topRecommendations)
+        {
+            var tips = await _matchupTipRepository.GetTipsForDraftAsync(rec.Champion, enemies, cancellationToken);
+            rec.MechanicTips = tips
+                .Select(t => new MechanicTipDto
+                {
+                    EnemyChampion = t.EnemyChampion,
+                    Tip = t.Tip,
+                    AbilityTag = t.AbilityTag
+                })
+                .ToList();
+        }
+
+        var recommendations = topRecommendations;
 
         if (request.IncludeAiExplanation)
         {

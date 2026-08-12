@@ -27,6 +27,7 @@ public static class DependencyInjection
 
         services.AddScoped<IChampionRepository, ChampionRepository>();
         services.AddScoped<IMatchupRuleRepository, MatchupRuleRepository>();
+        services.AddScoped<IMatchupTipRepository, MatchupTipRepository>();
         services.AddScoped<IAiExplanationCacheRepository, AiExplanationCacheRepository>();
 
         return services;

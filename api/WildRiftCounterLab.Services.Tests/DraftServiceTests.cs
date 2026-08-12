@@ -258,6 +258,7 @@ public class DraftServiceTests
             new PlanEngine(),
             new FakeChampionRepository(champions),
             new FakeMatchupRuleRepository(rules),
+            new FakeMatchupTipRepository(),
             aiProvider ?? new FakeAiExplanationProvider());
     }
 
@@ -377,6 +378,25 @@ public class DraftServiceTests
                 rule.Champion.Equals(championName, StringComparison.OrdinalIgnoreCase) ||
                 rule.EnemyChampion.Equals(championName, StringComparison.OrdinalIgnoreCase)));
         }
+    }
+
+    private sealed class FakeMatchupTipRepository : IMatchupTipRepository
+    {
+        public Task<List<MatchupTip>> GetTipsForDraftAsync(string champion, List<string> enemies, CancellationToken cancellationToken = default)
+            => Task.FromResult(new List<MatchupTip>());
+
+        public Task<List<MatchupTip>> GetAllAsync()
+            => Task.FromResult(new List<MatchupTip>());
+
+        public Task<MatchupTip?> GetByIdAsync(int id)
+            => Task.FromResult<MatchupTip?>(null);
+
+        public Task AddAsync(MatchupTip tip) => Task.CompletedTask;
+        public Task UpdateAsync(MatchupTip tip) => Task.CompletedTask;
+        public Task DeleteAsync(MatchupTip tip) => Task.CompletedTask;
+
+        public Task<bool> ExistsAsync(string champion, string enemyChampion, string tip)
+            => Task.FromResult(false);
     }
 
     private sealed class FakeAiExplanationProvider : IAiExplanationProvider

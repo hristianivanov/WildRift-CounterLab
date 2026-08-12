@@ -13,4 +13,6 @@ public class DraftRecommendationDto
     public string Plan { get; set; } = string.Empty;
 
     public string? AiExplanation { get; set; }
+
+    public List<MechanicTipDto> MechanicTips { get; set; } = new();
 }
