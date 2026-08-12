@@ -1,6 +1,9 @@
 // Update this when a new LoL season releases and the version increments.
 const DATA_DRAGON_VERSION = '16.16.1'
 
+// Champions that exist in Wild Rift but not in PC Data Dragon — always fall back to initials.
+const noImageChampions = new Set(['norra'])
+
 // Keys that differ from simply stripping non-alphanumeric characters from the display name.
 // Data Dragon champion keys are case-sensitive and sometimes differ from the display name.
 const championImageKeys: Record<string, string> = {
@@ -22,8 +25,9 @@ const championImageKeys: Record<string, string> = {
   'twisted fate': 'TwistedFate',
 }
 
-export function getChampionImageUrl(championName: string): string {
+export function getChampionImageUrl(championName: string): string | null {
   const normalizedName = championName.trim().toLowerCase()
+  if (noImageChampions.has(normalizedName)) return null
   const imageKey =
     championImageKeys[normalizedName] ??
     championName.replace(/[^a-zA-Z0-9]/g, '')

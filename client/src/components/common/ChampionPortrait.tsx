@@ -13,6 +13,7 @@ export default function ChampionPortrait({
   className = '',
   imageClassName = '',
 }: ChampionPortraitProps) {
+  const imageUrl = getChampionImageUrl(championName)
   const [imageFailed, setImageFailed] = useState(false)
 
   useEffect(() => {
@@ -23,9 +24,9 @@ export default function ChampionPortrait({
     <span
       className={`relative grid shrink-0 place-items-center overflow-hidden bg-gradient-to-br from-cyan-300/25 to-violet-400/20 font-black text-cyan-100 ${className}`}
     >
-      {!imageFailed ? (
+      {imageUrl && !imageFailed ? (
         <img
-          src={getChampionImageUrl(championName)}
+          src={imageUrl}
           alt={`${championName} portrait`}
           loading="lazy"
           onError={() => setImageFailed(true)}
