@@ -4,6 +4,8 @@ public interface IDataDragonClient
 {
     Task<IReadOnlyDictionary<string, IReadOnlyList<string>>> FetchChampionTagsAsync(CancellationToken cancellationToken = default);
 
+    Task<string> FetchLatestVersionAsync(CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Fetches the live Wild Rift champion roster from Community Dragon.
     /// Returns champion name → list of class roles (fighter, mage, tank, assassin, marksman, support).

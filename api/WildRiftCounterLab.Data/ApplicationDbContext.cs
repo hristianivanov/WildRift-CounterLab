@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Champion> Champions => Set<Champion>();
     public DbSet<AiExplanationCache> AiExplanationCaches => Set<AiExplanationCache>();
     public DbSet<MatchupTip> MatchupTips => Set<MatchupTip>();
+    public DbSet<AppSetting> AppSettings => Set<AppSetting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,5 +30,8 @@ public class ApplicationDbContext : DbContext
         // Hot path: GetTipsForDraftAsync filters by Champion + EnemyChampion.
         modelBuilder.Entity<MatchupTip>()
             .HasIndex(tip => new { tip.Champion, tip.EnemyChampion });
+
+        modelBuilder.Entity<AppSetting>()
+            .HasKey(s => s.Key);
     }
 }

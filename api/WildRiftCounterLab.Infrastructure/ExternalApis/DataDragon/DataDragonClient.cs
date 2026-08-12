@@ -16,7 +16,7 @@ public sealed class DataDragonClient : IDataDragonClient
     public async Task<IReadOnlyDictionary<string, IReadOnlyList<string>>> FetchChampionTagsAsync(
         CancellationToken cancellationToken = default)
     {
-        var version = await FetchLatestVersionAsync(cancellationToken);
+        var version = await FetchLatestVersionAsync(cancellationToken: cancellationToken);
 
         var response = await _http.GetFromJsonAsync<DataDragonChampionResponse>(
             $"https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json",
@@ -51,7 +51,7 @@ public sealed class DataDragonClient : IDataDragonClient
                 StringComparer.OrdinalIgnoreCase);
     }
 
-    private async Task<string> FetchLatestVersionAsync(CancellationToken cancellationToken)
+    public async Task<string> FetchLatestVersionAsync(CancellationToken cancellationToken = default)
     {
         var versions = await _http.GetFromJsonAsync<List<string>>(
             "https://ddragon.leagueoflegends.com/api/versions.json",

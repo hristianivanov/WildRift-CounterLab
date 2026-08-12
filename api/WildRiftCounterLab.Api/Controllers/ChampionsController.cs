@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Contracts;
 using Services;
 using Services.Models;
+using Services.Patch;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -16,13 +17,16 @@ public class ChampionsController : ControllerBase
 {
     private readonly ChampionAdminService _championAdminService;
     private readonly IChampionSyncService _championSyncService;
+    private readonly PatchMonitorService _patchMonitor;
 
     public ChampionsController(
         ChampionAdminService championAdminService,
-        IChampionSyncService championSyncService)
+        IChampionSyncService championSyncService,
+        PatchMonitorService patchMonitor)
     {
         _championAdminService = championAdminService;
         _championSyncService = championSyncService;
+        _patchMonitor = patchMonitor;
     }
 
     [HttpGet]
@@ -69,6 +73,14 @@ public class ChampionsController : ControllerBase
     public async Task<IActionResult> SyncChampions(CancellationToken cancellationToken)
     {
         return Ok(await _championSyncService.SyncFromDataDragonAsync(cancellationToken));
+    }
+
+    [HttpPost("patch-check")]
+    [ProducesResponseType(typeof(PatchCheckResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CheckPatch(CancellationToken cancellationToken)
+    {
+        return Ok(await _patchMonitor.CheckAndSyncAsync(cancellationToken));
     }
 
     [HttpDelete("{id:int}")]
