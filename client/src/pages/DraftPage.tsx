@@ -28,7 +28,7 @@ const productSignals = [
 
 export default function DraftPage() {
   const [draft, setDraft] = useState(initialDraft)
-  const { champions, usingFallback } = useChampions()
+  const { champions, loading: championsLoading, usingFallback } = useChampions()
   const {
     aiLoadingChampions,
     analyzeDraft,
@@ -83,7 +83,7 @@ export default function DraftPage() {
         <DraftForm
           champions={champions}
           value={draft}
-          isLoading={isLoading}
+          isLoading={isLoading || championsLoading}
           aiEnabled={aiEnabled}
           usingFallback={usingFallback}
           onChange={updateDraft}

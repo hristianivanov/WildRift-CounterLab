@@ -13,6 +13,7 @@ public class CreateMatchupRuleRequestDto
     [MaxLength(100)]
     public string EnemyChampion { get; set; } = string.Empty;
 
+    [Range(-100, 100)]
     public int ScoreModifier { get; set; }
 
     [MaxLength(500)]
