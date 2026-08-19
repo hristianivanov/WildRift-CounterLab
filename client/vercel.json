@@ -2,6 +2,7 @@
   "buildCommand": "corepack pnpm run build",
   "outputDirectory": "dist",
   "installCommand": "corepack pnpm install",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/(.*)",
