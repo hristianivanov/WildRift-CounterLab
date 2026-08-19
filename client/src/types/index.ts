@@ -63,3 +63,67 @@ export interface ApiError {
   details?: string | null
   traceId?: string | null
 }
+
+// Admin types
+export interface MatchupRuleDto {
+  id: number
+  role: string
+  champion: string
+  enemyChampion: string
+  scoreModifier: number
+  reason: string
+  plan: string
+}
+
+export interface CreateMatchupRuleRequest {
+  role: string
+  champion: string
+  enemyChampion: string
+  scoreModifier: number
+  reason: string
+  plan?: string
+}
+
+export interface UpdateMatchupRuleRequest {
+  role: string
+  champion: string
+  enemyChampion: string
+  scoreModifier: number
+  reason: string
+  plan?: string
+}
+
+export interface MatchupTipDto {
+  id: number
+  champion: string
+  enemyChampion: string
+  tip: string
+  abilityTag: string | null
+}
+
+export interface CreateMatchupTipRequest {
+  champion: string
+  enemyChampion: string
+  tip: string
+  abilityTag?: string
+}
+
+export interface UpdateMatchupTipRequest {
+  champion: string
+  enemyChampion: string
+  tip: string
+  abilityTag?: string
+}
+
+export interface ChampionSyncResultDto {
+  added: number
+  updated: number
+  removed: number
+}
+
+export interface PatchCheckResultDto {
+  latestVersion: string
+  previousVersion: string | null
+  syncTriggered: boolean
+  syncResult: ChampionSyncResultDto | null
+}

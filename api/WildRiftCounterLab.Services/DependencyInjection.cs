@@ -15,6 +15,7 @@ public static class DependencyInjection
 
         services.AddScoped<DraftService>();
         services.AddScoped<MatchupRuleAdminService>();
+        services.AddScoped<MatchupTipAdminService>();
         services.AddScoped<ChampionAdminService>();
         services.AddScoped<IChampionSyncService, ChampionSyncService>();
         services.AddScoped<PatchCheckService>();
