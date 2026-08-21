@@ -70,7 +70,7 @@ public class GroqAiExplanationProvider : IAiExplanationProvider
         {
             model,
             temperature = 0.2,
-            max_tokens = 500,
+            max_tokens = 3000,
             messages = new[]
             {
                 new
@@ -101,8 +101,12 @@ public class GroqAiExplanationProvider : IAiExplanationProvider
             JsonOptions,
             cancellationToken);
 
-        return result?.Choices.FirstOrDefault()?.Message.Content
+        var content = result?.Choices.FirstOrDefault()?.Message.Content
             ?? throw new InvalidOperationException("Groq returned an empty explanation.");
+
+        // Strip <think>…</think> blocks produced by reasoning models (e.g. Qwen)
+        var thinkEnd = content.LastIndexOf("</think>", StringComparison.OrdinalIgnoreCase);
+        return thinkEnd >= 0 ? content[(thinkEnd + 8)..].Trim() : content.Trim();
     }
 
     private static string BuildSinglePrompt(AiExplanationRequestDto request)
