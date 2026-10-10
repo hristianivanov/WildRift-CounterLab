@@ -63,7 +63,7 @@ jobs:
           }
 
           echo "Checking backend health endpoint..."
-          curl_check "${backend_url}/health" "$health_body"
+          curl_check "${backend_url}/api/health" "$health_body"
           if ! grep -Eiq 'healthy|"status"[[:space:]]*:[[:space:]]*"ok"' "$health_body"; then
             echo "::error::Backend health endpoint did not return an OK status."
             exit 1
